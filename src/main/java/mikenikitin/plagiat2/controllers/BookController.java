@@ -15,9 +15,13 @@ public class BookController {
 
     BookRepository bookRepository;
 
-
     @RequestMapping("/{id}")
-    private List<Book> hello(@PathVariable Integer id){
-        return bookRepository.findBooksByIssue(id);
+    private List<Book> hello(@PathVariable Long id){
+        return bookRepository.findBooksById(id);
+    }
+
+    @RequestMapping("/")
+    private Iterable<Book> hello(){
+        return bookRepository.findAll();
     }
 }

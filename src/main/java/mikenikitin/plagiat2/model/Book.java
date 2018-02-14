@@ -13,18 +13,15 @@ import javax.persistence.Id;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @JsonIgnore
+//    @JsonIgnore
     Long id;
     String name;
-    Integer issue;
 
-    public Book(String name, Integer issue) {
+    public Book(String name) {
         this.name = name;
-        this.issue = issue;
     }
 }
