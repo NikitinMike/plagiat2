@@ -22,41 +22,13 @@ import java.util.List;
 @AllArgsConstructor
 public class Plagiat2Application implements CommandLineRunner{
 
-	ArticleRepository articleRepository;
-
-	WordbookRepository wordbookRepository;
-
 	public static void main(String[] args) {
 		SpringApplication.run(Plagiat2Application.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-        StringBuilder result = new StringBuilder();
-        URL url = new URL("https://ru.wikipedia.org/wiki/%D0%A1%D0%BB%D1%83%D0%B6%D0%B5%D0%B1%D0%BD%D0%B0%D1%8F:%D0%A1%D0%BB%D1%83%D1%87%D0%B0%D0%B9%D0%BD%D0%B0%D1%8F_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0");
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        for(String line;(line=rd.readLine())!=null;) result.append(line); rd.close();
-        Long wc=0L;
 
-        List<Wordbook> wordbook = new ArrayList<>();
-        for (String w:result.toString().replaceAll("[^а-яёА-ЯЁ]"," ").split("\\s+")) // \\p{Alpha}
-            if (w.length()>2) wordbook.add(new Wordbook(w.toLowerCase()));
-//                System.out.print(++wc+":"+w.toLowerCase()+" ");
-//        System.out.println("");
-        wordbookRepository.saveAll(wordbook);
-
-//        a.setWc(wc); // System.out.println(wc);
-        articleRepository.save(new Article(URLDecoder.decode(conn.getURL().toString(),"UTF-8"),wc));
-//        System.out.println("Article:"+ a);
-
-//        List<Article> articles = articleRepository.findAll();
-//        System.out.println("ArticlesList:"+ articles);
-
-//        articleRepository.findAll().forEach((b) -> articles.add(b));
-//        for (Article article: articleRepository.findAll()) System.out.println(article);
-//        articleRepository.findAll().forEach((b) -> System.out.println(b));
-//        articleRepository.saveAll(articles);
 
 	}
 }

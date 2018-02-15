@@ -21,7 +21,7 @@ public class ArticleController {
         return articleRepository.findArticlesById(id);
     }
 
-    @RequestMapping()
+    @RequestMapping
     private List<Article> listall(){
         return articleRepository.findAll();
     }

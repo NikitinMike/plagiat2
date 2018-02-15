@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 public class Article {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    @JsonIgnore
     Long id;
     String name;
@@ -27,6 +27,11 @@ public class Article {
     public Article(String name, Long wc) {
         this.name = name;
         this.wc=wc;
+    }
+
+    public Article(String name) {
+        this.name = name;
+        wc=0L;
     }
 
 //    public void setwords(List<String> words){
