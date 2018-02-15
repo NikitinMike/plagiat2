@@ -14,14 +14,19 @@ import javax.persistence.Id;
 @Data
 @NoArgsConstructor
 @Entity
-public class Book {
+public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
 //    @JsonIgnore
     Long id;
     String name;
+    Long wc;
 
-    public Book(String name) {
+    public Article(String name) {
         this.name = name;
+    }
+
+    public void setwc(Long wc){
+        this.wc=wc;
     }
 }

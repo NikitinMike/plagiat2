@@ -1,8 +1,8 @@
 package mikenikitin.plagiat2.controllers;
 
 import lombok.AllArgsConstructor;
-import mikenikitin.plagiat2.model.Book;
-import mikenikitin.plagiat2.repository.BookRepository;
+import mikenikitin.plagiat2.model.Article;
+import mikenikitin.plagiat2.repository.ArticleRepository;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,17 +11,17 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-public class BookController {
+public class ArticleController {
 
-    BookRepository bookRepository;
+    ArticleRepository articleRepository;
 
     @RequestMapping("/{id}")
-    private List<Book> hello(@PathVariable Long id){
-        return bookRepository.findBooksById(id);
+    private Article hello(@PathVariable Long id){
+        return articleRepository.findArticlesById(id);
     }
 
     @RequestMapping("/")
-    private Iterable<Book> hello(){
-        return bookRepository.findAll();
+    private Iterable<Article> hello(){
+        return articleRepository.findAll();
     }
 }
