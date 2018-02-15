@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("article")
 public class ArticleController {
 
     ArticleRepository articleRepository;
@@ -20,7 +21,7 @@ public class ArticleController {
         return articleRepository.findArticlesById(id);
     }
 
-    @RequestMapping("/")
+    @RequestMapping()
     private List<Article> listall(){
         return articleRepository.findAll();
     }

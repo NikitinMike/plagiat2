@@ -2,7 +2,9 @@ package mikenikitin.plagiat2;
 
 import lombok.AllArgsConstructor;
 import mikenikitin.plagiat2.model.Article;
+import mikenikitin.plagiat2.model.Wordbook;
 import mikenikitin.plagiat2.repository.ArticleRepository;
+import mikenikitin.plagiat2.repository.WordbookRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,6 +24,8 @@ public class Plagiat2Application implements CommandLineRunner{
 
 	ArticleRepository articleRepository;
 
+	WordbookRepository wordbookRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(Plagiat2Application.class, args);
 	}
@@ -35,18 +39,21 @@ public class Plagiat2Application implements CommandLineRunner{
         for(String line;(line=rd.readLine())!=null;) result.append(line); rd.close();
         Long wc=0L;
 
+        List<Wordbook> wordbook = new ArrayList<>();
         for (String w:result.toString().replaceAll("[^а-яёА-ЯЁ]"," ").split("\\s+")) // \\p{Alpha}
-            if (w.length()>2) System.out.print(++wc+":"+w.toLowerCase()+" ");
-        System.out.println("");
+            if (w.length()>2) wordbook.add(new Wordbook(w.toLowerCase()));
+//                System.out.print(++wc+":"+w.toLowerCase()+" ");
+//        System.out.println("");
+        wordbookRepository.saveAll(wordbook);
 
 //        a.setWc(wc); // System.out.println(wc);
         articleRepository.save(new Article(URLDecoder.decode(conn.getURL().toString(),"UTF-8"),wc));
 //        System.out.println("Article:"+ a);
 
-//        List<Article> articles = new ArrayList<>(); // articles.add(a);
-        List<Article> articles = articleRepository.findAll();
+//        List<Article> articles = articleRepository.findAll();
+//        System.out.println("ArticlesList:"+ articles);
+
 //        articleRepository.findAll().forEach((b) -> articles.add(b));
-        System.out.println("ArticlesList:"+ articles);
 //        for (Article article: articleRepository.findAll()) System.out.println(article);
 //        articleRepository.findAll().forEach((b) -> System.out.println(b));
 //        articleRepository.saveAll(articles);
