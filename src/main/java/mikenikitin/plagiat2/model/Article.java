@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.List;
 
 
 @Data
@@ -21,12 +22,15 @@ public class Article {
     Long id;
     String name;
     Long wc;
+//    List<String> words;
 
-    public Article(String name) {
+    public Article(String name, Long wc) {
         this.name = name;
-    }
-
-    public void setwc(Long wc){
         this.wc=wc;
     }
+
+//    public void setwords(List<String> words){
+//        this.words=words;
+//    }
+
 }

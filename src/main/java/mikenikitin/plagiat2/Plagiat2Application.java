@@ -34,20 +34,22 @@ public class Plagiat2Application implements CommandLineRunner{
         BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         for(String line;(line=rd.readLine())!=null;) result.append(line); rd.close();
         Long wc=0L;
-        /*
+
         for (String w:result.toString().replaceAll("[^а-яёА-ЯЁ]"," ").split("\\s+")) // \\p{Alpha}
             if (w.length()>2) System.out.print(++wc+":"+w.toLowerCase()+" ");
-        */
-        Article a = new Article(URLDecoder.decode(conn.getURL().toString(),"UTF-8"));
-        a.setwc(wc); // System.out.println(wc);
-        System.out.println("WordsList:"+ a);
+        System.out.println("");
 
-        List<Article> articles = new ArrayList<>();
-//        Iterable<Article> articles = articleRepository.findAll();
-//        articles.forEach((b) -> System.out.println(b));
-//		for (int i = 0; i <10 ; i++) articles.add(new Article("test"+i, i));
-        articles.add(a);
-        articleRepository.saveAll(articles);
-        System.out.println("WordsList:"+ articles);
+//        a.setWc(wc); // System.out.println(wc);
+        articleRepository.save(new Article(URLDecoder.decode(conn.getURL().toString(),"UTF-8"),wc));
+//        System.out.println("Article:"+ a);
+
+//        List<Article> articles = new ArrayList<>(); // articles.add(a);
+        List<Article> articles = articleRepository.findAll();
+//        articleRepository.findAll().forEach((b) -> articles.add(b));
+        System.out.println("ArticlesList:"+ articles);
+//        for (Article article: articleRepository.findAll()) System.out.println(article);
+//        articleRepository.findAll().forEach((b) -> System.out.println(b));
+//        articleRepository.saveAll(articles);
+
 	}
 }

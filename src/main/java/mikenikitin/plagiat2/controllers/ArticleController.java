@@ -21,7 +21,7 @@ public class ArticleController {
     }
 
     @RequestMapping("/")
-    private Iterable<Article> hello(){
+    private List<Article> listall(){
         return articleRepository.findAll();
     }
 }
