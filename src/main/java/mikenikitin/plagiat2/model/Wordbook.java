@@ -1,13 +1,13 @@
 package mikenikitin.plagiat2.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -15,8 +15,16 @@ import javax.persistence.Id;
 public class Wordbook {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-//    @JsonIgnore
-    Long id;
+    @JsonIgnore
+    @Column(name="WORDBOOK_ID")
+    private long id;
+
+//    @OneToMany // (mappedBy="article")
+//    @JoinColumn(name="WORD_ID", referencedColumnName="WORDBOOK_ID") // nullable = false
+//    private List<Text> text;
+
+//    @OneToMany // (mappedBy = "wordbook")
+//    private List<Text> texts;
 
 //    Long wc;
     String word;

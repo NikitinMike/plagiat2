@@ -51,7 +51,8 @@ public class MainController {
                 Wordbook wbr=wordbookRepository.findByWord(word.toLowerCase());
                 if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word.toLowerCase()));
                 // wordbook.add(new Wordbook(w.toLowerCase(),++wc));
-                text.add(new Text(art.getId(),wbr.getId(),++wc));
+                text.add(new Text(art,wbr,++wc));
+//                text.add(new Text(++wc));
             }
 //                System.out.print(++wc+":"+w.toLowerCase()+" ");
         System.out.println();
@@ -59,7 +60,7 @@ public class MainController {
         textRepository.saveAll(text);
 //        System.out.println("Words:"+ wordbook);
 
-        art.setWc(wc);
+//        art.setWc(wc);
         System.out.println(wc);
         articleRepository.save(art);
 

@@ -5,10 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.List;
 
 
@@ -18,20 +15,25 @@ import java.util.List;
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @JsonIgnore
-    Long id;
+    @Column(name="ARTICLE_ID")
+    private Long id;
+
     String name;
-    Long wc;
-//    List<String> words;
+//    Long wc;
+
+    @JsonIgnore
+    @OneToMany // (mappedBy="article")
+    @JoinColumn(name="TEXT_ID", referencedColumnName="ARTICLE_ID") // nullable = false
+    private List<Text> text;
 
     public Article(String name, Long wc) {
         this.name = name;
-        this.wc=wc;
+//        this.wc=wc;
     }
 
     public Article(String name) {
         this.name = name;
-        wc=0L;
+//        wc=0L;
     }
 
 //    public void setwords(List<String> words){

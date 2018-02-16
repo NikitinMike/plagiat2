@@ -1,13 +1,12 @@
 package mikenikitin.plagiat2.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -15,17 +14,29 @@ import javax.persistence.Id;
 public class Text {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @JsonIgnore
+    private Long id;
+
+    @JsonIgnore
+    private Long position;
+
+    @Column(name="TEXT_ID")
+    @JsonIgnore
+    private Long articleId;
+
+//    @Column(name="WORD_ID")
 //    @JsonIgnore
-    Long id;
+//    private Long wbId;
 
-    Long article_id;
-    Long word_id;
-    Long position;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="WORDBOOK_ID")
+    private Wordbook word;
 
-    public Text(Long article_id,Long word_id,Long position){
-        this.article_id=article_id;
-        this.word_id=word_id;
+    public Text(Article art, Wordbook word, Long position){
         this.position=position;
+        this.word=word;
+//        this.wbId=word.getId();
+        this.articleId=art.getId();
     }
 
 }
