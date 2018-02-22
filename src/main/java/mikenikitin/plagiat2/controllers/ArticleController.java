@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import mikenikitin.plagiat2.model.Article;
 import mikenikitin.plagiat2.model.Text;
 import mikenikitin.plagiat2.repository.ArticleRepository;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -15,14 +18,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@RestController
+@Controller
 @AllArgsConstructor
-@RequestMapping("article")
+@RequestMapping({"article","articles"})
 public class ArticleController {
 
     ArticleRepository articleRepository;
 
-    @RequestMapping("/{id}")
+    @RequestMapping("{id}")
+    @ResponseBody
     private List<String> article(@PathVariable Long id, HttpServletResponse response) throws IOException {
         if(articleRepository.findArticlesById(id)==null){response.sendRedirect("/article");return null;}
         List<String> list = new ArrayList<>(); // = null;
@@ -34,7 +38,14 @@ public class ArticleController {
         return list;
     }
 
+    @RequestMapping({"/index", "/"})
+    private String index(Model model) {
+        model.addAttribute("articles", articleRepository.findAll());
+        return "indexArticles";
+    }
+
     @RequestMapping
+    @ResponseBody
     private List<Article> listall(){
         return articleRepository.findAll();
     }

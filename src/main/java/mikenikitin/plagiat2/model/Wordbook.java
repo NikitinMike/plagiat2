@@ -3,6 +3,7 @@ package mikenikitin.plagiat2.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class Wordbook {
 //    private List<Text> texts;
 
 //    Long wc;
+    @Order
     String word;
 
     public Wordbook (String s){

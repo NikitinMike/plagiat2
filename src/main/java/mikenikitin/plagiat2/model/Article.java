@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,6 +19,7 @@ public class Article {
     @Column(name="ARTICLE_ID")
     private Long id;
 
+    @Order
     String name;
 //    Long wc;
 
