@@ -31,19 +31,18 @@ public class MainController {
 
     TextRepository textRepository;
 
-    //    @RequestMapping("/demo")
+    @RequestMapping("/demo")
     private String demo(
         @RequestParam(defaultValue = "http://www.stihi.ru/poems/list.html?topic=all") String url
     ) throws Exception {
-        String catalog = getPage("http://www.stihi.ru/poems/list.html?topic=all");
 //        String catalog = getPage("http://www.stihi.ru/poems/list.html?day=20&month=02&year=2018&topic=all");
 //        System.out.println(stihiStrip(getPage("http://www.stihi.ru/2016/10/28/1984")));
 //        return getLinks(catalog).toString();
-        return catalog;
+        return getPage(url);
     }
 
     @RequestMapping("/wiki")
-    private Article main() throws Exception {
+    private Article wikipedia() throws Exception {
 
         StringBuilder result = new StringBuilder();
         URL url = new URL("https://ru.wikipedia.org/wiki/%D0%A1%D0%BB%D1%83%D0%B6%D0%B5%D0%B1%D0%BD%D0%B0%D1%8F:%D0%A1%D0%BB%D1%83%D1%87%D0%B0%D0%B9%D0%BD%D0%B0%D1%8F_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0");
@@ -133,13 +132,45 @@ public class MainController {
         return result.toString();
     }
 
-    @RequestMapping("/stihi")
-    private String stihiStrip(@RequestParam String url) throws Exception { // <div class="copyright">
+    private String stihiStrip(String url) throws Exception { // <div class="copyright">
         Matcher m = Pattern.compile("<div class=\"text\">(.+?)</div>").matcher(getPage(url));
         if (m.find()) return Pattern.compile("&nbsp;|&quot;")
                 .matcher(Pattern.compile("<br>").matcher(m.group(1)).replaceAll("\n"))
                 .replaceAll(" ");
         return "";
+    }
+
+    @RequestMapping("/stihi")
+    private String stihi2(@RequestParam String url) throws Exception {
+
+        String stih=stihiStrip(url);
+
+        Article art=new Article(URLDecoder.decode(url,"UTF-8"));
+        articleRepository.save(art);
+
+        List<Text> text = new ArrayList<>();
+        Long wc=0L;
+        for (String word:stih.replaceAll("[^а-яёА-ЯЁ]"," ").split("\\s+")) // \\p{Alpha}
+            if (word.length()>0) {
+                Wordbook wbr=wordbookRepository.findByWord(word.toLowerCase());
+                if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word.toLowerCase()));
+                // wordbook.add(new Wordbook(w.toLowerCase(),++wc));
+                text.add(new Text(art,wbr,++wc));
+//                text.add(new Text(++wc));
+            }
+//      System.out.print(++wc+":"+w.toLowerCase()+" ");
+//        System.out.println();
+//        wordbookRepository.saveAll(wordbook);
+        textRepository.saveAll(text);
+//        System.out.println("Words:"+ wordbook);
+
+//        art.setWc(wc);
+        articleRepository.save(art);
+
+        System.out.println(url);
+        System.out.println(wc);
+
+        return stih;
     }
 
 }

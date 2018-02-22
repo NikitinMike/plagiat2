@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +23,8 @@ public class ArticleController {
     ArticleRepository articleRepository;
 
     @RequestMapping("/{id}")
-    private List<String> hello(@PathVariable Long id){
+    private List<String> article(@PathVariable Long id, HttpServletResponse response) throws IOException {
+        if(articleRepository.findArticlesById(id)==null){response.sendRedirect("/article");return null;}
         List<String> list = new ArrayList<>(); // = null;
         for (Text t:articleRepository.findArticlesById(id).getText()) list.add(t.getWord().getWord()); // System.out.print(t.getWord().getWord());
         // .forEach((b) -> System.out.println(b))

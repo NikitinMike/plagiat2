@@ -14,7 +14,7 @@ import java.util.List;
 public class Wordbook {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    @JsonIgnore
+//    @JsonIgnore
     @Column(name="WORDBOOK_ID")
     private long id;
 
