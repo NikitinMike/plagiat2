@@ -28,7 +28,7 @@ public class Wordbook {
 
 //    Long wc;
     @Order
-    String word;
+    private String word;
 
     public Wordbook (String s){
         word = s;
@@ -40,4 +40,7 @@ public class Wordbook {
 //        this.wc=wc;
     }
 
+    public String getWord() {
+        return word;
+    }
 }

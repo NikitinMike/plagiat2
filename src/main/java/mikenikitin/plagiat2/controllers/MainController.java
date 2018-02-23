@@ -25,11 +25,11 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 public class MainController {
 
-    ArticleRepository articleRepository;
+    private ArticleRepository articleRepository;
 
-    WordbookRepository wordbookRepository;
+    private WordbookRepository wordbookRepository;
 
-    TextRepository textRepository;
+    private TextRepository textRepository;
 
     @RequestMapping("/demo")
     private String demo(
@@ -105,18 +105,18 @@ public class MainController {
         List<String> ls=new ArrayList(),stihi=new ArrayList();
         while (m.find())
             if (!Pattern.compile(root).matcher(m.group(1)).find())
-                if (Pattern.compile("poemlink").matcher(m.group(1)).find())
-                    stihi.add(local+"/stihi?url=" +root+
-                            Pattern.compile("\"").matcher(
-                                    Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
-                            ).replaceAll("")
-                    );
-                else ls.add(local+"/?url=" +root+
-                        Pattern.compile("\"").matcher(
-                                Pattern.compile("&").matcher(
-                                        Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("") // authorlink
-                                ).replaceAll("%26") // "&amp;"
-                        ).replaceAll("")
+                if (Pattern.compile("poemlink").matcher(m.group(1)).find()) {
+                    String s= Pattern.compile("\"").matcher(
+                        Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
+                    ).replaceAll("");
+                    System.out.println(stihi2base(root+s));
+                    stihi.add(local+"/stih?url="+root+s);
+                } else ls.add(local+"/?url=" +root+
+                    Pattern.compile("\"").matcher(
+                        Pattern.compile("&").matcher(
+                            Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("") // authorlink
+                        ).replaceAll("%26") // "&amp;"
+                    ).replaceAll("")
                 );
         stihi.addAll(ls);
         return stihi;
@@ -140,13 +140,13 @@ public class MainController {
         return "";
     }
 
-    @RequestMapping("/stihi")
-    private String stihi2(@RequestParam String url) throws Exception {
-
-        String stih=stihiStrip(url);
+    private String stihi2base(String url) throws Exception {
 
         Article art=new Article(URLDecoder.decode(url,"UTF-8"));
-        articleRepository.save(art);
+        if (articleRepository.findArticlesByName(art.getName())==null) articleRepository.save(art);
+        else return "";
+
+        String stih=stihiStrip(url);
 
         List<Text> text = new ArrayList<>();
         Long wc=0L;
@@ -167,10 +167,17 @@ public class MainController {
 //        art.setWc(wc);
         articleRepository.save(art);
 
-        System.out.println(url);
+//        System.out.println(url);
         System.out.println(wc);
 
-        return stih;
+//        return stih;
+        return url;
+
+    }
+
+    @RequestMapping("/stih")
+    private String stih(@RequestParam String url) throws Exception {
+        return stihi2base(url);
     }
 
 }

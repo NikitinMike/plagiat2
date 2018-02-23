@@ -20,7 +20,7 @@ public class Article {
     private Long id;
 
     @Order
-    String name;
+    private String name;
 //    Long wc;
 
     @JsonIgnore
@@ -36,6 +36,18 @@ public class Article {
     public Article(String name) {
         this.name = name;
 //        wc=0L;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public List<Text> getText() {
+        return text;
     }
 
 //    public void setwords(List<String> words){

@@ -23,14 +23,15 @@ import java.util.stream.Stream;
 @RequestMapping({"article","articles"})
 public class ArticleController {
 
-    ArticleRepository articleRepository;
+    private ArticleRepository articleRepository;
 
     @RequestMapping("{id}")
     @ResponseBody
     private List<String> article(@PathVariable Long id, HttpServletResponse response) throws IOException {
         if(articleRepository.findArticlesById(id)==null){response.sendRedirect("/article");return null;}
         List<String> list = new ArrayList<>(); // = null;
-        for (Text t:articleRepository.findArticlesById(id).getText()) list.add(t.getWord().getWord()); // System.out.print(t.getWord().getWord());
+        for (Text t:articleRepository.findArticlesById(id).getText()) list.add(t.getWord().getWord());
+        // System.out.print(t.getWord().getWord());
         // .forEach((b) -> System.out.println(b))
 //        articleRepository.findArticlesById(id).getText().forEach((t)->System.out.print(t.getWord().getWord()+" "));
 //        articleRepository.findArticlesById(id).getText().map((t)->(t.getWord().getWord()));

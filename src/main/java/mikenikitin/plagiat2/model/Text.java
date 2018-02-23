@@ -39,4 +39,7 @@ public class Text {
         this.articleId=art.getId();
     }
 
+    public Wordbook getWord() {
+        return word;
+    }
 }
