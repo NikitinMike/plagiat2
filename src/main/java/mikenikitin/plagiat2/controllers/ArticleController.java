@@ -20,12 +20,12 @@ import java.util.stream.Stream;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping({"article","articles"})
+@RequestMapping({"article","/articles"})
 public class ArticleController {
 
     private ArticleRepository articleRepository;
 
-    @RequestMapping("{id}")
+//    @RequestMapping("{id}")
     @ResponseBody
     private List<String> article(@PathVariable Long id, HttpServletResponse response) throws IOException {
         if(articleRepository.findArticlesById(id)==null){response.sendRedirect("/article");return null;}
@@ -39,7 +39,16 @@ public class ArticleController {
         return list;
     }
 
-    @RequestMapping({"/index", "/"})
+    @RequestMapping("{id}")
+    private String article(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
+        if(articleRepository.findArticlesById(id)==null){response.sendRedirect("/article");return null;}
+        List<String> article = new ArrayList<>(); // = null;
+        for (Text t:articleRepository.findArticlesById(id).getText()) article.add(t.getWord().getWord());
+        model.addAttribute("article", article);
+        return "article";
+    }
+
+    @RequestMapping({"/index","/"})
     private String index(Model model) {
         model.addAttribute("articles", articleRepository.findAll());
         return "indexArticles";

@@ -21,7 +21,7 @@ public class Article {
 
     @Order
     private String name;
-//    Long wc;
+    private Long wc;
 
     @JsonIgnore
     @OneToMany // (mappedBy="article")
@@ -30,12 +30,12 @@ public class Article {
 
     public Article(String name, Long wc) {
         this.name = name;
-//        this.wc=wc;
+        this.wc=wc;
     }
 
     public Article(String name) {
         this.name = name;
-//        wc=0L;
+        wc=0L;
     }
 
     public String getName() {
@@ -48,6 +48,14 @@ public class Article {
 
     public List<Text> getText() {
         return text;
+    }
+
+    public Long getWc() {
+        return wc;
+    }
+
+    public void setWc(Long wc) {
+        this.wc = wc;
     }
 
 //    public void setwords(List<String> words){

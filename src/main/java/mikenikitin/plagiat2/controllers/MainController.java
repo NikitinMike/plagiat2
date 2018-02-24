@@ -102,24 +102,36 @@ public class MainController {
 //        if (year!=null&&month!=null&&day!=null) System.out.println(LocalDate.of(year,month,day));
         String root="http://www.stihi.ru",local="http://localhost:8080";
         Matcher m = Pattern.compile("<a href=(.+?)>").matcher(getPage(url));
-        List<String> ls=new ArrayList(),stihi=new ArrayList();
+        List<String> ls=new ArrayList(),poems=new ArrayList(),authors=new ArrayList();
         while (m.find())
             if (!Pattern.compile(root).matcher(m.group(1)).find())
                 if (Pattern.compile("poemlink").matcher(m.group(1)).find()) {
                     String s= Pattern.compile("\"").matcher(
                         Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
                     ).replaceAll("");
-                    System.out.println(stihi2base(root+s));
-                    stihi.add(local+"/stih?url="+root+s);
-                } else ls.add(local+"/?url=" +root+
-                    Pattern.compile("\"").matcher(
-                        Pattern.compile("&").matcher(
-                            Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("") // authorlink
-                        ).replaceAll("%26") // "&amp;"
-                    ).replaceAll("")
-                );
-        stihi.addAll(ls);
-        return stihi;
+                    stihi2base(root+s);
+                    System.out.println(root+s);
+                    poems.add(local+"/stih?url="+root+s);
+                } else {
+                    if (Pattern.compile("authorlink").matcher(m.group(1)).find()) // System.out.println(m.group(1));
+                        authors.add(local+"/?url=" +root+
+                            Pattern.compile("\"").matcher(
+                                Pattern.compile("&").matcher(
+                                    Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
+                                ).replaceAll("%26") // "&amp;"
+                            ).replaceAll("")
+                        );
+                    else ls.add(local+"/?url=" +root+
+                        Pattern.compile("\"").matcher(
+                            Pattern.compile("&").matcher(
+                                Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
+                            ).replaceAll("%26") // "&amp;"
+                        ).replaceAll("")
+                    );
+                }
+//        ls.addAll(stihi);
+        if (authors.isEmpty()) return ls;
+        return authors;
     }
 
     private String getPage(String s) throws Exception {
@@ -143,36 +155,28 @@ public class MainController {
     private String stihi2base(String url) throws Exception {
 
         Article art=new Article(URLDecoder.decode(url,"UTF-8"));
-        if (articleRepository.findArticlesByName(art.getName())==null) articleRepository.save(art);
-        else return "";
+        if (articleRepository.findArticlesByName(art.getName())!=null) return "";
+        articleRepository.save(art);
 
+//        System.out.println(url);
         String stih=stihiStrip(url);
 
-        List<Text> text = new ArrayList<>();
         Long wc=0L;
+        List<Text> text = new ArrayList<>();
         for (String word:stih.replaceAll("[^а-яёА-ЯЁ]"," ").split("\\s+")) // \\p{Alpha}
             if (word.length()>0) {
                 Wordbook wbr=wordbookRepository.findByWord(word.toLowerCase());
                 if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word.toLowerCase()));
-                // wordbook.add(new Wordbook(w.toLowerCase(),++wc));
                 text.add(new Text(art,wbr,++wc));
-//                text.add(new Text(++wc));
             }
-//      System.out.print(++wc+":"+w.toLowerCase()+" ");
-//        System.out.println();
-//        wordbookRepository.saveAll(wordbook);
         textRepository.saveAll(text);
-//        System.out.println("Words:"+ wordbook);
 
-//        art.setWc(wc);
+        System.out.println(wc);
+        art.setWc(wc);
         articleRepository.save(art);
 
-//        System.out.println(url);
-        System.out.println(wc);
-
-//        return stih;
-        return url;
-
+        return stih;
+//        return url;
     }
 
     @RequestMapping("/stih")
