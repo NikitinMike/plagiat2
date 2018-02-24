@@ -17,6 +17,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -99,9 +101,10 @@ public class MainController {
         System.out.println(url);
 //        System.out.printf(" %d-%d-%d ",year,month,day);
 //        if (year!=null&&month!=null&&day!=null) System.out.println(LocalDate.of(year,month,day));
-        String root="http://www.stihi.ru",local="http://localhost:8080";
+        String root="http://www.stihi.ru",localHost="http://localhost:8080";
         Matcher m = Pattern.compile("<a href=(.+?)>").matcher(getPage(url));
         List<String> ls=new ArrayList(),poems=new ArrayList(),authors=new ArrayList();
+        ls.add(localHost);
         while (m.find())
             if (!Pattern.compile(root).matcher(m.group(1)).find())
                 if (Pattern.compile("poemlink").matcher(m.group(1)).find()) {
@@ -110,17 +113,17 @@ public class MainController {
                     ).replaceAll("");
                     stihi2base(root+s);
                     System.out.println(root+s);
-                    poems.add(local+"/stih?url="+root+s);
+                    poems.add(localHost+"/stih?url="+root+s);
                 } else {
                     if (Pattern.compile("authorlink").matcher(m.group(1)).find()) // System.out.println(m.group(1));
-                        authors.add(local+"/?url=" +root+
+                        authors.add(localHost+"/?url=" +root+
                             Pattern.compile("\"").matcher(
                                 Pattern.compile("&").matcher(
                                     Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
                                 ).replaceAll("%26") // "&amp;"
                             ).replaceAll("")
                         );
-                    else ls.add(local+"/?url=" +root+
+                    else ls.add(localHost+"/?url=" +root+
                         Pattern.compile("\"").matcher(
                             Pattern.compile("&").matcher(
                                 Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
@@ -129,7 +132,12 @@ public class MainController {
                     );
                 }
 //        ls.addAll(stihi);
+
+//        if (!url.isEmpty());
+
         if (authors.isEmpty()) return ls;
+        authors.add(localHost);
+        Collections.reverse(authors);
         return authors;
     }
 
