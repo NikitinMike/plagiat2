@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static jdk.nashorn.internal.objects.NativeArray.reverse;
 
 @Controller
 @AllArgsConstructor
@@ -50,7 +53,9 @@ public class ArticleController {
 
     @RequestMapping({"/index","/"})
     private String index(Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
+        List<Article> articles = articleRepository.findAll();
+        Collections.reverse(articles);
+        model.addAttribute("articles", articles );
         return "indexArticles";
     }
 

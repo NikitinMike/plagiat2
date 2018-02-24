@@ -84,7 +84,6 @@ public class MainController {
 //        articleRepository.findAll().forEach((b) -> articles.add(b));
 
         return art;
-
     }
 
     @RequestMapping("/")
@@ -147,8 +146,8 @@ public class MainController {
     private String stihiStrip(String url) throws Exception { // <div class="copyright">
         Matcher m = Pattern.compile("<div class=\"text\">(.+?)</div>").matcher(getPage(url));
         if (m.find()) return Pattern.compile("&nbsp;|&quot;")
-                .matcher(Pattern.compile("<br>").matcher(m.group(1)).replaceAll("\n"))
-                .replaceAll(" ");
+            .matcher(Pattern.compile("<br>").matcher(m.group(1)).replaceAll("\n"))
+            .replaceAll(" ");
         return "";
     }
 
