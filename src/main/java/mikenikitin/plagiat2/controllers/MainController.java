@@ -91,7 +91,7 @@ public class MainController {
     }
 
     private final String root = "http://www.stihi.ru", localHost = "http://localhost:8080",
-            start = "http://www.stihi.ru/poems/list.html?topic=all";
+            href = "<a href=(.+?)>", start = "http://www.stihi.ru/poems/list.html?topic=all";
     //      "http://www.stihi.ru/poems/list.html?type=selected" //
 
 //    @RequestMapping("/{page}")
@@ -106,21 +106,56 @@ public class MainController {
     ) throws Exception {
 //        if (year!=null&&month!=null&&day!=null) System.out.println(LocalDate.of(year,month,day));
 //        System.out.println(path);
-        System.out.println(url);
-        List<String> ls = new ArrayList(); ls.add(localHost); ls.add(localHost+"/authors"); ls.add(localHost+"/poems");
-        Matcher m = Pattern.compile("<a href=(.+?)>").matcher(url.isEmpty()?getPage(start):getPage(url));
+//        System.out.println(url);
+//        return today(url);
+        return mainPage(url.isEmpty()?start:url);
+    }
+
+    private List<String> mainPage(String url) throws Exception {
+        List<String> ls = new ArrayList<>();
+        Matcher m = Pattern.compile(href).matcher(getPage(url));
+        String s;
         while (m.find())
-//            if (!Pattern.compile(root).matcher(m.group(1)).find())
             if (Pattern.compile("poems").matcher(m.group(1)).find())
-//                if (Pattern.compile("http|www|login|readers|rec|reg|req|cgi|bin|publish").matcher(m.group(1)).find())
-//                    System.out.println(m.group(1)); // ommend|rec_author|rec_writer
-//                else
-                ls.add(localHost + "/poems/?url=" + root + Pattern.compile("\"").matcher(
+                if (!Pattern.compile("start").matcher(m.group(1)).find())
+                    if (!ls.contains(s = localHost + "/poems/?url=" + root +
+                        Pattern.compile("\"").matcher(
+                            Pattern.compile(" class=\".+\"").matcher(
+                                m.group(1).replaceAll("&","%26")
+                            ).replaceFirst("")
+                        ).replaceAll(""))) ls.add(s);
+        Collections.sort(ls);
+        ls.add(localHost);
+        ls.add(localHost+"/authors");
+        ls.add(localHost+"/poems");
+        ls.add(localHost+"/today");
+        Collections.reverse(ls);
+        return ls;
+    }
+
+    @RequestMapping("/today")
+    private List<String> today(@RequestParam(defaultValue = "" ) String url) throws Exception
+    { // System.out.println(url);
+        return todayList(url.isEmpty()?start:url);
+    }
+
+    private List<String> todayList(String url) throws Exception {
+        System.out.println(url);
+        List<String> today = new ArrayList<>();
+        Matcher m = Pattern.compile(href).matcher(getPage(url));
+        while (m.find())
+            if (Pattern.compile("start").matcher(m.group(1)).find()) // System.out.println(m.group(1));
+                today.add(localHost + "/poems/?url=" + root + Pattern.compile("\"").matcher(
                     Pattern.compile("&").matcher(
                         Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
                     ).replaceAll("%26") // "&amp;"
                 ).replaceAll(""));
-        return ls;
+        today.add(localHost);
+        today.add(localHost+"/authors");
+        today.add(localHost+"/poems");
+        today.add(localHost+"/today");
+        Collections.reverse(today);
+        return today;
     }
 
     @RequestMapping("/poems")
@@ -137,8 +172,8 @@ public class MainController {
 
     private List<String> poems(String url) throws Exception {
         System.out.println(url);
-        Matcher m = Pattern.compile("<a href=(.+?)>").matcher(getPage(url));
-        List<String> poems = new ArrayList();
+        Matcher m = Pattern.compile(href).matcher(getPage(url));
+        List<String> poems = new ArrayList<>();
         while (m.find())
             if (Pattern.compile("poemlink").matcher(m.group(1)).find()) {
                 poems.add( // localHost + "/stih/?url=" +
@@ -165,8 +200,8 @@ public class MainController {
     }
 
     private List<String> authors(@RequestParam(defaultValue = "" ) String url) throws Exception {
-        Matcher m = Pattern.compile("<a href=(.+?)>").matcher(getPage(url));
-        List<String> authors = new ArrayList(); authors.add(localHost+"/authors"); authors.add(localHost);
+        Matcher m = Pattern.compile(href).matcher(getPage(url));
+        List<String> authors = new ArrayList<>(); authors.add(localHost+"/authors"); authors.add(localHost);
 //        String urls=Pattern.compile(root).matcher(url).replaceFirst("");
         System.out.println(url);
         while (m.find())
@@ -219,7 +254,7 @@ public class MainController {
         Long wc=0L;
         List<Text> text = new ArrayList<>();
         articleRepository.save(art);
-        List<String> nw=new ArrayList();
+        List<String> nw=new ArrayList<>();
         for (String word:words) // \\p{Alpha}
             if (word.length()>0) {
                 Wordbook wbr=wordbookRepository.findByWord(word.toLowerCase());
