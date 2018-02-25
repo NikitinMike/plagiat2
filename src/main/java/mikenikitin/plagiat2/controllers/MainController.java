@@ -107,7 +107,7 @@ public class MainController {
 //        if (year!=null&&month!=null&&day!=null) System.out.println(LocalDate.of(year,month,day));
 //        System.out.println(path);
         System.out.println(url);
-        List<String> ls = new ArrayList(); ls.add(localHost); ls.add(localHost+"/authors");
+        List<String> ls = new ArrayList(); ls.add(localHost); ls.add(localHost+"/authors"); ls.add(localHost+"/poems");
         Matcher m = Pattern.compile("<a href=(.+?)>").matcher(url.isEmpty()?getPage(start):getPage(url));
         while (m.find())
 //            if (!Pattern.compile(root).matcher(m.group(1)).find())
@@ -124,8 +124,15 @@ public class MainController {
     }
 
     @RequestMapping("/poems")
-    private List<String> mainPoems(@RequestParam(defaultValue = start ) String url) throws Exception {
-        return poems(url.isEmpty()?start:url);
+    private List<String> mainPoems(@RequestParam(defaultValue = "" ) String url) throws Exception {
+        List<String> poems=poems(url.isEmpty()?start:url);
+        Integer c=poems.size()-2;
+        System.out.println("POEMS TO GO: "+c);
+//        if (url.isEmpty())
+        for (String p:poems) System.out.println(--c+":"+!stih2base(p).isEmpty());
+        poems.add(localHost+"/poems");
+        Collections.reverse(poems);
+        return poems;
     }
 
     private List<String> poems(String url) throws Exception {
@@ -174,7 +181,6 @@ public class MainController {
                         ).replaceAll("")
                     );
                 else System.out.println(m.group(1));
-//        Collections.reverse(authors);
         return authors;
     }
 
@@ -213,16 +219,19 @@ public class MainController {
         Long wc=0L;
         List<Text> text = new ArrayList<>();
         articleRepository.save(art);
+        List<String> nw=new ArrayList();
         for (String word:words) // \\p{Alpha}
             if (word.length()>0) {
                 Wordbook wbr=wordbookRepository.findByWord(word.toLowerCase());
                 if (wbr == null) System.out.print(".");
+                if (wbr == null) nw.add(word.toLowerCase());
                 if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word.toLowerCase()));
                 text.add(new Text(art,wbr,++wc));
             }
         textRepository.saveAll(text);
 
         System.out.println(" WC:"+wc);
+        System.out.println(nw);
         art.setWc(wc);
         articleRepository.save(art);
 
