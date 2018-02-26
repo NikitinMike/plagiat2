@@ -1,16 +1,16 @@
 package mikenikitin.plagiat2.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
 import java.util.List;
 
 
-@Data
+@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 public class Article {
@@ -20,21 +20,35 @@ public class Article {
     private Long id;
 
     @Order
-    private String name;
+    private String name; // link to article
     private Long wc;
+    private Long rating; // good=0 >> poor=9999
 
     @JsonIgnore
     @OneToMany // (mappedBy="article")
     @JoinColumn(name="TEXT_ID", referencedColumnName="ARTICLE_ID") // nullable = false
     private List<Text> text;
 
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="AUTHOR_ID")
+    private Author author;
+
     public Article(String name, Long wc) {
         this.name = name;
         this.wc=wc;
+        this.rating=0L;
     }
 
     public Article(String name) {
         this.name = name;
+        this.rating=0L;
+        wc=0L;
+    }
+
+    public Article(String name,Author author) {
+        this.name = name;
+        this.author = author;
+        this.rating=0L;
         wc=0L;
     }
 
@@ -42,9 +56,7 @@ public class Article {
         return name;
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() {return id;}
 
     public List<Text> getText() {
         return text;
@@ -56,6 +68,10 @@ public class Article {
 
     public void setWc(Long wc) {
         this.wc = wc;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
 //    public void setwords(List<String> words){

@@ -2,9 +2,11 @@ package mikenikitin.plagiat2.controllers;
 
 import lombok.AllArgsConstructor;
 import mikenikitin.plagiat2.model.Article;
+import mikenikitin.plagiat2.model.Author;
 import mikenikitin.plagiat2.model.Text;
 import mikenikitin.plagiat2.model.Wordbook;
 import mikenikitin.plagiat2.repository.ArticleRepository;
+import mikenikitin.plagiat2.repository.AuthorRepository;
 import mikenikitin.plagiat2.repository.TextRepository;
 import mikenikitin.plagiat2.repository.WordbookRepository;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,12 +30,17 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 public class MainController {
 
+    private final String root = "http://www.stihi.ru", localHost = "http://localhost:8080",
+            href = "<a href=(.+?)>", start = "http://www.stihi.ru/poems/list.html?topic=all";
+    //      "http://www.stihi.ru/poems/list.html?type=selected" //
+
     private ArticleRepository articleRepository;
 
     private WordbookRepository wordbookRepository;
 
     private TextRepository textRepository;
 
+    private AuthorRepository authorRepository;
 
     @RequestMapping("/demo")
     private String demo(
@@ -90,10 +97,6 @@ public class MainController {
         return art;
     }
 
-    private final String root = "http://www.stihi.ru", localHost = "http://localhost:8080",
-            href = "<a href=(.+?)>", start = "http://www.stihi.ru/poems/list.html?topic=all";
-    //      "http://www.stihi.ru/poems/list.html?type=selected" //
-
 //    @RequestMapping("/{page}")
     @RequestMapping("/")
     private List<String> mainCatalog(
@@ -126,7 +129,7 @@ public class MainController {
                         ).replaceAll(""))) ls.add(s);
         Collections.sort(ls);
         ls.add(localHost);
-        ls.add(localHost+"/authors");
+        ls.add(localHost+"/avtor");
         ls.add(localHost+"/poems");
         ls.add(localHost+"/today");
         Collections.reverse(ls);
@@ -151,7 +154,7 @@ public class MainController {
                     ).replaceAll("%26") // "&amp;"
                 ).replaceAll(""));
         today.add(localHost);
-        today.add(localHost+"/authors");
+        today.add(localHost+"/avtor");
         today.add(localHost+"/poems");
         today.add(localHost+"/today");
         Collections.reverse(today);
@@ -183,11 +186,11 @@ public class MainController {
                 );
             }
         poems.add(localHost);
-        poems.add(localHost+"/authors");
+        poems.add(localHost+"/avtor");
         return poems;
     }
 
-    @RequestMapping("/authors")
+    @RequestMapping("/avtor")
     private List<String> mainAuthors(@RequestParam(defaultValue = "" ) String url) throws Exception {
         List<String> a=authors(url.isEmpty()?start:url);
         if (url.isEmpty()) return a;
@@ -201,21 +204,21 @@ public class MainController {
 
     private List<String> authors(@RequestParam(defaultValue = "" ) String url) throws Exception {
         Matcher m = Pattern.compile(href).matcher(getPage(url));
-        List<String> authors = new ArrayList<>(); authors.add(localHost+"/authors"); authors.add(localHost);
+        List<String> authors = new ArrayList<>(); authors.add(localHost+"/avtor"); authors.add(localHost);
 //        String urls=Pattern.compile(root).matcher(url).replaceFirst("");
-        System.out.println(url);
+//        System.out.println(url);
         while (m.find())
             if (!Pattern.compile("recomlink").matcher(m.group(1)).find())
                 if (Pattern.compile("avtor").matcher(m.group(1)).find())
             // && Pattern.compile("authorlink").matcher(m.group(1)).find()
-                    authors.add(localHost + "/authors/?url=" + root +
+                    authors.add(localHost + "/avtor/?url=" + root +
                         Pattern.compile("\"").matcher(
                             Pattern.compile("&").matcher(
                                 Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
                             ).replaceAll("%26") // "&amp;"
                         ).replaceAll("")
                     );
-                else System.out.println(m.group(1));
+//                else System.out.println(m.group(1));
         return authors;
     }
 
@@ -229,23 +232,40 @@ public class MainController {
         return result.toString();
     }
 
-    private String stripStih(String url) throws Exception { // <div class="copyright">
-        Matcher m = Pattern.compile("<div class=\"text\">(.+?)</div>").matcher(getPage(url));
+    private String stripStih(String stih) throws Exception { // <div class="copyright">
+//        System.out.println(stih);
+        Matcher m = Pattern.compile("<div class=\"text\">(.+?)</div>").matcher(stih);
         if (!m.find()) return "";
-        return Pattern.compile("&nbsp;|&quot;")
-            .matcher(Pattern.compile("<br>").matcher(m.group(1)).replaceAll("\n"))
-            .replaceAll(" ");
+//        System.out.println(m.group(1));
+        return Pattern.compile("&nbsp;|&quot;").matcher(m.group(1).replaceAll("<br>","\n")).replaceAll(" ");
     }
 
     private String stih2base(String url) throws Exception {
 
+//        System.out.println(url);
+        String stih=getPage(url);
+
+//      "<h1>title-name</h1>"
+//        Matcher m = Pattern.compile("<div class=\"title-author\">(.+?)</div>").matcher(stih);
+//        if (!m.find()) return localHost;
+
+        Matcher am = Pattern.compile("<a href=\"(.+?)\">(.+?)</a>").matcher(stih);
+        String authorName=am.find()?root+am.group(1):localHost;
+        String realName=am.find()?am.group(2):localHost;
+
+        stih=stripStih(stih);
+        if(stih.isEmpty())return "";
+
+        String[] words=stih.replaceAll("[^а-яёА-ЯЁ]"," ").split("\\s+");
+        if(words.length>999||words.length<9) return "";
+
         Article art=new Article(URLDecoder.decode(url,"UTF-8"));
         if (articleRepository.findArticlesByName(art.getName())!=null) return "";
 
-        String stih=stripStih(url);
-        if(stih.isEmpty())return "";
-        String[] words=stih.replaceAll("[^а-яёА-ЯЁ]"," ").split("\\s+");
-        if(words.length>999||words.length<9) return "";
+        Author author=authorRepository.findByName(authorName);
+        if (author==null) authorRepository.save(author=new Author(authorName,realName));
+
+        art.setAuthor(author);
 
         System.out.println(url);
         System.out.print(" length:"+stih.length());
@@ -254,7 +274,8 @@ public class MainController {
         Long wc=0L;
         List<Text> text = new ArrayList<>();
         articleRepository.save(art);
-        List<String> nw=new ArrayList<>();
+
+        List<String> nw=new ArrayList<>(); // new words in wordbook
         for (String word:words) // \\p{Alpha}
             if (word.length()>0) {
                 Wordbook wbr=wordbookRepository.findByWord(word.toLowerCase());

@@ -17,7 +17,7 @@ public class Wordbook {
     @GeneratedValue(strategy = GenerationType.TABLE)
 //    @JsonIgnore
     @Column(name="WORDBOOK_ID")
-    private long id;
+    private Long id;
 
 //    @OneToMany // (mappedBy="article")
 //    @JoinColumn(name="WORD_ID", referencedColumnName="WORDBOOK_ID") // nullable = false
@@ -29,14 +29,18 @@ public class Wordbook {
 //    Long wc;
     @Order
     private String word;
+//    @Order
+    private Long ugly;
 
     public Wordbook (String s){
         word = s;
+        ugly=0L;
 //        wc=0L;
     }
 
     public Wordbook (String s,Long wc){
         word = s;
+        ugly=0L;
 //        this.wc=wc;
     }
 

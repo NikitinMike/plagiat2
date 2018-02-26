@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
@@ -26,7 +28,9 @@ public class WordbookController {
 
     @RequestMapping({"/index", "/"})
     private String index(Model model) {
-        model.addAttribute("wordbook", wordbookRepository.findAll());
+        List<Wordbook> wb=wordbookRepository.findAll();
+        Collections.reverse(wb);
+        model.addAttribute("wordbook", wb);
         return "indexWordBook";
     }
 }
