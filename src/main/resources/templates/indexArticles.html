@@ -13,12 +13,14 @@
             <th>ARTICLE</th>
             <th>WC</th>
             <th>Author</th>
+            <th>Title</th>
         </tr>
         <tr th:each ="article : ${articles}">
             <td> <a th:text="${article.id}" th:href="@{'/article/' + ${article.id}}"></a> </td>
-            <td> <a th:text="${article.name}" th:href="@{${article.name}}"></a> </td>
+            <td> <a th:text="${article.name.substring(20)}" th:href="@{${article.name}}"></a> </td>
             <td th:text="${article.wc}" > </td>
             <td th:text="${article.author.realname}" > </td>
+            <td th:text="${article.title}" > </td>
         </tr>
     </table>
 </div>

@@ -21,6 +21,7 @@ public class Article {
 
     @Order
     private String name; // link to article
+    private String title;
     private Long wc;
     private Long rating; // good=0 >> poor=9999
 

@@ -132,6 +132,7 @@ public class MainController {
         ls.add(localHost+"/avtor");
         ls.add(localHost+"/poems");
         ls.add(localHost+"/today");
+        ls.add(localHost+"/articles/");
         Collections.reverse(ls);
         return ls;
     }
@@ -157,6 +158,7 @@ public class MainController {
         today.add(localHost+"/avtor");
         today.add(localHost+"/poems");
         today.add(localHost+"/today");
+        today.add(localHost+"/articles/");
         Collections.reverse(today);
         return today;
     }
@@ -245,9 +247,9 @@ public class MainController {
 //        System.out.println(url);
         String stih=getPage(url);
 
-//      "<h1>title-name</h1>"
-//        Matcher m = Pattern.compile("<div class=\"title-author\">(.+?)</div>").matcher(stih);
-//        if (!m.find()) return localHost;
+        String title=localHost;
+        Matcher tm = Pattern.compile("<h1>(.+?)</h1>").matcher(stih);
+        if (tm.find()) title=tm.group(1);
 
         Matcher am = Pattern.compile("<a href=\"(.+?)\">(.+?)</a>").matcher(stih);
         String authorName=am.find()?root+am.group(1):localHost;
@@ -266,6 +268,7 @@ public class MainController {
         if (author==null) authorRepository.save(author=new Author(authorName,realName));
 
         art.setAuthor(author);
+        art.setTitle(title);
 
         System.out.println(url);
         System.out.print(" length:"+stih.length());

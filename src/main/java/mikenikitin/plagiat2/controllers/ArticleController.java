@@ -23,7 +23,7 @@ import static jdk.nashorn.internal.objects.NativeArray.reverse;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping({"article","/articles"})
+@RequestMapping({"article","articles"})
 public class ArticleController {
 
     private ArticleRepository articleRepository;
@@ -51,7 +51,7 @@ public class ArticleController {
         return "article";
     }
 
-    @RequestMapping({"/index","/"})
+    @RequestMapping("/")
     private String index(Model model) {
         List<Article> articles = articleRepository.findAll();
         Collections.reverse(articles);
