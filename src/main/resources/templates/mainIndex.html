@@ -1,36 +1,25 @@
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
-    <title>Authors</title>
+    <title>MAIN PAGE</title>
 </head>
-
 <body>
-
-<h3>
+    <h3>
     <a href="http://localhost:8080"> home </a>
     <a href="http://localhost:8080/avtor"> avtor </a>
     <a href="http://localhost:8080/poems"> poems </a>
     <a href="http://localhost:8080/today"> today </a>
     <a href="http://localhost:8080/articles/"> articles </a>
-</h3>
-
+    </h3>
     <table border="0">
         <tr>
-            <th>ID</th>
-            <th>Author</th>
-            <th>RealName</th>
+            <th>ARTICLE</th>
         </tr>
-        <tr th:each ="author : ${authors}">
-            <td> <a th:text="${author.id}" th:href="@{'/article/' + ${author.id}}"></a> </td>
-            <td> <a th:text="${author.name}" th:href="@{${author.name}}"></a> </td>
-            <td th:text="${author.realname}" > </td>
+        <tr th:each ="item : ${list}">
+            <td> <a th:text="${item.substring(86)}" th:href="@{${item}}"></a> </td>
         </tr>
     </table>
-
-<a href="/authors/"> back </a>
 </body>
-
 </html>

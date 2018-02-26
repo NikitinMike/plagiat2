@@ -9,10 +9,9 @@ import mikenikitin.plagiat2.repository.ArticleRepository;
 import mikenikitin.plagiat2.repository.AuthorRepository;
 import mikenikitin.plagiat2.repository.TextRepository;
 import mikenikitin.plagiat2.repository.WordbookRepository;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -26,7 +25,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@RestController
+@Controller
 @AllArgsConstructor
 public class MainController {
 
@@ -99,7 +98,7 @@ public class MainController {
 
 //    @RequestMapping("/{page}")
     @RequestMapping("/")
-    private List<String> mainCatalog(
+    private String mainCatalog( Model model,
 //        @PathVariable String page,
 //        @RequestParam(required=false) Integer year,
 //        @RequestParam(required=false) Integer month,
@@ -108,10 +107,8 @@ public class MainController {
         @RequestParam(defaultValue = "" ) String url
     ) throws Exception {
 //        if (year!=null&&month!=null&&day!=null) System.out.println(LocalDate.of(year,month,day));
-//        System.out.println(path);
-//        System.out.println(url);
-//        return today(url);
-        return mainPage(url.isEmpty()?start:url);
+        model.addAttribute("list", mainPage(url.isEmpty()?start:url) );
+        return "mainIndex";
     }
 
     private List<String> mainPage(String url) throws Exception {
@@ -119,28 +116,24 @@ public class MainController {
         Matcher m = Pattern.compile(href).matcher(getPage(url));
         String s;
         while (m.find())
-            if (Pattern.compile("poems").matcher(m.group(1)).find())
-                if (!Pattern.compile("start").matcher(m.group(1)).find())
-                    if (!ls.contains(s = localHost + "/poems/?url=" + root +
-                        Pattern.compile("\"").matcher(
-                            Pattern.compile(" class=\".+\"").matcher(
-                                m.group(1).replaceAll("&","%26")
-                            ).replaceFirst("")
-                        ).replaceAll(""))) ls.add(s);
+//          if (Pattern.compile("poems").matcher(m.group(1)).find())
+            if (Pattern.compile("month").matcher(m.group(1)).find())
+                if (!ls.contains(s = localHost + "/poems/?url=" + root +
+                    Pattern.compile("\"").matcher(
+                        Pattern.compile(" class=\".+\"").matcher(
+                            m.group(1).replaceAll("&","%26")
+                        ).replaceFirst("")
+                    ).replaceAll(""))) ls.add(s);
         Collections.sort(ls);
-        ls.add(localHost);
-        ls.add(localHost+"/avtor");
-        ls.add(localHost+"/poems");
-        ls.add(localHost+"/today");
-        ls.add(localHost+"/articles/");
         Collections.reverse(ls);
         return ls;
     }
 
     @RequestMapping("/today")
-    private List<String> today(@RequestParam(defaultValue = "" ) String url) throws Exception
+    private String today(@RequestParam(defaultValue = "" ) String url,Model model) throws Exception
     { // System.out.println(url);
-        return todayList(url.isEmpty()?start:url);
+        model.addAttribute("list", todayList(url.isEmpty()?start:url) );
+        return "todayIndex";
     }
 
     private List<String> todayList(String url) throws Exception {
@@ -154,25 +147,25 @@ public class MainController {
                         Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
                     ).replaceAll("%26") // "&amp;"
                 ).replaceAll(""));
-        today.add(localHost);
-        today.add(localHost+"/avtor");
-        today.add(localHost+"/poems");
-        today.add(localHost+"/today");
-        today.add(localHost+"/articles/");
         Collections.reverse(today);
         return today;
     }
 
     @RequestMapping("/poems")
-    private List<String> mainPoems(@RequestParam(defaultValue = "" ) String url) throws Exception {
+    private String mainPoems(@RequestParam(defaultValue = "" ) String url,Model model) throws Exception {
         List<String> poems=poems(url.isEmpty()?start:url);
-        Integer c=poems.size()-2;
+//        poems=poems.subList(1,2);
+        Integer c=poems.size();
         System.out.println("POEMS TO GO: "+c);
 //        if (url.isEmpty())
         for (String p:poems) System.out.println(--c+":"+!stih2base(p).isEmpty());
-        poems.add(localHost+"/poems");
-        Collections.reverse(poems);
-        return poems;
+//        poems.add(localHost);
+//        poems.add(localHost+"/avtor");
+//        poems.add(localHost+"/poems");
+//        poems.add(localHost+"/today");
+//        Collections.reverse(poems);
+        model.addAttribute("list", poems);
+        return "poems";
     }
 
     private List<String> poems(String url) throws Exception {
@@ -187,26 +180,28 @@ public class MainController {
                     ).replaceAll("")
                 );
             }
-        poems.add(localHost);
-        poems.add(localHost+"/avtor");
         return poems;
     }
 
     @RequestMapping("/avtor")
-    private List<String> mainAuthors(@RequestParam(defaultValue = "" ) String url) throws Exception {
+    @ResponseBody
+    private String mainAuthors(@RequestParam(defaultValue = "" ) String url,Model model) throws Exception {
         List<String> a=authors(url.isEmpty()?start:url);
-        if (url.isEmpty()) return a;
+        model.addAttribute("list", a);
+        if (url.isEmpty()) return "avtors";
         List<String> poems=poems(url);
-        Integer c=poems.size()-2;
+        Integer c=poems.size();
         System.out.println("POEMS TO GO: "+c);
         for (String p:poems) System.out.println(--c+":"+!stih2base(p).isEmpty());
         a.addAll(poems);
-        return a;
+        model.addAttribute("list", a);
+        return "avtors";
     }
 
     private List<String> authors(@RequestParam(defaultValue = "" ) String url) throws Exception {
         Matcher m = Pattern.compile(href).matcher(getPage(url));
-        List<String> authors = new ArrayList<>(); authors.add(localHost+"/avtor"); authors.add(localHost);
+        List<String> authors = new ArrayList<>();
+//        authors.add(localHost+"/avtor"); authors.add(localHost);
 //        String urls=Pattern.compile(root).matcher(url).replaceFirst("");
 //        System.out.println(url);
         while (m.find())
@@ -299,6 +294,7 @@ public class MainController {
     }
 
     @RequestMapping("/stih")
+    @ResponseBody
     private String stih(@RequestParam String url) throws Exception {
         return stih2base(url);
     }

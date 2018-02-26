@@ -3,19 +3,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Russian Article</title>
+    <title>MAIN PAGE</title>
 </head>
 <body>
-
-<h3>
+    <h3>
     <a href="http://localhost:8080"> home </a>
     <a href="http://localhost:8080/avtor"> avtor </a>
     <a href="http://localhost:8080/poems"> poems </a>
     <a href="http://localhost:8080/today"> today </a>
     <a href="http://localhost:8080/articles/"> articles </a>
-</h3>
-
-<p th:text="${article}" > </p>
+    </h3>
+    <span th:each ="item : ${list}">
+        <a th:text="${item.substring(31)}" th:href="@{${item}}"></a>
+    </span>
 </body>
-<a href="/articles/"> back </a>
 </html>
