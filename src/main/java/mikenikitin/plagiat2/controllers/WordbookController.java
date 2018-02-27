@@ -31,6 +31,6 @@ public class WordbookController {
         List<Wordbook> wb=wordbookRepository.findAll();
         Collections.reverse(wb);
         model.addAttribute("wordbook", wb);
-        return "indexWordBook";
+        return "WordBook";
     }
 }

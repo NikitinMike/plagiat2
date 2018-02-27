@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>AVTOR</title>
+    <title>WordBook</title>
 </head>
+
 <body>
+
 <div th:include="header::header"> HEADER </div>
-<div th:each ="item : ${list}">
-    <a th:text="${item.substring(59)}" th:href="@{${item}}"></a>
+<div>
+    <a th:each ="word : ${wordbook}">
+         [<a th:text="${word.word}"></a>:<a th:text="${word.id}"></a>]
+    </a>
 </div>
 <div th:replace="footer::footer"> FOOTER </div>
+
 </body>
+
 </html>
