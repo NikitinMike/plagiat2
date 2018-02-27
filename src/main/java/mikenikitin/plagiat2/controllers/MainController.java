@@ -180,7 +180,7 @@ public class MainController {
     }
 
     @RequestMapping("/avtor")
-    @ResponseBody
+//    @ResponseBody
     private String mainAuthors(@RequestParam(defaultValue = "" ) String url,Model model) throws Exception {
         List<String> a=authors(url.isEmpty()?start:url);
         model.addAttribute("list", a);

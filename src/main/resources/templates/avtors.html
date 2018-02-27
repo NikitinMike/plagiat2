@@ -5,15 +5,10 @@
     <title>MAIN PAGE</title>
 </head>
 <body>
-    <h3>
-    <a href="http://localhost:8080"> home </a>
-    <a href="http://localhost:8080/avtor"> avtor </a>
-    <a href="http://localhost:8080/poems"> poems </a>
-    <a href="http://localhost:8080/today"> today </a>
-    <a href="http://localhost:8080/articles/"> articles </a>
-    </h3>
-    <div th:each ="item : ${list}">
-        <a th:text="${item.substring(59)}" th:href="@{${item}}"></a>
-    </div>
+<div th:include="header::header"> HEADER </div>
+<div th:each ="item : ${list}">
+    <a th:text="${item.substring(59)}" th:href="@{${item}}"></a>
+</div>
+<div th:replace="footer::footer"> FOOTER </div>
 </body>
 </html>

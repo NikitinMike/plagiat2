@@ -9,28 +9,24 @@
 
 <body>
 
-<h3>
-    <a href="http://localhost:8080"> home </a>
-    <a href="http://localhost:8080/avtor"> avtor </a>
-    <a href="http://localhost:8080/poems"> poems </a>
-    <a href="http://localhost:8080/today"> today </a>
-    <a href="http://localhost:8080/articles/"> articles </a>
-</h3>
+<div th:include="header::header"> HEADER </div>
 
-    <table border="0">
-        <tr>
-            <th>ID</th>
-            <th>Author</th>
-            <th>RealName</th>
-        </tr>
-        <tr th:each ="author : ${authors}">
-            <td> <a th:text="${author.id}" th:href="@{'/article/' + ${author.id}}"></a> </td>
-            <td> <a th:text="${author.name}" th:href="@{${author.name}}"></a> </td>
-            <td th:text="${author.realname}" > </td>
-        </tr>
-    </table>
+<table border="0">
+    <tr>
+        <th>ID</th>
+        <th>Author</th>
+        <th>RealName</th>
+    </tr>
+    <tr th:each ="author : ${authors}">
+        <td> <a th:text="${author.id}" th:href="@{'/article/' + ${author.id}}"></a> </td>
+        <td> <a th:text="${author.name}" th:href="@{${author.name}}"></a> </td>
+        <td th:text="${author.realname}" > </td>
+    </tr>
+</table>
 
 <a href="/authors/"> back </a>
+<div th:replace="footer::footer"> FOOTER </div>
+
 </body>
 
 </html>

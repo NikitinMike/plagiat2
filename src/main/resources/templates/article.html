@@ -7,10 +7,12 @@
     </head>
     <body>
 
-    <div th:replace="header::header">...</div>
+    <div th:include="header::header"> HEADER </div>
 
     <p th:text="${article}" > </p>
     <a href="/articles/"> back </a>
+
+    <div th:replace="footer::footer"> FOOTER </div>
 
     </body>
 
