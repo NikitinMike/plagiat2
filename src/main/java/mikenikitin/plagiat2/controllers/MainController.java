@@ -14,7 +14,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -31,7 +33,8 @@ public class MainController {
 
     private final String root = "http://www.stihi.ru", localHost = "http://localhost:8080",
             href = "<a href=(.+?)>", start = "http://www.stihi.ru/poems/list.html?topic=all";
-    //      "http://www.stihi.ru/poems/list.html?type=selected" //
+    //"http://www.stihi.ru/poems/list.html?type=selected" //
+    //"http://www.stihi.ru/poems/list.html?topic=all"
 
     private ArticleRepository articleRepository;
 
@@ -41,77 +44,13 @@ public class MainController {
 
     private AuthorRepository authorRepository;
 
-    @RequestMapping("/demo")
-    private String demo(
-        @RequestParam(defaultValue = "http://www.stihi.ru/poems/list.html?topic=all") String url
-    ) throws Exception {
-//        String catalog = getPage("http://www.stihi.ru/poems/list.html?day=20&month=02&year=2018&topic=all");
-//        System.out.println(stihiStrip(getPage("http://www.stihi.ru/2016/10/28/1984")));
-//        return getLinks(catalog).toString();
-        return getPage(url);
-    }
-
-    @RequestMapping("/wiki")
-    private Article wikipedia() throws Exception {
-
-        StringBuilder result = new StringBuilder();
-        URL url = new URL("https://ru.wikipedia.org/wiki/%D0%A1%D0%BB%D1%83%D0%B6%D0%B5%D0%B1%D0%BD%D0%B0%D1%8F:%D0%A1%D0%BB%D1%83%D1%87%D0%B0%D0%B9%D0%BD%D0%B0%D1%8F_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0");
-
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        for(String line;(line=rd.readLine())!=null;) result.append(line); rd.close();
-
-        Article art=new Article(URLDecoder.decode(conn.getURL().toString(),"UTF-8"));
-        articleRepository.save(art);
-
-//        List<Wordbook> wordbook = new ArrayList<>();
-//        wordbook=wordbookRepository.findAll();
-//        System.out.println("WordBook:"+wordbook);
-
-        List<Text> text = new ArrayList<>();
-        Long wc=0L;
-        for (String word:result.toString().replaceAll("[^а-яёА-ЯЁ]"," ").split("\\s+")) // \\p{Alpha}
-            if (word.length()>2) {
-                Wordbook wbr=wordbookRepository.findByWord(word.toLowerCase());
-                if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word.toLowerCase()));
-                // wordbook.add(new Wordbook(w.toLowerCase(),++wc));
-                text.add(new Text(art,wbr,++wc));
-//                text.add(new Text(++wc));
-            }
-//                System.out.print(++wc+":"+w.toLowerCase()+" ");
-        System.out.println();
-//        wordbookRepository.saveAll(wordbook);
-        textRepository.saveAll(text);
-//        System.out.println("Words:"+ wordbook);
-
-//        art.setWc(wc);
-        System.out.println(wc);
-        articleRepository.save(art);
-
-//        System.out.println("ArticlesList:"+ articleRepository.findAll());
-//        for (Article article: articleRepository.findAll()) System.out.println(article);
-//        articleRepository.findAll().forEach((b) -> System.out.println(b));
-//        articleRepository.findAll().forEach((b) -> articles.add(b));
-
-        return art;
-    }
-
-//    @RequestMapping("/{page}")
     @RequestMapping("/")
-    private String mainCatalog( Model model,
-//        @PathVariable String page,
-//        @RequestParam(required=false) Integer year,
-//        @RequestParam(required=false) Integer month,
-//        @RequestParam(required=false) Integer day
-//        System.out.printf(" %d-%d-%d ",year,month,day);
-        @RequestParam(defaultValue = "" ) String url
-    ) throws Exception {
-//        if (year!=null&&month!=null&&day!=null) System.out.println(LocalDate.of(year,month,day));
-        model.addAttribute("list", mainPage(url.isEmpty()?start:url) );
+    private String mainCatalog(Model model, @RequestParam(defaultValue=start) String url) {
+        model.addAttribute("list", mainPage(url));
         return "mainIndex";
     }
 
-    private List<String> mainPage(String url) throws Exception {
+    private List<String> mainPage(String url) {
         List<String> ls = new ArrayList<>();
         Matcher m = Pattern.compile(href).matcher(getPage(url));
         String s;
@@ -130,13 +69,12 @@ public class MainController {
     }
 
     @RequestMapping("/today")
-    private String today(@RequestParam(defaultValue = "" ) String url,Model model) throws Exception
-    { // System.out.println(url);
-        model.addAttribute("list", todayList(url.isEmpty()?start:url) );
+    private String today(@RequestParam(defaultValue=start) String url, Model model) {
+        model.addAttribute("list", todayList(url));
         return "todayIndex";
     }
 
-    private List<String> todayList(String url) throws Exception {
+    private List<String> todayList(String url){
         System.out.println(url);
         List<String> today = new ArrayList<>();
         Matcher m = Pattern.compile(href).matcher(getPage(url));
@@ -152,9 +90,8 @@ public class MainController {
     }
 
     @RequestMapping("/poems")
-    private String mainPoems(@RequestParam(defaultValue = "" ) String url,Model model) throws Exception {
-        List<String> poems=poems(url.isEmpty()?start:url);
-//        poems=poems.subList(1,2);
+    private String mainPoems(@RequestParam(defaultValue=start) String url,Model model) {
+        List<String> poems=poems(url); // .subList(1,2);
         Integer c=poems.size();
         System.out.println("POEMS TO GO: "+c);
 //        if (url.isEmpty())
@@ -163,7 +100,7 @@ public class MainController {
         return "poems";
     }
 
-    private List<String> poems(String url) throws Exception {
+    private List<String> poems(String url) {
         System.out.println(url);
         Matcher m = Pattern.compile(href).matcher(getPage(url));
         List<String> poems = new ArrayList<>();
@@ -180,26 +117,22 @@ public class MainController {
     }
 
     @RequestMapping("/avtor")
-//    @ResponseBody
-    private String mainAuthors(@RequestParam(defaultValue = "" ) String url,Model model) throws Exception {
-        List<String> a=authors(url.isEmpty()?start:url);
-        model.addAttribute("list", a);
-        if (url.isEmpty()) return "avtors";
+    private String mainAuthors(@RequestParam(defaultValue=start) String url,Model model) {
+        List<String> a=authors(url);
+        /*
         List<String> poems=poems(url);
         Integer c=poems.size();
         System.out.println("POEMS TO GO: "+c);
         for (String p:poems) System.out.println(--c+":"+!stih2base(p).isEmpty());
         a.addAll(poems);
+        */
         model.addAttribute("list", a);
         return "avtors";
     }
 
-    private List<String> authors(@RequestParam(defaultValue = "" ) String url) throws Exception {
-        Matcher m = Pattern.compile(href).matcher(getPage(url));
+    private List<String> authors(String url){
         List<String> authors = new ArrayList<>();
-//        authors.add(localHost+"/avtor"); authors.add(localHost);
-//        String urls=Pattern.compile(root).matcher(url).replaceFirst("");
-//        System.out.println(url);
+        Matcher m = Pattern.compile(href).matcher(getPage(url));
         while (m.find())
             if (!Pattern.compile("recomlink").matcher(m.group(1)).find())
                 if (Pattern.compile("avtor").matcher(m.group(1)).find())
@@ -215,25 +148,26 @@ public class MainController {
         return authors;
     }
 
-    private String getPage(String s) throws Exception {
-        HttpURLConnection conn = (HttpURLConnection) new URL(s).openConnection();
-        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream(),"windows-1251"));
+    private String getPage(String s){
         StringBuilder result = new StringBuilder();
-        for(String line;(line=rd.readLine())!=null;) result.append(line); // System.out.println(line)
-        rd.close();
-//        System.out.println(result);
+        try (BufferedReader rd = new BufferedReader(
+            new InputStreamReader((new URL(s).openConnection()).getInputStream(),"windows-1251")))
+        {for(String line;(line=rd.readLine())!=null;) result.append(line);}
+        catch (IOException e) {e.printStackTrace();}
         return result.toString();
     }
 
-    private String stripStih(String stih) throws Exception { // <div class="copyright">
-//        System.out.println(stih);
+    private String stripStih(String stih){ // <div class="copyright">
         Matcher m = Pattern.compile("<div class=\"text\">(.+?)</div>").matcher(stih);
-        if (!m.find()) return "";
+        if (m.find()) return "";
 //        System.out.println(m.group(1));
         return Pattern.compile("&nbsp;|&quot;").matcher(m.group(1).replaceAll("<br>","\n")).replaceAll(" ");
     }
 
-    private String stih2base(String url) throws Exception {
+    private String stih2base(String url){
+
+        try {url = URLDecoder.decode(url,"UTF-8");}
+        catch (UnsupportedEncodingException e) {e.printStackTrace();}
 
 //        System.out.println(url);
         String stih=getPage(url);
@@ -252,7 +186,7 @@ public class MainController {
         String[] words=stih.replaceAll("[^а-яёА-ЯЁ]"," ").split("\\s+");
         if(words.length>999||words.length<9) return "";
 
-        Article art=new Article(URLDecoder.decode(url,"UTF-8"));
+        Article art= new Article(url);
         if (articleRepository.findArticlesByName(art.getName())!=null) return "";
 
         Author author=authorRepository.findByName(authorName);
@@ -291,8 +225,6 @@ public class MainController {
 
     @RequestMapping("/stih")
     @ResponseBody
-    private String stih(@RequestParam String url) throws Exception {
-        return stih2base(url);
-    }
+    private String stih(@RequestParam String url){return stih2base(url);}
 
 }
