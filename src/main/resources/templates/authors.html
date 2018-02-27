@@ -19,7 +19,7 @@
     </tr>
     <tr th:each ="author : ${authors}">
         <td> <a th:text="${author.id}" th:href="@{'/article/' + ${author.id}}"></a> </td>
-        <td> <a th:text="${author.name}" th:href="@{${author.name}}"></a> </td>
+        <td> <a th:text="${author.name.substring(26)}" th:href="@{${author.name}}"></a> </td>
         <td th:text="${author.realname}" > </td>
     </tr>
 </table>

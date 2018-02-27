@@ -10,9 +10,8 @@
 <span th:each ="item : ${list}">
     <!--<a th:text="${item.substring(119)}" th:href="@{${item}}"></a>-->
     <!--<a th:text="${item.substring(35)}" th:href="@{${root+item}}"></a>-->
-    <!--<a th:text="${item.substring(0)}" th:href="@{${root+item}}"></a>-->
-    <a th:text="${#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(item,'start=',':'),'day=','/'),'year=',' '),'month=','/'),'%26',''),'/poems/list.html?',''),'topic=all','').substring(0)}" th:href="@{${root+item}}"> </a>
     <!--<a th:text="${item.substring(67)}" th:href="@{${root+item}}"></a>-->
+    <a th:text="${#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(item,'start=',':'),'day=','/'),'year=',' '),'month=','/'),'%26',''),'/poems/list.html?',''),'topic=all','').substring(0)}" th:href="@{${root+item}}"> </a>
 </span>
 <div th:replace="footer::footer"> FOOTER </div>
 </body>

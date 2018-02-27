@@ -7,15 +7,10 @@
 </head>
 <body>
 <div th:include="header::header"> HEADER </div>
-<div>
-    <table border="0">
-        <tr>
-            <th>ARTICLE</th>
-        </tr>
-        <tr th:each ="item : ${list}">
-            <td> <a th:text="${item.substring(86)}" th:href="@{${item}}"></a> </td>
-        </tr>
-    </table>
+<div th:each ="item : ${list}">
+    <b>
+        <a th:text="${#strings.replace(#strings.replace(#strings.replace(item.substring(34),'%26','/'),'month=',''),'day=','')}" th:href="@{${root+item}}"> </a>
+    </b>
 </div>
 <div th:replace="footer::footer"> FOOTER </div>
 </body>

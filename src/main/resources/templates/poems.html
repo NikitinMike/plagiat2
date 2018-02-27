@@ -8,6 +8,7 @@
 <body>
 <div th:include="header::header"> HEADER </div>
 <span th:each ="item : ${list}">
+        <!--<a th:text="${item}" th:href="@{${item}}"></a>-->
         <a th:text="${item.substring(31)}" th:href="@{${item}}"></a>
     </span>
 <div th:replace="footer::footer"> FOOTER </div>

@@ -11,7 +11,7 @@
 <div th:include="header::header"> HEADER </div>
 <div>
     <a th:each ="word : ${wordbook}">
-         [<a th:text="${word.word}"></a>:<a th:text="${word.id}"></a>]
+         [<a th:text="${word.word}"></a>:<i th:text="${word.id}"></i>]
     </a>
 </div>
 <div th:replace="footer::footer"> FOOTER </div>
