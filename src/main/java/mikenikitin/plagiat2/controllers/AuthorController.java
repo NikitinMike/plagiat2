@@ -20,7 +20,7 @@ import java.util.List;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/authors") // {"author","/authors"}
+@RequestMapping("/authors") //  {"author","/authors"}
 public class AuthorController {
 
     private AuthorRepository authorRepository;
@@ -31,6 +31,19 @@ public class AuthorController {
         Collections.reverse(authors);
         model.addAttribute("authors", authors );
         return "authors";
+    }
+
+    @RequestMapping("{id}")
+//    @ResponseBody
+    private String articles(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
+        if(authorRepository.findAuthorsById(id)==null){response.sendRedirect("/authors");return null;}
+//        System.out.println(authorRepository.findAuthorsById(id));
+        List<String> articles = new ArrayList<>(); // = null;
+        for (Article a:authorRepository.findAuthorsById(id).getArticles()) articles.add(a.getTitle());
+        model.addAttribute("author", authorRepository.findAuthorsById(id).getRealname());
+        model.addAttribute("articles", articles);
+        return "articles";
+//        return articles;
     }
 
     @RequestMapping

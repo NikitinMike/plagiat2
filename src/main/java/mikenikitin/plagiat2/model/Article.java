@@ -75,9 +75,9 @@ public class Article {
         this.author = author;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public void setTitle(String title) {this.title = title;}
+
+    public String getTitle() {return title;}
 
 //    public void setwords(List<String> words){
 //        this.words=words;

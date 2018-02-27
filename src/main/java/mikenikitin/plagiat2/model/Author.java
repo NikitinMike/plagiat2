@@ -1,9 +1,11 @@
 package mikenikitin.plagiat2.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
+import java.util.List;
 
 @AllArgsConstructor
 @Getter
@@ -24,6 +26,10 @@ public class Author {
 
     private Long rating; // good=0 >> poor=9999
 
+//    @JsonIgnore
+    @OneToMany (mappedBy="author")
+    private List<Article> articles;
+
     public Author(String name) {
         this.name=name;
         rating=0L;
@@ -35,4 +41,9 @@ public class Author {
         rating=0L;
     }
 
+    public List<Article> getArticles() {return articles;}
+
+    public String getName() {return name;}
+
+    public String getRealname() {return realname;}
 }

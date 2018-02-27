@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Articles of </title>
+    </head>
+    <body>
+
+    <h1 th:text="${author}" >Author</h1>
+
+    <div th:include="header::header"> HEADER </div>
+
+    <div th:each ="article : ${articles}">
+        <p th:text="${article}" > </p>
+    </div>
+
+    <a href="/authors/"> back </a>
+
+    <div th:replace="footer::footer"> FOOTER </div>
+
+    </body>
+
+</html>

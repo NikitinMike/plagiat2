@@ -238,6 +238,7 @@ public class MainController {
         System.out.println(nw);
         art.setWc(wc);
         articleRepository.save(art);
+        authorRepository.save(author);
 
         return stih;
 //        return url;
