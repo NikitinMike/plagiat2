@@ -159,11 +159,6 @@ public class MainController {
         System.out.println("POEMS TO GO: "+c);
 //        if (url.isEmpty())
         for (String p:poems) System.out.println(--c+":"+!stih2base(p).isEmpty());
-//        poems.add(localHost);
-//        poems.add(localHost+"/avtor");
-//        poems.add(localHost+"/poems");
-//        poems.add(localHost+"/today");
-//        Collections.reverse(poems);
         model.addAttribute("list", poems);
         return "poems";
     }
@@ -180,6 +175,7 @@ public class MainController {
                     ).replaceAll("")
                 );
             }
+        // Collections.reverse(poems);
         return poems;
     }
 

@@ -1,21 +1,17 @@
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Russian Article</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Russian Article</title>
+    </head>
+    <body>
 
-<h3>
-    <a href="http://localhost:8080"> home </a>
-    <a href="http://localhost:8080/avtor"> avtor </a>
-    <a href="http://localhost:8080/poems"> poems </a>
-    <a href="http://localhost:8080/today"> today </a>
-    <a href="http://localhost:8080/articles/"> articles </a>
-</h3>
+    <div th:replace="header::header">...</div>
 
-<p th:text="${article}" > </p>
-</body>
-<a href="/articles/"> back </a>
+    <p th:text="${article}" > </p>
+    <a href="/articles/"> back </a>
+
+    </body>
+
 </html>
