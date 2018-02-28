@@ -48,22 +48,27 @@ public class MainController {
     @ResponseBody
     private String stih(@RequestParam String url){return stih2base(url);}
 
+    private static List<String> fulllst;
+
     @RequestMapping("/links/{level}")
     @ResponseBody
-    private List<String> links(@RequestParam(defaultValue=start) String url,
-                               @PathVariable Long level, Model model) {
+    private List<String> links(
+        @RequestParam(defaultValue=start) String url,
+        @PathVariable Long level, Model model
+    ) {
 //        model.addAttribute("list", findPoems(url,2));
 //        model.addAttribute("root", localHost+"/day/?url="+root );
 //        return "mainIndex";
+        fulllst=new ArrayList<>();
         return findPoems(url,level);
     }
 
 
     @RequestMapping("/avtor")
     private String mainAuthors(@RequestParam(defaultValue=start) String url,Model model) {
-        List<String> a=authors(url);
+        List<String> a=authors(url,localHost + "/avtor/?url=" + root);
 
-        List<String> poems=poems(url);
+        List<String> poems=poems(url,root);
         Integer c=poems.size();
         System.out.println("POEMS TO GO: "+c);
         for (String p:poems) System.out.println(--c+":"+!stih2base(p).isEmpty());
@@ -75,28 +80,28 @@ public class MainController {
 
     @RequestMapping("/")
     private String mainCatalog(Model model, @RequestParam(defaultValue=start) String url) {
-        model.addAttribute("list", mainPage(url));
+        model.addAttribute("list", mainPage(url,""));
         model.addAttribute("root", localHost+"/day/?url="+root );
         return "mainIndex";
     }
 
     @RequestMapping("/day")
     private String day(@RequestParam(defaultValue=start) String url, Model model) {
-        model.addAttribute("list", todayList(url));
+        model.addAttribute("list", todayList(url,""));
         model.addAttribute("root", localHost+"/poems/?url="+root );
         return "dayIndex";
     }
 
     @RequestMapping("/today")
     private String today(@RequestParam(defaultValue=start) String url, Model model) {
-        model.addAttribute("list", todayList(url));
+        model.addAttribute("list", todayList(url,""));
         model.addAttribute("root", localHost+"/poems/?url="+root );
         return "todayIndex";
     }
 
     @RequestMapping("/poems")
     private String mainPoems(@RequestParam(defaultValue=start) String url,Model model) {
-        List<String> poems=poems(url); // .subList(1,2);
+        List<String> poems=poems(url,root); // .subList(1,2);
         Integer c=poems.size();
         System.out.println("POEMS TO GO: "+c);
         for (String p:poems) System.out.println(--c+":"+!stih2base(p).isEmpty());
@@ -104,7 +109,7 @@ public class MainController {
         return "poems";
     }
 
-    private List<String> mainPage(String url) {
+    private List<String> mainPage(String url,String prefix) {
         List<String> ls = new ArrayList<>();
         Matcher m = Pattern.compile(href).matcher(getPage(url));
         String s;
@@ -114,13 +119,13 @@ public class MainController {
                         Pattern.compile(" class=\".+\"").matcher(
                             m.group(1).replaceAll("&","%26")
                         ).replaceFirst("")
-                    ).replaceAll(""))) ls.add(s);
+                    ).replaceAll(""))) ls.add(prefix+s);
 //        Collections.sort(ls);
 //        Collections.reverse(ls);
         return ls;
     }
 
-    private List<String> todayList(String url){
+    private List<String> todayList(String url,String prefix){
         System.out.println(url);
         List<String> today = new ArrayList<>(),days = new ArrayList<>();
         Matcher m = Pattern.compile(href).matcher(getPage(url));
@@ -128,13 +133,13 @@ public class MainController {
           if (Pattern.compile("poems").matcher(m.group(1)).find())
 //                  && Pattern.compile("day").matcher(m.group(1)).find())
             if (Pattern.compile("start").matcher(m.group(1)).find()) // System.out.println(m.group(1));
-                today.add(Pattern.compile("\"").matcher(
+                today.add(prefix+Pattern.compile("\"").matcher(
                     Pattern.compile("&").matcher(
                         Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
                     ).replaceAll("%26") // "&amp;"
                 ).replaceAll(""));
             else
-                days.add(Pattern.compile("\"").matcher(
+                days.add(prefix+Pattern.compile("\"").matcher(
                     Pattern.compile("&").matcher(
                         Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
                     ).replaceAll("%26") // "&amp;"
@@ -145,33 +150,18 @@ public class MainController {
         return today;
     }
 
-    private List<String> poems(String url) {
-        System.out.println(url);
-        Matcher m = Pattern.compile(href).matcher(getPage(url));
-        List<String> poems = new ArrayList<>();
-        while (m.find())
-            if (Pattern.compile("poemlink").matcher(m.group(1)).find()) {
-                poems.add( root + Pattern.compile("\"").matcher( // localHost + "/stih/?url=" +
-                        Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
-                    ).replaceAll("")
-                );
-            }
-        Collections.sort(poems);
-        return poems;
-    }
-
-    private List<String> authors(String url){
+    private List<String> authors(String url,String prefix){
         List<String> authors = new ArrayList<>();
         Matcher m = Pattern.compile(href).matcher(getPage(url));
         while (m.find())
             if (!Pattern.compile("recomlink").matcher(m.group(1)).find())
                 if (Pattern.compile("avtor").matcher(m.group(1)).find())
             // && Pattern.compile("authorlink").matcher(m.group(1)).find()
-                    authors.add(localHost + "/avtor/?url=" + root +
-                        Pattern.compile("\"").matcher(
-                            Pattern.compile("&").matcher(
+                    authors.add( Pattern.compile(prefix).matcher(m.group(1)).find()?"":prefix+Pattern.compile("\"").matcher(
+                        Pattern.compile("&").matcher(
                                 Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
-                            ).replaceAll("%26") // "&amp;"
+//                            ).replaceAll("%26") // "&amp;"
+                            ).replaceAll("&") // "&amp;"
                         ).replaceAll("")
                     );
 //                else System.out.println(m.group(1));
@@ -179,10 +169,10 @@ public class MainController {
     }
 
     private String getPage(String s){
+//        System.out.println('['+s+']');
         StringBuilder result = new StringBuilder();
-        try (BufferedReader rd = new BufferedReader(
-            new InputStreamReader((new URL(s).openConnection()).getInputStream(),"windows-1251")))
-        {for(String line;(line=rd.readLine())!=null;) result.append(line);}
+        try (BufferedReader rd = new BufferedReader(new InputStreamReader((new URL(s).openConnection()).getInputStream(),"windows-1251")))
+        {for(String line;(line=rd.readLine())!=null;) result.append(line); rd.close();}
         catch (IOException e) {e.printStackTrace();}
         return result.toString();
     }
@@ -256,9 +246,44 @@ public class MainController {
     }
 
     private List<String> findPoems(String url,Long level) {
-        List<String> poems=poems(url);
-//        List<String> links=mainPage(url);
-        if (level>0) for (String p:mainPage(url)) poems.addAll(findPoems(p,level-1));
+//        if (!Pattern.compile(root).matcher(url).find()) url=root+url;
+//            url=URLDecoder.decode(root.concat(url),"UTF-8");
+
+        fulllst.add(url);
+        List<String> poems=poems(url,root);
+
+        if (level>0)
+            for (String lst:authors(url,root))
+//            for (String lst:todayList(url,root))
+//            for (String lst:mainPage(url,root))
+                if (!fulllst.contains(lst))
+                    poems.addAll(findPoems(lst,level-1));
+//                    System.out.println(findPoems(lst,level-1));
+
+        System.out.println(url+" :"+poems.size());
+
+//        String page = getPage(url);
+//        System.out.println(page);
+//        Matcher m = Pattern.compile(href).matcher(page);
+//        if (level>0) while (m.find()) // System.out.println(root+m.group(1));
+//            poems.addAll(findPoems(Pattern.compile("/poems/list").matcher(m.group(1)).replaceFirst(root+"/poems/list"),level-1));
+
+        return poems;
+
+    }
+
+    private List<String> poems(String url,String prefix) {
+//        System.out.println(url);
+        Matcher m = Pattern.compile(href).matcher(getPage(url));
+        List<String> poems = new ArrayList<>();
+        while (m.find())
+            if (Pattern.compile("poemlink").matcher(m.group(1)).find()) {
+                poems.add( prefix + Pattern.compile("\"").matcher( // localHost + "/stih/?url=" +
+                        Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
+                        ).replaceAll("")
+                );
+            }
+//        Collections.sort(poems);
         return poems;
     }
 
