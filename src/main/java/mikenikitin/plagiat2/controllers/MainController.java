@@ -48,16 +48,27 @@ public class MainController {
     @ResponseBody
     private String stih(@RequestParam String url){return stih2base(url);}
 
+    @RequestMapping("/links/{level}")
+    @ResponseBody
+    private List<String> links(@RequestParam(defaultValue=start) String url,
+                               @PathVariable Long level, Model model) {
+//        model.addAttribute("list", findPoems(url,2));
+//        model.addAttribute("root", localHost+"/day/?url="+root );
+//        return "mainIndex";
+        return findPoems(url,level);
+    }
+
+
     @RequestMapping("/avtor")
     private String mainAuthors(@RequestParam(defaultValue=start) String url,Model model) {
         List<String> a=authors(url);
-        /*
+
         List<String> poems=poems(url);
         Integer c=poems.size();
         System.out.println("POEMS TO GO: "+c);
         for (String p:poems) System.out.println(--c+":"+!stih2base(p).isEmpty());
-        a.addAll(poems);
-        */
+//        a.addAll(poems);
+
         model.addAttribute("list", a);
         return "avtors";
     }
@@ -242,6 +253,13 @@ public class MainController {
 
         return stih;
 //        return url;
+    }
+
+    private List<String> findPoems(String url,Long level) {
+        List<String> poems=poems(url);
+//        List<String> links=mainPage(url);
+        if (level>0) for (String p:mainPage(url)) poems.addAll(findPoems(p,level-1));
+        return poems;
     }
 
 }

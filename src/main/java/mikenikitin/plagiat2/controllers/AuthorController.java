@@ -24,11 +24,12 @@ import java.util.List;
 public class AuthorController {
 
     private AuthorRepository authorRepository;
+    static private boolean reverse=true;
 
     @RequestMapping("/") // {"/index","/"}
     private String index(Model model) {
         List<Author> authors = authorRepository.findAll();
-        Collections.reverse(authors);
+        if (reverse=!reverse) Collections.reverse(authors);
         model.addAttribute("authors", authors );
         return "authors";
     }
@@ -37,6 +38,7 @@ public class AuthorController {
     private String orderByCount(Model model) {
         List<Author> authors = authorRepository.findAll();
         Collections.sort(authors,(b,a)->(a.getArticles().size()-b.getArticles().size()));
+        if (reverse=!reverse) Collections.reverse(authors);
         model.addAttribute("authors", authors );
         return "authors";
     }
@@ -45,6 +47,7 @@ public class AuthorController {
     private String orderByName(Model model) {
         List<Author> authors = authorRepository.findAll();
         Collections.sort(authors,(a,b)->(a.getName().compareTo(b.getName())));
+        if (reverse=!reverse) Collections.reverse(authors);
         model.addAttribute("authors", authors );
         return "authors";
     }
@@ -53,6 +56,7 @@ public class AuthorController {
     private String orderByRealName(Model model) {
         List<Author> authors = authorRepository.findAll();
         Collections.sort(authors,(a,b)->(a.getRealname().compareTo(b.getRealname())));
+        if (reverse=!reverse) Collections.reverse(authors);
         model.addAttribute("authors", authors );
         return "authors";
     }
