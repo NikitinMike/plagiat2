@@ -1,24 +1,31 @@
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <title>Articles of </title>
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <title>Articles of </title>
+</head>
+<body>
 
-    <h1 th:text="${author}" >Author</h1>
+<h1 th:text="${author}" >Author</h1>
 
-    <div th:include="header::header"> HEADER </div>
+<div th:include="header::header"> HEADER </div>
 
-    <div th:each ="article : ${articles}">
-        <p th:text="${article}" > </p>
-    </div>
+<table>
+    <tr th:each ="article : ${articles}">
+        <td>
+            <a th:text="${article.id}" th:href="@{'http://localhost:8080/article/'+${article.id}}"> </a>
+        </td>
+        <td>
+            <a th:text="${article.title}" th:href="@{${article.name}}"> </a>
+        </td>
+    </tr>
+</table>
 
-    <a href="/authors/"> back </a>
+<a href="/authors/"> back </a>
 
-    <div th:replace="footer::footer"> FOOTER </div>
+<div th:replace="footer::footer"> FOOTER </div>
 
-    </body>
+</body>
 
 </html>
