@@ -28,8 +28,31 @@ public class AuthorController {
     @RequestMapping("/") // {"/index","/"}
     private String index(Model model) {
         List<Author> authors = authorRepository.findAll();
-//        Collections.reverse(authors);
+        Collections.reverse(authors);
+        model.addAttribute("authors", authors );
+        return "authors";
+    }
+
+    @RequestMapping("/count") // {"/index","/"}
+    private String orderByCount(Model model) {
+        List<Author> authors = authorRepository.findAll();
         Collections.sort(authors,(b,a)->(a.getArticles().size()-b.getArticles().size()));
+        model.addAttribute("authors", authors );
+        return "authors";
+    }
+
+    @RequestMapping("/name") // {"/index","/"}
+    private String orderByName(Model model) {
+        List<Author> authors = authorRepository.findAll();
+        Collections.sort(authors,(a,b)->(a.getName().compareTo(b.getName())));
+        model.addAttribute("authors", authors );
+        return "authors";
+    }
+
+    @RequestMapping("/realname") // {"/index","/"}
+    private String orderByRealName(Model model) {
+        List<Author> authors = authorRepository.findAll();
+        Collections.sort(authors,(a,b)->(a.getRealname().compareTo(b.getRealname())));
         model.addAttribute("authors", authors );
         return "authors";
     }

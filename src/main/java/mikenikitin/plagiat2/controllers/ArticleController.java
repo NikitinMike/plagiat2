@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import mikenikitin.plagiat2.model.Article;
 import mikenikitin.plagiat2.model.Text;
 import mikenikitin.plagiat2.repository.ArticleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,9 +27,61 @@ import static jdk.nashorn.internal.objects.NativeArray.reverse;
 @RequestMapping({"article","articles"})
 public class ArticleController {
 
+    static private boolean reverse=true;
+//    @Autowired
     private ArticleRepository articleRepository;
 
-//    @RequestMapping("{id}")
+//    protected List<Article> articles = articleRepository.findAll();
+
+    @RequestMapping("/")
+    private String index(Model model) {
+        List<Article> articles = articleRepository.findAll();
+        if (reverse=!reverse) Collections.reverse(articles);
+        model.addAttribute("articles", articles );
+        return "indexArticles";
+    }
+
+    @RequestMapping("/name")
+    private String orderByName(Model model) {
+        List<Article> articles = articleRepository.findAll();
+        Collections.sort(articles,(b,a)->(a.getName().compareTo(b.getName())));
+        if (reverse=!reverse) Collections.reverse(articles);
+        model.addAttribute("articles", articles );
+        return "indexArticles";
+    }
+
+    @RequestMapping("/wc")
+    private String orderByWC(Model model) {
+        List<Article> articles = articleRepository.findAll();
+        Collections.sort(articles,(b,a)->(a.getWc().intValue()-b.getWc().intValue()));
+        if (reverse=!reverse) Collections.reverse(articles);
+        model.addAttribute("articles", articles );
+        return "indexArticles";
+    }
+
+    @RequestMapping("/title")
+    private String orderByTitle(Model model) {
+        List<Article> articles = articleRepository.findAll();
+        Collections.sort(articles,(b,a)->(a.getTitle().compareTo(b.getTitle())));
+        if (reverse=!reverse) Collections.reverse(articles);
+        model.addAttribute("articles", articles );
+        return "indexArticles";
+    }
+
+    @RequestMapping("/author")
+    private String orderByAuthor(Model model) {
+        List<Article> articles = articleRepository.findAll();
+        Collections.sort(articles,(b,a)->(a.getAuthor().getRealname().compareTo(b.getAuthor().getRealname())));
+        if (reverse=!reverse) Collections.reverse(articles);
+        model.addAttribute("articles", articles );
+        return "indexArticles";
+    }
+
+    @RequestMapping
+    @ResponseBody
+    private List<Article> listall(){return articleRepository.findAll();}
+
+    //    @RequestMapping("{id}")
     @ResponseBody
     private List<String> article(@PathVariable Long id, HttpServletResponse response) throws IOException {
         if(articleRepository.findArticlesById(id)==null){response.sendRedirect("/article");return null;}
@@ -51,17 +104,4 @@ public class ArticleController {
         return "article";
     }
 
-    @RequestMapping("/")
-    private String index(Model model) {
-        List<Article> articles = articleRepository.findAll();
-        Collections.reverse(articles);
-        model.addAttribute("articles", articles );
-        return "indexArticles";
-    }
-
-    @RequestMapping
-    @ResponseBody
-    private List<Article> listall(){
-        return articleRepository.findAll();
-    }
 }
