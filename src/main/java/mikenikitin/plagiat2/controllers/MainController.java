@@ -31,11 +31,6 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 public class MainController {
 
-    private final String root = "http://www.stihi.ru", localHost = "http://localhost:8080",
-            href = "<a href=(.+?)>", start = "http://www.stihi.ru/poems/list.html?topic=all";
-    //"http://www.stihi.ru/poems/list.html?type=selected" //
-    //"http://www.stihi.ru/poems/list.html?topic=all"
-
     private ArticleRepository articleRepository;
 
     private WordbookRepository wordbookRepository;
@@ -48,25 +43,37 @@ public class MainController {
     @ResponseBody
     private String stih(@RequestParam String url){return stih2base(url);}
 
-    private static List<String> fulllst;
+    private final String root = "http://www.stihi.ru",
+            localHost = "http://localhost:8080",
+            linkClass=" class=[\"\'].+[\"\']",
+            href = "<a href=(.+?)>";
+
+    private static List<String> skiplst;
+
+    private final String start = "http://www.stihi.ru/poems/list.html?topic=all",
+            selected="http://www.stihi.ru/poems/selected.html",
+            editor="http://www.stihi.ru/authors/";
+//        editor="http://www.stihi.ru/authors/editor.html";
+
+    //"http://www.stihi.ru/poems/list.html?type=selected" //
+    //"http://www.stihi.ru/poems/list.html?topic=all"
 
     @RequestMapping("/links/{level}")
     @ResponseBody
-    private List<String> links(
-        @RequestParam(defaultValue=start) String url,
+    private List<String> links (
+        @RequestParam(defaultValue=editor) String url,
         @PathVariable Long level, Model model
     ) {
 //        model.addAttribute("list", findPoems(url,2));
 //        model.addAttribute("root", localHost+"/day/?url="+root );
 //        return "mainIndex";
-        fulllst=new ArrayList<>();
-        return findPoems(url,level);
+        skiplst=new ArrayList<>();
+        return findAutorsPoems(url,level,"");
     }
 
-
     @RequestMapping("/avtor")
-    private String mainAuthors(@RequestParam(defaultValue=start) String url,Model model) {
-        List<String> a=authors(url,localHost + "/avtor/?url=" + root);
+    private String mainAuthors(@RequestParam(defaultValue=editor) String url,Model model) {
+        List<String> a=authors(url,localHost+"/avtor/?url="+root);
 
         List<String> poems=poems(url,root);
         Integer c=poems.size();
@@ -116,7 +123,7 @@ public class MainController {
         while (m.find())
             if (Pattern.compile("month").matcher(m.group(1)).find())
                 if (!ls.contains(s = Pattern.compile("\"").matcher(
-                        Pattern.compile(" class=\".+\"").matcher(
+                        Pattern.compile(linkClass).matcher(
                             m.group(1).replaceAll("&","%26")
                         ).replaceFirst("")
                     ).replaceAll(""))) ls.add(prefix+s);
@@ -135,13 +142,13 @@ public class MainController {
             if (Pattern.compile("start").matcher(m.group(1)).find()) // System.out.println(m.group(1));
                 today.add(prefix+Pattern.compile("\"").matcher(
                     Pattern.compile("&").matcher(
-                        Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
+                        Pattern.compile(linkClass).matcher(m.group(1)).replaceFirst("")
                     ).replaceAll("%26") // "&amp;"
                 ).replaceAll(""));
             else
                 days.add(prefix+Pattern.compile("\"").matcher(
                     Pattern.compile("&").matcher(
-                        Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
+                        Pattern.compile(linkClass).matcher(m.group(1)).replaceFirst("")
                     ).replaceAll("%26") // "&amp;"
                 ).replaceAll(""));
         Collections.reverse(today);
@@ -152,17 +159,23 @@ public class MainController {
 
     private List<String> authors(String url,String prefix){
         List<String> authors = new ArrayList<>();
-        Matcher m = Pattern.compile(href).matcher(getPage(url));
+        String page=Pattern.compile("<div class=\"textlink\">.+?</div>").matcher(getPage(url)).replaceAll("");
+        Matcher m = Pattern.compile(href).matcher(page);
+//        System.out.println(page);
         while (m.find())
-            if (!Pattern.compile("recomlink").matcher(m.group(1)).find())
-                if (Pattern.compile("avtor").matcher(m.group(1)).find())
-            // && Pattern.compile("authorlink").matcher(m.group(1)).find()
-                    authors.add( Pattern.compile(prefix).matcher(m.group(1)).find()?"":prefix+Pattern.compile("\"").matcher(
-                        Pattern.compile("&").matcher(
-                                Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
+//         if(Pattern.compile("authorlink").matcher(m.group(1)).find())
+            if (Pattern.compile("avtor").matcher(m.group(1)).find())
+//                if (Pattern.compile("recomlink").matcher(m.group(1)).find())
+                    authors.add(
+                        Pattern.compile(prefix).matcher(m.group(1)).find()?"":prefix+
+                            Pattern.compile("\"").matcher(
+//                            Pattern.compile("&").matcher(
+                                Pattern.compile(linkClass).matcher(
+                                    m.group(1)
+                                ).replaceAll("")
 //                            ).replaceAll("%26") // "&amp;"
-                            ).replaceAll("&") // "&amp;"
-                        ).replaceAll("")
+//                            ).replaceAll("&") // "&amp;"
+                            ).replaceAll("")
                     );
 //                else System.out.println(m.group(1));
         return authors;
@@ -245,31 +258,19 @@ public class MainController {
 //        return url;
     }
 
-    private List<String> findPoems(String url,Long level) {
-//        if (!Pattern.compile(root).matcher(url).find()) url=root+url;
-//            url=URLDecoder.decode(root.concat(url),"UTF-8");
-
-        fulllst.add(url);
+    private List<String> findAutorsPoems(String url,Long level,String left) {
+//        System.out.println('['+url+']');
+        skiplst.add(url);
         List<String> poems=poems(url,root);
-
         if (level>0)
             for (String lst:authors(url,root))
 //            for (String lst:todayList(url,root))
 //            for (String lst:mainPage(url,root))
-                if (!fulllst.contains(lst))
-                    poems.addAll(findPoems(lst,level-1));
-//                    System.out.println(findPoems(lst,level-1));
-
-        System.out.println(url+" :"+poems.size());
-
-//        String page = getPage(url);
-//        System.out.println(page);
-//        Matcher m = Pattern.compile(href).matcher(page);
-//        if (level>0) while (m.find()) // System.out.println(root+m.group(1));
-//            poems.addAll(findPoems(Pattern.compile("/poems/list").matcher(m.group(1)).replaceFirst(root+"/poems/list"),level-1));
-
+                if (!skiplst.contains(lst))
+                    poems.addAll(findAutorsPoems(lst,level-1,left+"-"));
+//        if (level>0)
+            System.out.println(level+": "+left+url+" :"+poems.size());
         return poems;
-
     }
 
     private List<String> poems(String url,String prefix) {
@@ -278,9 +279,12 @@ public class MainController {
         List<String> poems = new ArrayList<>();
         while (m.find())
             if (Pattern.compile("poemlink").matcher(m.group(1)).find()) {
-                poems.add( prefix + Pattern.compile("\"").matcher( // localHost + "/stih/?url=" +
-                        Pattern.compile(" class=\".+\"").matcher(m.group(1)).replaceFirst("")
-                        ).replaceAll("")
+                poems.add( prefix + // localHost + "/stih/?url=" +
+                    Pattern.compile("\"").matcher(
+                        Pattern.compile(linkClass).matcher(
+                            m.group(1)
+                        ).replaceFirst("")
+                    ).replaceAll("")
                 );
             }
 //        Collections.sort(poems);
