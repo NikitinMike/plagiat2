@@ -61,8 +61,12 @@ public class MainController {
     @RequestMapping("/links/{level}")
     private List<String> links (@PathVariable Long level, Model model) {
         skiplst=new ArrayList<>();
-        List<String> lst=findAutorsPoems(editor1,level,"");
-        return lst.isEmpty()? findAutorsPoems(editor2,level,""):lst;
+        List<String> poems=findAutorsPoems(editor1,level,"");
+        if (poems.isEmpty())poems=findAutorsPoems(editor2,level,"");
+        Integer c=poems.size();
+        System.out.println("POEMS TO GO: "+c);
+        for (String p:poems) System.out.println(--c+":"+!stih2base(p).isEmpty());
+        return poems;
 //        model.addAttribute("list", findPoems(url,2));
 //        model.addAttribute("root", localHost+"/day/?url="+root );
 //        return "mainIndex";
