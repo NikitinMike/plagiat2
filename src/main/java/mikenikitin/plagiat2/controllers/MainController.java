@@ -50,39 +50,22 @@ public class MainController {
 
     private static List<String> skiplst;
 
-    private final String start = "http://www.stihi.ru/poems/list.html?topic=all",
-            selected="http://www.stihi.ru/poems/selected.html",
-            editor="http://www.stihi.ru/authors/";
-//        editor="http://www.stihi.ru/authors/editor.html";
-
     //"http://www.stihi.ru/poems/list.html?type=selected" //
     //"http://www.stihi.ru/poems/list.html?topic=all"
+    private final String start = "http://www.stihi.ru/poems/list.html?topic=all",
+            selected="http://www.stihi.ru/poems/selected.html",
+            editor2="http://www.stihi.ru/authors/",
+            editor1="http://www.stihi.ru/authors/editor.html";
 
-    @RequestMapping("/links/{level}")
     @ResponseBody
-    private List<String> links (
-        @RequestParam(defaultValue=editor) String url,
-        @PathVariable Long level, Model model
-    ) {
+    @RequestMapping("/links/{level}")
+    private List<String> links (@PathVariable Long level, Model model) {
+        skiplst=new ArrayList<>();
+        List<String> lst=findAutorsPoems(editor1,level,"");
+        return lst.isEmpty()? findAutorsPoems(editor2,level,""):lst;
 //        model.addAttribute("list", findPoems(url,2));
 //        model.addAttribute("root", localHost+"/day/?url="+root );
 //        return "mainIndex";
-        skiplst=new ArrayList<>();
-        return findAutorsPoems(url,level,"");
-    }
-
-    @RequestMapping("/avtor")
-    private String mainAuthors(@RequestParam(defaultValue=editor) String url,Model model) {
-        List<String> a=authors(url,localHost+"/avtor/?url="+root);
-
-        List<String> poems=poems(url,root);
-        Integer c=poems.size();
-        System.out.println("POEMS TO GO: "+c);
-        for (String p:poems) System.out.println(--c+":"+!stih2base(p).isEmpty());
-//        a.addAll(poems);
-
-        model.addAttribute("list", a);
-        return "avtors";
     }
 
     @RequestMapping("/")
@@ -107,13 +90,29 @@ public class MainController {
     }
 
     @RequestMapping("/poems")
-    private String mainPoems(@RequestParam(defaultValue=start) String url,Model model) {
+    private String mainPoems(@RequestParam(defaultValue=selected) String url,Model model) {
         List<String> poems=poems(url,root); // .subList(1,2);
         Integer c=poems.size();
         System.out.println("POEMS TO GO: "+c);
         for (String p:poems) System.out.println(--c+":"+!stih2base(p).isEmpty());
         model.addAttribute("list", poems);
         return "poems";
+    }
+
+    @RequestMapping("/avtor")
+    private String mainAuthors(@RequestParam(defaultValue=editor2) String url,Model model) {
+        List<String> authors=authors(url,root); // localHost+"/avtor/?url="+root
+//        List<String> list=new ArrayList<>();
+        for (String a:authors) {
+            System.out.println(a);
+            List<String> poems=poems(a,root);
+            Integer c=poems.size();
+            System.out.println("POEMS TO GO: "+c);
+            for (String p:poems) System.out.println(--c+":"+!stih2base(p).isEmpty());
+    //        a.addAll(poems);
+        }
+        model.addAttribute("list",authors);
+        return "avtors";
     }
 
     private List<String> mainPage(String url,String prefix) {
@@ -275,18 +274,17 @@ public class MainController {
 
     private List<String> poems(String url,String prefix) {
 //        System.out.println(url);
-        Matcher m = Pattern.compile(href).matcher(getPage(url));
         List<String> poems = new ArrayList<>();
+        Matcher m = Pattern.compile(href).matcher(getPage(url));
         while (m.find())
-            if (Pattern.compile("poemlink").matcher(m.group(1)).find()) {
-                poems.add( prefix + // localHost + "/stih/?url=" +
+            if(Pattern.compile("poemlink").matcher(m.group(1)).find())
+                poems.add(prefix+ // localHost + "/stih/?url=" +
                     Pattern.compile("\"").matcher(
                         Pattern.compile(linkClass).matcher(
                             m.group(1)
                         ).replaceFirst("")
                     ).replaceAll("")
                 );
-            }
 //        Collections.sort(poems);
         return poems;
     }
