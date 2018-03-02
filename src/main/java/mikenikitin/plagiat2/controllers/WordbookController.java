@@ -13,6 +13,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.reverse;
+
 @Controller
 @AllArgsConstructor
 @RequestMapping("wordbook")
@@ -29,8 +31,27 @@ public class WordbookController {
     @RequestMapping({"/index", "/"})
     private String index(Model model) {
         List<Wordbook> wb=wordbookRepository.findAll();
-        Collections.reverse(wb);
+//        Collections.
+        reverse(wb);
         model.addAttribute("wordbook", wb);
         return "WordBook";
     }
+
+    @RequestMapping("/order")
+    private String order(Model model) {
+        List<Wordbook> wb=wordbookRepository.findAll();
+        wb.sort((a,b)->(a.getWord().compareTo(b.getWord())));
+//        Collections.sort(wb,(a,b)->(a.getWord().compareTo(b.getWord())));
+        model.addAttribute("wordbook", wb);
+        return "WordBook";
+    }
+
+    @RequestMapping("/{sym}")
+    private String symbol(Model model) {
+        List<Wordbook> wb=wordbookRepository.findAll();
+        //Collections //sort(wb,(a,b)->(a.getWord().compareTo(b.getWord())));
+        model.addAttribute("wordbook", wb);
+        return "WordBook";
+    }
+
 }
