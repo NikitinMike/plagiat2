@@ -25,13 +25,14 @@ public class Article {
     private Long wc;
     private Long rating; // good=0 >> poor=9999
 
-//    @JsonIgnore
+    @JsonIgnore
     @OneToMany (mappedBy="article")
 //    @JoinColumn(name="TEXT_ID", referencedColumnName="ARTICLE_ID") // nullable = false
     private List<Text> text;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn // (name="AUTHOR_ID")
+    @JsonIgnore
     private Author author;
 
     public Article(String name, Long wc) {

@@ -22,7 +22,6 @@ public class Text {
 //    @JsonIgnore
     private Long position;
 
-//    @JsonIgnore
 //    private Long articleId;
 
     @ManyToOne(fetch=FetchType.LAZY)
@@ -35,6 +34,7 @@ public class Text {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn // (name="WORDBOOK_ID")
+    @JsonIgnore
     private Wordbook word;
 
     public Text(Article art, Wordbook word, Long position){

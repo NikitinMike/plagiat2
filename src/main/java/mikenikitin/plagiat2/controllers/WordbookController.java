@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,13 +51,15 @@ public class WordbookController {
     }
 
     @RequestMapping("/word/{id}")
-    @ResponseBody
-    private List<Text> id(@PathVariable Long id) {
-        Wordbook wb=wordbookRepository.getById(id);
-        System.out.println(wb);
-        List<Text> text=textRepository.getAllByWord(wb); // findAllByWord(wordbookRepository.getById(id));
-        System.out.println(text);
-        return null;
+//    @ResponseBody
+    private String id(@PathVariable Long id,Model model) {
+        List<Article> articles=new ArrayList<>();
+        for (Text txt:textRepository.getAllByWord(wordbookRepository.getById(id)))
+//            System.out.println(txt.getArticle().getTitle());
+            articles.add(txt.getArticle());
+        model.addAttribute("articles", articles);
+        return "indexArticles";
+//        return texts.stream().map(text -> text.getArticle()).collect(Collectors.toList());
     }
 
     @RequestMapping("/{sym}")

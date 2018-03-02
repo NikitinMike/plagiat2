@@ -70,7 +70,7 @@ public class AuthorController {
         for (Article a:authorRepository.findAuthorsById(id).getArticles()) articles.add(a);
         model.addAttribute("author", authorRepository.findAuthorsById(id).getRealname());
         model.addAttribute("articles", articles);
-        return "articles";
+        return "indexArticles";
 //        return articles;
     }
 
