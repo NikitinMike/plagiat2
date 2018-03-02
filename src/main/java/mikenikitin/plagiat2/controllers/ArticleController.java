@@ -3,6 +3,7 @@ package mikenikitin.plagiat2.controllers;
 import lombok.AllArgsConstructor;
 import mikenikitin.plagiat2.model.Article;
 import mikenikitin.plagiat2.model.Text;
+import mikenikitin.plagiat2.model.Wordbook;
 import mikenikitin.plagiat2.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -93,13 +94,22 @@ public class ArticleController {
         return list;
     }
 
-    @RequestMapping("{id}")
-    private String article(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
+    @RequestMapping("/flat/{id}")
+    private String article2(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
         if(articleRepository.findArticlesById(id)==null){response.sendRedirect("/article");return null;}
         List<String> article = new ArrayList<>(); // = null;
         for (Text t:articleRepository.findArticlesById(id).getText()) article.add(t.getWord().getWord());
         model.addAttribute("article", article);
         return "article";
+    }
+
+    @RequestMapping("{id}")
+    private String article(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
+//        if(articleRepository.findArticlesById(id)==null){response.sendRedirect("/article");return null;}
+        List<Wordbook> article = new ArrayList<>(); // = null;
+        for (Text t:articleRepository.findArticlesById(id).getText()) article.add(t.getWord());
+        model.addAttribute("wordbook", article);
+        return "WordBook";
     }
 
 }
