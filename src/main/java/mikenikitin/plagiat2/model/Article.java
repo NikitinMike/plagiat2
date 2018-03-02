@@ -54,6 +54,22 @@ public class Article {
         wc=0L;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
+
+    public void setWc(Long wc) {
+        this.wc = wc;
+    }
+
 //    public String getName() {
 //        return name;
 //    }

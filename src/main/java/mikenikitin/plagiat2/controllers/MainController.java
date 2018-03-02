@@ -95,17 +95,28 @@ public class MainController {
 
     @RequestMapping("/poems")
     private String mainPoems(@RequestParam(defaultValue=selected) String url,Model model) {
-        List<String> poems=poems(url,root); // .subList(1,2);
+
+        List<String> poems = poems(url, root); // .subList(1,2);
+
+        for (String l:mainPage(url,"")) // System.out.println(root+l);
+            if (Pattern.compile("start").matcher(l).find())
+//                System.out.println((root+l)+poems(root+l, root));
+                poems.addAll(poems(root+l, root));
+
         Integer c=poems.size();
-        System.out.println("POEMS TO GO: "+c);
-        for (String p:poems) System.out.println(--c+":"+!stih2base(p).isEmpty());
+        System.out.println("POEMS TO GO: " + c);
+        for (String p : poems) System.out.println(--c + ":" + !stih2base(p).isEmpty());
+
         model.addAttribute("list", poems);
         return "poems";
     }
 
     @RequestMapping("/avtor")
-    private String mainAuthors(@RequestParam(defaultValue=editor2) String url,Model model) {
-        List<String> authors=authors(url,root); // localHost+"/avtor/?url="+root
+    private String mainAuthors(@RequestParam(defaultValue=editor1) String url,Model model) {
+
+        List<String> authors=new ArrayList<>();
+        while (authors.isEmpty()) authors=authors(url,root); // localHost+"/avtor/?url="+root
+
 //        List<String> list=new ArrayList<>();
         for (String a:authors) {
             System.out.println(a);
@@ -127,7 +138,7 @@ public class MainController {
             if (Pattern.compile("month").matcher(m.group(1)).find())
                 if (!ls.contains(s = Pattern.compile("\"").matcher(
                         Pattern.compile(linkClass).matcher(
-                            m.group(1).replaceAll("&","%26")
+                            m.group(1) // .replaceAll("&","%26")
                         ).replaceFirst("")
                     ).replaceAll(""))) ls.add(prefix+s);
 //        Collections.sort(ls);
@@ -167,7 +178,8 @@ public class MainController {
 //        System.out.println(page);
         while (m.find())
 //         if(Pattern.compile("authorlink").matcher(m.group(1)).find())
-            if (Pattern.compile("avtor").matcher(m.group(1)).find())
+            if (Pattern.compile("avtor").matcher(m.group(1)).find() ||
+        Pattern.compile("/authors/editor").matcher(m.group(1)).find())
 //                if (Pattern.compile("recomlink").matcher(m.group(1)).find())
                     authors.add(
                         Pattern.compile(prefix).matcher(m.group(1)).find()?"":prefix+
@@ -180,7 +192,8 @@ public class MainController {
 //                            ).replaceAll("&") // "&amp;"
                             ).replaceAll("")
                     );
-//                else System.out.println(m.group(1));
+            else
+                System.out.println(m.group(1));
         return authors;
     }
 

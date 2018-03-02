@@ -45,6 +45,10 @@ public class Text {
 //        this.articleId=art.getId();
     }
 
+    public Article getArticle() {
+        return article;
+    }
+
 //    public Wordbook getWord() {
 //        return word;
 //    }

@@ -53,6 +53,10 @@ public class Wordbook {
 //        this.wc=wc;
     }
 
+    public String getWord() {
+        return word;
+    }
+
 //    public String getWord() {
 //        return word;
 //    }
