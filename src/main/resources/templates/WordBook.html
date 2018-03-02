@@ -11,7 +11,10 @@
 <div th:include="header::header"> HEADER </div>
 <div>
     <a th:each ="word : ${wordbook}">
-         [<a th:text="${word.word}"></a>:<i th:text="${word.id}"></i>]
+        <!--<i th:text="${word.getRevWord()}"/>-->
+        <a th:text="${word.word}" th:href="@{'http://localhost:8080/wordbook/word/'+${word.id}}">
+        <i th:text="${word.id}"/></a>
+        <!--&nbsp-->
     </a>
 </div>
 <div th:replace="footer::footer"> FOOTER </div>

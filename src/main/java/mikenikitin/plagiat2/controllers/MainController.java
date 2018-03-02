@@ -52,9 +52,9 @@ public class MainController {
 
     //"http://www.stihi.ru/poems/list.html?type=selected" //
     //"http://www.stihi.ru/poems/list.html?topic=all"
-    private final String start = "http://www.stihi.ru/poems/list.html?topic=all",
+    private final String editor2="http://www.stihi.ru/authors/",
+            start = "http://www.stihi.ru/poems/list.html?topic=all",
             selected="http://www.stihi.ru/poems/selected.html",
-            editor2="http://www.stihi.ru/authors/",
             editor1="http://www.stihi.ru/authors/editor.html";
 
     @ResponseBody

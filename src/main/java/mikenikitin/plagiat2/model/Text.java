@@ -13,33 +13,39 @@ import java.util.List;
 @Entity
 public class Text {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @JsonIgnore
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @JsonIgnore
+//    @Column(name="TEXT_ID")
     private Long id;
 
-    @JsonIgnore
+//    @JsonIgnore
     private Long position;
 
-    @Column(name="TEXT_ID")
-    @JsonIgnore
-    private Long articleId;
+//    @JsonIgnore
+//    private Long articleId;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn // (name="ARTICLE_ID")
+    private Article article;
 
 //    @Column(name="WORD_ID")
 //    @JsonIgnore
 //    private Long wbId;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="WORDBOOK_ID")
+    @JoinColumn // (name="WORDBOOK_ID")
     private Wordbook word;
 
     public Text(Article art, Wordbook word, Long position){
-        this.position=position;
+        this.article=art;
         this.word=word;
+        this.position=position;
 //        this.wbId=word.getId();
-        this.articleId=art.getId();
+//        this.articleId=art.getId();
     }
 
-    public Wordbook getWord() {
-        return word;
-    }
+//    public Wordbook getWord() {
+//        return word;
+//    }
 }

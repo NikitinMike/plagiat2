@@ -8,4 +8,6 @@ import java.util.List;
 public interface WordbookRepository extends CrudRepository <Wordbook,Long> {
     List<Wordbook> findAll();
     Wordbook findByWord(String s);
+    Wordbook getById(Long id);
+    List<Wordbook> findAllByWordLike(String s);
 }

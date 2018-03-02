@@ -7,6 +7,7 @@ import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -14,10 +15,23 @@ import java.util.List;
 @Entity
 public class Wordbook {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-//    @JsonIgnore
-    @Column(name="WORDBOOK_ID")
+//    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
+//    @Column(name="WORDBOOK_ID")
     private Long id;
+
+    //    Long wc;
+    @Order
+    private String word;
+
+    //    @Order
+    @JsonIgnore
+    private Long ugly;
+
+    @Order
+    @JsonIgnore
+    public String getRevWord() {return new StringBuilder(this.word).reverse().toString();}
 
 //    @OneToMany // (mappedBy="article")
 //    @JoinColumn(name="WORD_ID", referencedColumnName="WORDBOOK_ID") // nullable = false
@@ -26,11 +40,6 @@ public class Wordbook {
 //    @OneToMany // (mappedBy = "wordbook")
 //    private List<Text> texts;
 
-//    Long wc;
-    @Order
-    private String word;
-//    @Order
-    private Long ugly;
 
     public Wordbook (String s){
         word = s;
@@ -44,7 +53,8 @@ public class Wordbook {
 //        this.wc=wc;
     }
 
-    public String getWord() {
-        return word;
-    }
+//    public String getWord() {
+//        return word;
+//    }
+
 }

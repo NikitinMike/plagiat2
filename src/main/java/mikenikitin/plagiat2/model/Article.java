@@ -16,7 +16,7 @@ import java.util.List;
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="ARTICLE_ID")
+//    @Column(name="ARTICLE_ID")
     private Long id;
 
     @Order
@@ -25,13 +25,13 @@ public class Article {
     private Long wc;
     private Long rating; // good=0 >> poor=9999
 
-    @JsonIgnore
-    @OneToMany // (mappedBy="article")
-    @JoinColumn(name="TEXT_ID", referencedColumnName="ARTICLE_ID") // nullable = false
+//    @JsonIgnore
+    @OneToMany (mappedBy="article")
+//    @JoinColumn(name="TEXT_ID", referencedColumnName="ARTICLE_ID") // nullable = false
     private List<Text> text;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="AUTHOR_ID")
+    @JoinColumn // (name="AUTHOR_ID")
     private Author author;
 
     public Article(String name, Long wc) {
@@ -53,31 +53,31 @@ public class Article {
         wc=0L;
     }
 
-    public String getName() {
-        return name;
-    }
+//    public String getName() {
+//        return name;
+//    }
 
-    public Long getId() {return id;}
+//    public Long getId() {return id;}
 
-    public List<Text> getText() {
-        return text;
-    }
+//    public List<Text> getText() {
+//        return text;
+//    }
 
-    public Long getWc() {
-        return wc;
-    }
+//    public Long getWc() {
+//        return wc;
+//    }
 
-    public void setWc(Long wc) {
-        this.wc = wc;
-    }
+//    public void setWc(Long wc) {
+//        this.wc = wc;
+//    }
 
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
+//    public void setAuthor(Author author) {
+//        this.author = author;
+//    }
 
-    public void setTitle(String title) {this.title = title;}
+//    public void setTitle(String title) {this.title = title;}
 
-    public String getTitle() {return title;}
+//    public String getTitle() {return title;}
 
 //    public void setwords(List<String> words){
 //        this.words=words;
