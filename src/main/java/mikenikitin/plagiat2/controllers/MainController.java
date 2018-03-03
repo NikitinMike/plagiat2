@@ -179,7 +179,7 @@ public class MainController {
         while (m.find())
 //         if(Pattern.compile("authorlink").matcher(m.group(1)).find())
             if (Pattern.compile("avtor").matcher(m.group(1)).find() ||
-        Pattern.compile("/authors/editor").matcher(m.group(1)).find())
+                Pattern.compile("/authors/editor").matcher(m.group(1)).find())
 //                if (Pattern.compile("recomlink").matcher(m.group(1)).find())
                     authors.add(
                         Pattern.compile(prefix).matcher(m.group(1)).find()?"":prefix+
@@ -192,8 +192,7 @@ public class MainController {
 //                            ).replaceAll("&") // "&amp;"
                             ).replaceAll("")
                     );
-            else
-                System.out.println(m.group(1));
+//            else System.out.println(m.group(1));
         return authors;
     }
 
@@ -245,27 +244,30 @@ public class MainController {
         art.setAuthor(author);
         art.setTitle(title);
 
-        System.out.println(url);
-        System.out.print(" length:"+stih.length());
-        System.out.print(" words:"+words.length);
-
         Long wc=0L;
         List<Text> text = new ArrayList<>();
         articleRepository.save(art);
 
-        List<String> nw=new ArrayList<>(); // new words in wordbook
+        System.out.print("#"+art.getId());
+        System.out.print(' '+url);
+        System.out.print(" length:"+stih.length());
+        System.out.println(" words:"+words.length);
+
+//        List<String> nw=new ArrayList<>(); // new words in wordbook
         for (String word:words) // \\p{Alpha}
             if (word.length()>0) {
                 Wordbook wbr=wordbookRepository.findByWord(word.toLowerCase());
-                if (wbr == null) System.out.print(".");
-                if (wbr == null) nw.add(word.toLowerCase());
+//                if (wbr == null) System.out.print(".");
+//                if (wbr == null) nw.add(word.toLowerCase());
+                if (wbr == null) System.out.print(' '+word.toLowerCase());
                 if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word.toLowerCase()));
                 text.add(new Text(art,wbr,++wc));
             }
-        textRepository.saveAll(text);
+        System.out.println(' ');
+//        System.out.println(" WC:"+wc);
+//        System.out.println(nw);
 
-        System.out.println(" WC:"+wc);
-        System.out.println(nw);
+        textRepository.saveAll(text);
         art.setWc(wc);
         articleRepository.save(art);
         authorRepository.save(author);
@@ -284,7 +286,7 @@ public class MainController {
 //            for (String lst:mainPage(url,root))
                 if (!skiplst.contains(lst))
                     poems.addAll(findAutorsPoems(lst,level-1,left+"-"));
-//        if (level>0)
+        if (level>0)
             System.out.println(level+": "+left+url+" :"+poems.size());
         return poems;
     }
