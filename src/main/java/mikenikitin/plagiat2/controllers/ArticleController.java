@@ -94,6 +94,15 @@ public class ArticleController {
         return list;
     }
 
+    @RequestMapping("/delete/{id}")
+    @ResponseBody
+    private boolean delete(@PathVariable Long id, HttpServletResponse response){
+        Article art=articleRepository.findArticlesById(id);
+        if(art==null) return false;
+        articleRepository.delete(art);
+        return true;
+    }
+
     @RequestMapping("/flat/{id}")
     private String article2(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
         if(articleRepository.findArticlesById(id)==null){response.sendRedirect("/article");return null;}

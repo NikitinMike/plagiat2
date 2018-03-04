@@ -24,6 +24,7 @@
             <td> <a th:text="${article.author.realname}"  th:href="@{${article.author.name}}"/> </td>
             <td> <a th:text="${article.title}" th:href="@{'/article/' + ${article.id}}"/> </td>
             <td th:text="${article.wc}" > </td>
+            <td> <a th:text="delete" th:href="@{'/article/delete/' + ${article.id}}"/> </td>
         </tr>
     </table>
 </div>
