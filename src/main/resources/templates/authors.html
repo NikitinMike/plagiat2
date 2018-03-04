@@ -21,8 +21,10 @@
     <tr th:each ="author : ${authors}">
         <td> <a th:text="${author.id}" th:href="@{'/authors/' + ${author.id}}"></a> </td>
         <td> <a th:text="${author.name.substring(26)}" th:href="@{${author.name}}"></a> </td>
-        <td th:text="${author.realname}" > </td>
-        <td th:text="${#lists.size(author.articles)}" > </td>
+        <td> <a th:text="${author.realname}" th:href="@{${author.name}}"/> </td>
+        <td> <a th:text="${#lists.size(author.articles)}" th:href="@{'/authors/' + ${author.id}}"/> </td>
+        <td> <a th:text=" poems " th:href="@{'http://localhost:8080/poems?url='+${author.name}}"></a> </td>
+        <td> <a th:text=" avtor " th:href="@{'http://localhost:8080/avtor?url='+${author.name}}"></a> </td>
     </tr>
 </table>
 

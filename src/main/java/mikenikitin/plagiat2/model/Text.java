@@ -49,6 +49,10 @@ public class Text {
         return article;
     }
 
+    public Wordbook getWord() {
+        return word;
+    }
+
 //    public Wordbook getWord() {
 //        return word;
 //    }

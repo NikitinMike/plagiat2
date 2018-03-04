@@ -28,7 +28,7 @@ import static jdk.nashorn.internal.objects.NativeArray.reverse;
 @RequestMapping({"article","articles"})
 public class ArticleController {
 
-    static private boolean reverse=true;
+    static private boolean reverse;
     private ArticleRepository articleRepository;
 //    protected List<Article> articles = articleRepository.findAll();
 

@@ -24,7 +24,7 @@ import java.util.List;
 public class AuthorController {
 
     private AuthorRepository authorRepository;
-    static private boolean reverse=true;
+    static private boolean reverse;
 
     @RequestMapping("/") // {"/index","/"}
     private String index(Model model) {

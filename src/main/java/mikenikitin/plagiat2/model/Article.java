@@ -74,6 +74,22 @@ public class Article {
         return id;
     }
 
+    public Long getWc() {
+        return wc;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public List<Text> getText() {
+        return text;
+    }
+
 //    public String getName() {
 //        return name;
 //    }
