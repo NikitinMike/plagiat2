@@ -31,20 +31,12 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 //    protected List<Article> articles = articleRepository.findAll();
 
-    @RequestMapping("/")
-    private String index(Model model) {
-        List<Article> articles = articleRepository.findAll();
-        if (lastOrder.isEmpty()) Collections.reverse(articles);
-        model.addAttribute("articles", articles );
-        return "indexArticles";
-    }
-
     static private String lastOrder="";
     static private boolean reverse=false;
-    @RequestMapping("/order/{order}") // name wc title author
-    private String orderBy(@PathVariable String order, Model model) {
+    @RequestMapping({"/","/order/"})
+    private String index(Model model) {
         List<Article> articles = articleRepository.findAll();
-        switch (order) {
+        switch (lastOrder) {
             case "name":
                 Collections.sort(articles,(b,a)->(a.getName().compareTo(b.getName())));
                 break;
@@ -62,11 +54,15 @@ public class ArticleController {
             default:
                 break;
         }
-        if (order.equals(lastOrder)) reverse=!reverse;
         if (reverse) Collections.reverse(articles);
-        lastOrder=order;
         model.addAttribute("articles", articles );
         return "indexArticles";
+    }
+
+    @RequestMapping({"/order/{order}"}) // name wc title author
+    private String orderBy(@PathVariable String order, Model model) {
+        if(!order.isEmpty()) if (order.equals(lastOrder)) reverse=!reverse; else lastOrder=order;
+        return "redirect:/articles/";
     }
 
     @RequestMapping
@@ -91,9 +87,9 @@ public class ArticleController {
 //    @ResponseBody
     private String delete(@PathVariable Long id, HttpServletResponse response){
         Article art=articleRepository.findArticlesById(id);
-        if(art==null) return "redirect:/articles/order/"+lastOrder;
+        if(art==null) return "redirect:/articles/";
         articleRepository.delete(art);
-        return "redirect:/articles/order/"+lastOrder;
+        return "redirect:/articles/";
     }
 
     @RequestMapping("/flat/{id}")

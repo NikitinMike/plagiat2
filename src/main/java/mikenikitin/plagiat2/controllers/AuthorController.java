@@ -30,18 +30,7 @@ public class AuthorController {
     @RequestMapping("/") // {"/index","/"}
     private String index(Model model) {
         List<Author> authors = authorRepository.findAll();
-//        if (reverse=!reverse)
-        Collections.reverse(authors);
-        model.addAttribute("authors", authors );
-        return "authors";
-    }
-
-    static private boolean reverse=false;
-    static private String lastOrder="";
-    @RequestMapping("/order/{order}") // name wc title author
-    private String orderBy(@PathVariable String order, Model model) {
-        List<Author> authors = authorRepository.findAll();
-        switch (order) {
+        switch (lastOrder) {
             case "count":
                 Collections.sort(authors,(b,a)->(a.getArticles().size()-b.getArticles().size()));
                 break;
@@ -56,11 +45,17 @@ public class AuthorController {
             default:
                 break;
         }
-        if (order.equals(lastOrder)) reverse=!reverse;
         if (reverse) Collections.reverse(authors);
-        lastOrder=order;
         model.addAttribute("authors", authors );
         return "authors";
+    }
+
+    static private boolean reverse=false;
+    static private String lastOrder="";
+    @RequestMapping("/order/{order}") // name wc title author
+    private String orderBy(@PathVariable String order, Model model) {
+        if(!order.isEmpty()) if (order.equals(lastOrder)) reverse=!reverse; else lastOrder=order;
+        return "redirect:/authors/";
     }
 
     @RequestMapping("{id}")
