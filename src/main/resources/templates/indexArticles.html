@@ -12,11 +12,11 @@
 <div>
     <table border="0">
         <tr>
-            <th><a href="./">ID</a></th>
-            <th><a href="./name">ARTICLE</a></th>
-            <th><a href="./author">Author</a></th>
-            <th><a href="./title">Title</a></th>
-            <th><a href="./wc">WC</a></th>
+            <th><a href="/articles/order/id">ID</a></th>
+            <th><a href="/articles/order/name">ARTICLE</a></th>
+            <th><a href="/articles/order/author">Author</a></th>
+            <th><a href="/articles/order/title">Title</a></th>
+            <th><a href="/articles/order/wc">WC</a></th>
         </tr>
         <tr th:each ="article : ${articles}">
             <td> <a th:text="${article.id}" th:href="@{'/article/' + ${article.id}}"/> </td>

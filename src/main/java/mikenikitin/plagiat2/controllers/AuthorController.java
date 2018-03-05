@@ -23,40 +23,42 @@ import java.util.List;
 @RequestMapping("/authors") //  {"author","/authors"}
 public class AuthorController {
 
+    private ArticleRepository articleRepository;
     private AuthorRepository authorRepository;
-    static private boolean reverse;
+//    static private boolean reverse;
 
     @RequestMapping("/") // {"/index","/"}
     private String index(Model model) {
         List<Author> authors = authorRepository.findAll();
-        if (reverse=!reverse) Collections.reverse(authors);
+//        if (reverse=!reverse)
+        Collections.reverse(authors);
         model.addAttribute("authors", authors );
         return "authors";
     }
 
-    @RequestMapping("/count") // {"/index","/"}
-    private String orderByCount(Model model) {
+    static private boolean reverse=false;
+    static private String lastOrder="";
+    @RequestMapping("/order/{order}") // name wc title author
+    private String orderBy(@PathVariable String order, Model model) {
         List<Author> authors = authorRepository.findAll();
-        Collections.sort(authors,(b,a)->(a.getArticles().size()-b.getArticles().size()));
-        if (reverse=!reverse) Collections.reverse(authors);
-        model.addAttribute("authors", authors );
-        return "authors";
-    }
-
-    @RequestMapping("/name") // {"/index","/"}
-    private String orderByName(Model model) {
-        List<Author> authors = authorRepository.findAll();
-        Collections.sort(authors,(a,b)->(a.getName().compareTo(b.getName())));
-        if (reverse=!reverse) Collections.reverse(authors);
-        model.addAttribute("authors", authors );
-        return "authors";
-    }
-
-    @RequestMapping("/realname") // {"/index","/"}
-    private String orderByRealName(Model model) {
-        List<Author> authors = authorRepository.findAll();
-        Collections.sort(authors,(a,b)->(a.getRealname().compareTo(b.getRealname())));
-        if (reverse=!reverse) Collections.reverse(authors);
+        switch (order) {
+            case "count":
+                Collections.sort(authors,(b,a)->(a.getArticles().size()-b.getArticles().size()));
+                break;
+            case "name":
+                Collections.sort(authors,(a,b)->(a.getName().compareTo(b.getName())));
+                break;
+            case "realname":
+                Collections.sort(authors,(a,b)->(a.getRealname().compareTo(b.getRealname())));
+                break;
+            case "id":
+                break;
+            default:
+                break;
+        }
+        if (order.equals(lastOrder)) reverse=!reverse;
+        if (reverse) Collections.reverse(authors);
+        lastOrder=order;
         model.addAttribute("authors", authors );
         return "authors";
     }
@@ -74,6 +76,16 @@ public class AuthorController {
 //        return articles;
     }
 
+    @RequestMapping("/delete/{id}")
+//    @ResponseBody
+    private String delete(@PathVariable Long id, HttpServletResponse response){
+        Author a=authorRepository.findAuthorsById(id);
+        if(a==null) return "redirect:/authors/";
+        List<Article> articles = new ArrayList<>(); // = null;
+        for (Article art:authorRepository.findAuthorsById(id).getArticles()) articleRepository.delete(art);
+        authorRepository.delete(a);
+        return "redirect:/authors/order/"+lastOrder;
+    }
     @RequestMapping
     @ResponseBody
     private List<Author> listall(){

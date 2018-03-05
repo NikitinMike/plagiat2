@@ -28,50 +28,43 @@ import static jdk.nashorn.internal.objects.NativeArray.reverse;
 @RequestMapping({"article","articles"})
 public class ArticleController {
 
-    static private boolean reverse;
     private ArticleRepository articleRepository;
 //    protected List<Article> articles = articleRepository.findAll();
 
     @RequestMapping("/")
     private String index(Model model) {
         List<Article> articles = articleRepository.findAll();
-        if (reverse=!reverse) Collections.reverse(articles);
+        if (lastOrder.isEmpty()) Collections.reverse(articles);
         model.addAttribute("articles", articles );
         return "indexArticles";
     }
 
-    @RequestMapping("/name")
-    private String orderByName(Model model) {
+    static private String lastOrder="";
+    static private boolean reverse=false;
+    @RequestMapping("/order/{order}") // name wc title author
+    private String orderBy(@PathVariable String order, Model model) {
         List<Article> articles = articleRepository.findAll();
-        Collections.sort(articles,(b,a)->(a.getName().compareTo(b.getName())));
-        if (reverse=!reverse) Collections.reverse(articles);
-        model.addAttribute("articles", articles );
-        return "indexArticles";
-    }
-
-    @RequestMapping("/wc")
-    private String orderByWC(Model model) {
-        List<Article> articles = articleRepository.findAll();
-        Collections.sort(articles,(b,a)->(a.getWc().intValue()-b.getWc().intValue()));
-        if (reverse=!reverse) Collections.reverse(articles);
-        model.addAttribute("articles", articles );
-        return "indexArticles";
-    }
-
-    @RequestMapping("/title")
-    private String orderByTitle(Model model) {
-        List<Article> articles = articleRepository.findAll();
-        Collections.sort(articles,(b,a)->(a.getTitle().compareTo(b.getTitle())));
-        if (reverse=!reverse) Collections.reverse(articles);
-        model.addAttribute("articles", articles );
-        return "indexArticles";
-    }
-
-    @RequestMapping("/author")
-    private String orderByAuthor(Model model) {
-        List<Article> articles = articleRepository.findAll();
-        Collections.sort(articles,(b,a)->(a.getAuthor().getRealname().compareTo(b.getAuthor().getRealname())));
-        if (reverse=!reverse) Collections.reverse(articles);
+        switch (order) {
+            case "name":
+                Collections.sort(articles,(b,a)->(a.getName().compareTo(b.getName())));
+                break;
+            case "wc":
+                Collections.sort(articles,(b,a)->(a.getWc().intValue()-b.getWc().intValue()));
+                break;
+            case "title":
+                Collections.sort(articles,(b,a)->(a.getTitle().compareTo(b.getTitle())));
+                break;
+            case "author":
+                Collections.sort(articles,(b,a)->(a.getAuthor().getRealname().compareTo(b.getAuthor().getRealname())));
+                break;
+            case "id":
+                break;
+            default:
+                break;
+        }
+        if (order.equals(lastOrder)) reverse=!reverse;
+        if (reverse) Collections.reverse(articles);
+        lastOrder=order;
         model.addAttribute("articles", articles );
         return "indexArticles";
     }
@@ -95,12 +88,12 @@ public class ArticleController {
     }
 
     @RequestMapping("/delete/{id}")
-    @ResponseBody
-    private boolean delete(@PathVariable Long id, HttpServletResponse response){
+//    @ResponseBody
+    private String delete(@PathVariable Long id, HttpServletResponse response){
         Article art=articleRepository.findArticlesById(id);
-        if(art==null) return false;
+        if(art==null) return "redirect:/articles/order/"+lastOrder;
         articleRepository.delete(art);
-        return true;
+        return "redirect:/articles/order/"+lastOrder;
     }
 
     @RequestMapping("/flat/{id}")

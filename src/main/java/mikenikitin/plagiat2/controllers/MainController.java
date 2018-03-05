@@ -233,7 +233,7 @@ public class MainController {
         if(stih.isEmpty())return "";
 
         String[] words=stih.replaceAll("[^а-яёА-ЯЁ]"," ").split("\\s+");
-        if(words.length>999||words.length<9) return "";
+        if(words.length<33||words.length>555) return "";
 
         Article art= new Article(url);
         if (articleRepository.findArticlesByName(art.getName())!=null) return "";
@@ -249,7 +249,7 @@ public class MainController {
         articleRepository.save(art);
 
         System.out.print("#"+art.getId());
-        System.out.print(' '+url);
+        System.out.print(' '+url.replaceAll("http://www.stihi.ru/",""));
         System.out.print(" length:"+stih.length());
         System.out.println(" words:"+words.length);
 
@@ -259,11 +259,11 @@ public class MainController {
                 Wordbook wbr=wordbookRepository.findByWord(word.toLowerCase());
 //                if (wbr == null) System.out.print(".");
 //                if (wbr == null) nw.add(word.toLowerCase());
-                if (wbr == null) System.out.print(' '+word.toLowerCase());
+//                if (wbr == null) System.out.print(' '+word.toLowerCase());
                 if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word.toLowerCase()));
                 text.add(new Text(art,wbr,++wc));
             }
-        System.out.println(' ');
+//        System.out.println(' ');
 //        System.out.println(" WC:"+wc);
 //        System.out.println(nw);
 
@@ -306,6 +306,10 @@ public class MainController {
                 );
 //        Collections.sort(poems);
         return poems;
+    }
+
+    private int ovalArrayNames (Article...names) {
+        return names.length;
     }
 
 }

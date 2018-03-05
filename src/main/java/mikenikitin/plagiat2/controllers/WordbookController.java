@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import mikenikitin.plagiat2.model.Article;
 import mikenikitin.plagiat2.model.Text;
 import mikenikitin.plagiat2.model.Wordbook;
+import mikenikitin.plagiat2.repository.ArticleRepository;
 import mikenikitin.plagiat2.repository.TextRepository;
 import mikenikitin.plagiat2.repository.WordbookRepository;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ public class WordbookController {
 
     private WordbookRepository wordbookRepository;
     private TextRepository textRepository;
+    private ArticleRepository articleRepository;
 
     @RequestMapping("/rest")
     @ResponseBody
@@ -56,7 +58,9 @@ public class WordbookController {
         List<Article> articles=new ArrayList<>();
         for (Text txt:textRepository.getAllByWord(wordbookRepository.getById(id)))
 //            System.out.println(txt.getArticle().getTitle());
-            articles.add(txt.getArticle());
+            if (!articles.contains(txt.getArticle()))
+                if (articleRepository.existsById(txt.getArticle().getId()))
+                    articles.add(txt.getArticle());
         model.addAttribute("articles", articles);
         return "indexArticles";
 //        return texts.stream().map(text -> text.getArticle()).collect(Collectors.toList());
