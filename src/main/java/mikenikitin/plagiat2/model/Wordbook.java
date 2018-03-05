@@ -29,6 +29,11 @@ public class Wordbook {
     @JsonIgnore
     private Long ugly;
 
+    @JsonIgnore
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn // (name="AUTHOR_ID")
+    private SpeechPart spart;
+
     @Order
     @JsonIgnore
     public String getRevWord() {return new StringBuilder(this.word).reverse().toString();}
