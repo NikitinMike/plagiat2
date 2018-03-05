@@ -35,6 +35,9 @@ public class Wordbook {
     private SpeechPart spart;
 
     @Order
+    private int size;
+
+    @Order
     @JsonIgnore
     public String getRevWord() {return new StringBuilder(this.word).reverse().toString();}
 
@@ -45,25 +48,14 @@ public class Wordbook {
 //    @OneToMany // (mappedBy = "wordbook")
 //    private List<Text> texts;
 
-
     public Wordbook (String s){
         word = s;
         ugly=0L;
-//        wc=0L;
-    }
-
-    public Wordbook (String s,Long wc){
-        word = s;
-        ugly=0L;
-//        this.wc=wc;
+        size=s.replaceAll("[бвгджзйклмнпрстфхцчшщъь]","").length();
     }
 
     public String getWord() {
         return word;
     }
-
-//    public String getWord() {
-//        return word;
-//    }
 
 }
