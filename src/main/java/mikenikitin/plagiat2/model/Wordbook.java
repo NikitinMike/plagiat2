@@ -35,11 +35,29 @@ public class Wordbook {
     private SpeechPart spart;
 
     @Order
+    @JsonIgnore
     private int size;
+
+//    @Order
+//    @JsonIgnore
+//    public String getRevWord() {return new StringBuilder(this.word).reverse().toString();}
 
     @Order
     @JsonIgnore
-    public String getRevWord() {return new StringBuilder(this.word).reverse().toString();}
+    public int getSize() {return size;}
+
+    public String getLetters() {
+        return getLetters(true,true);
+    }
+
+    public String getLetters(boolean type) {
+        return getLetters(type,false);
+    }
+
+    public String getLetters(boolean type,boolean reverse) {
+        return (type)?getWord(reverse).replaceAll("[аеёиоуыэюя]",""):
+            getWord(reverse).replaceAll("[бвгджзйклмнпрстфхцчшщъь]","");
+    }
 
 //    @OneToMany // (mappedBy="article")
 //    @JoinColumn(name="WORD_ID", referencedColumnName="WORDBOOK_ID") // nullable = false
@@ -51,11 +69,16 @@ public class Wordbook {
     public Wordbook (String s){
         word = s;
         ugly=0L;
-        size=s.replaceAll("[бвгджзйклмнпрстфхцчшщъь]","").length();
+        size=this.getLetters(false).length();
     }
 
     public String getWord() {
         return word;
+    }
+
+    public String getWord(boolean reverse) {
+        return new StringBuilder(getWord().replaceAll("[ьъ]","")).reverse().toString();
+//        return (reverse)?new StringBuilder(getWord()).reverse().toString():getWord();
     }
 
 }

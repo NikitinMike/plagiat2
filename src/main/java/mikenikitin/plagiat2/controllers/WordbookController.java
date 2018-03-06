@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static java.util.Collections.reverse;
 import static java.util.Collections.sort;
 
 @Controller
@@ -37,8 +40,9 @@ public class WordbookController {
     @RequestMapping({"/index", "/"})
     private String index(Model model) {
         List<Wordbook> wb=wordbookRepository.findAll();
-        Collections.sort(wb,(a, b)->(a.getRevWord().compareTo(b.getRevWord())));
-//        reverse(wb);
+        Collections.sort(wb,(a, b)->(a.getWord(true).compareTo(b.getWord(true))));
+//        Collections.sort(wb,(a, b)->(a.getLetters().compareTo(b.getLetters())));
+        reverse(wb);
         model.addAttribute("wordbook", wb);
         return "WordBook";
     }
@@ -71,6 +75,23 @@ public class WordbookController {
         List<Wordbook> wb=wordbookRepository.findAllByWordLike(sym+'%');
         model.addAttribute("wordbook", wb);
         return "WordBook";
+    }
+
+    @RequestMapping("/fill")
+    @ResponseBody
+    private void fillWB(){
+        List<Wordbook> wb=wordbookRepository.findAll();
+        wb.forEach((a)->a.setSize(a.getLetters(false).length()));
+
+//        wb.forEach(System.out::println);
+//        wb.forEach(Wordbook::getWord);
+
+//        List<String> a = Arrays.asList("123","234","345");
+//        List<Integer> b = a.stream()
+//                .map(String::length)
+//                .collect(Collectors.toList());
+
+        wordbookRepository.saveAll(wb);
     }
 
 }
