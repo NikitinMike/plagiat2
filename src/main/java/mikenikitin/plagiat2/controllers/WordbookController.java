@@ -40,7 +40,7 @@ public class WordbookController {
     @RequestMapping({"/index", "/"})
     private String index(Model model) {
         List<Wordbook> wb=wordbookRepository.findAll();
-        Collections.sort(wb,(a, b)->(a.getWord(true).compareTo(b.getWord(true))));
+        sort(wb,(a, b)->(a.getWord(true).compareTo(b.getWord(true))));
 //        Collections.sort(wb,(a, b)->(a.getLetters().compareTo(b.getLetters())));
         reverse(wb);
         model.addAttribute("wordbook", wb);
