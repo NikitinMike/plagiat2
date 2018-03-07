@@ -22,7 +22,7 @@ public class Text {
 //    @JsonIgnore
     private Long position;
 
-//    private Long articleId;
+    private boolean clause; // end clause=true
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn // (name="ARTICLE_ID")

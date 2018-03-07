@@ -38,6 +38,8 @@ public class Wordbook {
     @JsonIgnore
     private int size;
 
+    private boolean endtype; // Male/Female
+
 //    @Order
 //    @JsonIgnore
 //    public String getRevWord() {return new StringBuilder(this.word).reverse().toString();}

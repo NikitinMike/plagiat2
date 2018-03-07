@@ -205,13 +205,17 @@ public class MainController {
         return result.toString();
     }
 
+/*
     private String stripStih(String stih){ // <div class="copyright">
 //        System.out.println(stih);
         Matcher m = Pattern.compile("<div class=\"text\">(.+?)</div>").matcher(stih);
         if (!m.find()) return "";
 //        System.out.println(m.group(1));
-        return Pattern.compile("&nbsp;|&quot;").matcher(m.group(1).replaceAll("<br>","\n")).replaceAll(" ");
+//        return Pattern.compile("&nbsp;|&quot;").matcher(m.group(1).replaceAll("<br>","\n")).replaceAll(" ");
+        return Pattern.compile("&nbsp;|&quot;").matcher(m.group(1)).replaceAll(" ");
+//        .replaceAll("<br>","\n")
     }
+*/
 
     private String stih2base(String url){
 
@@ -229,11 +233,18 @@ public class MainController {
         String authorName=am.find()?root+am.group(1):localHost;
         String realName=am.find()?am.group(2):localHost;
 
-        stih=stripStih(stih);
+//        stih=stripStih(stih);
+        Matcher sm = Pattern.compile("<div class=\"text\">(.+?)</div>").matcher(stih);
+        if (!sm.find()) return "";
+//        System.out.println(m.group(1));
+//        return Pattern.compile("&nbsp;|&quot;").matcher(m.group(1).replaceAll("<br>","\n")).replaceAll(" ");
+        stih = Pattern.compile("&nbsp;|&quot;").matcher(sm.group(1)).replaceAll(" ");
+        stih = stih.replaceAll("\\s*<br>","\n");
         if(stih.isEmpty())return "";
 
-        String[] words=stih.replaceAll("[^а-яёА-ЯЁ]"," ").split("\\s+");
+        String[] words=stih.replaceAll("[^а-яёА-ЯЁ]"," ").split("\\s+"); // <br>
         if(words.length<33||words.length>555) return "";
+//        System.out.println(words.toString());
 
         Article art= new Article(url);
         if (articleRepository.findArticlesByName(art.getName())!=null) return "";
@@ -256,6 +267,7 @@ public class MainController {
 //        List<String> nw=new ArrayList<>(); // new words in wordbook
         for (String word:words) // \\p{Alpha}
             if (word.length()>0) {
+//                System.out.print(word+",");
                 Wordbook wbr=wordbookRepository.findByWord(word.toLowerCase());
 //                if (wbr == null) System.out.print(".");
 //                if (wbr == null) nw.add(word.toLowerCase());
