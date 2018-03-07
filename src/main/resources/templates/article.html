@@ -9,7 +9,28 @@
 
     <div th:include="header::header"> HEADER </div>
 
-    <p th:text="${article}" > </p>
+    <!--<p th:text="${article}" />-->
+
+    <div>
+        <a th:each ="word : ${article}">
+            <!--<i th:text="${word.getRevWord()}"/>-->
+
+            <a th:if="${word.clause}">
+                <b th:text="${word.word.word}" />
+                <br/>
+            </a>
+            <a th:unless="${word.clause}">
+                <a th:text="${word.word.word}" />
+            </a>
+
+            <!--<a th:text="${word.word.word}" th:href="@{'http://localhost:8080/wordbook/word/'+${word.word.id}}"/>-->
+
+            <!--<i th:text="${word.getLetters(true)}"/>-->
+            <!--<i th:text="${word.getWord(true)}"/>-->
+            <!--&nbsp-->
+        </a>
+    </div>
+
 
     <!--<a href="/authors/"> back to authors </a>-->
     <!--<a href="/articles/"> back to articles </a>-->

@@ -223,68 +223,78 @@ public class MainController {
         catch (UnsupportedEncodingException e) {e.printStackTrace();}
 
 //        System.out.println(url);
-        String stih=getPage(url);
+        String poem=getPage(url);
 
         String title=localHost;
-        Matcher tm = Pattern.compile("<h1>(.+?)</h1>").matcher(stih);
+        Matcher tm = Pattern.compile("<h1>(.+?)</h1>").matcher(poem);
         if (tm.find()) title=tm.group(1);
 
-        Matcher am = Pattern.compile("<a href=\"(.+?)\">(.+?)</a>").matcher(stih);
+        Matcher am = Pattern.compile("<a href=\"(.+?)\">(.+?)</a>").matcher(poem);
         String authorName=am.find()?root+am.group(1):localHost;
         String realName=am.find()?am.group(2):localHost;
 
-//        stih=stripStih(stih);
-        Matcher sm = Pattern.compile("<div class=\"text\">(.+?)</div>").matcher(stih);
+//        poem=stripStih(poem);
+        Matcher sm = Pattern.compile("<div class=\"text\">(.+?)</div>").matcher(poem);
         if (!sm.find()) return "";
 //        System.out.println(m.group(1));
 //        return Pattern.compile("&nbsp;|&quot;").matcher(m.group(1).replaceAll("<br>","\n")).replaceAll(" ");
-        stih = Pattern.compile("&nbsp;|&quot;").matcher(sm.group(1)).replaceAll(" ");
-        stih = stih.replaceAll("\\s*<br>","\n");
-        if(stih.isEmpty())return "";
+        poem = Pattern.compile("&nbsp;|&quot;").matcher(sm.group(1)).replaceAll(" ");
+        poem = poem.replaceAll("\\s*<br>","\n");
+        if(poem.isEmpty())return "";
 
-        String[] words=stih.replaceAll("[^а-яёА-ЯЁ]"," ").split("\\s+"); // <br>
-        if(words.length<33||words.length>555) return "";
-//        System.out.println(words.toString());
+//        System.out.println(poem);
+        String[] lines=poem.split("\\n+");
+        if (lines.length < 4 || lines.length > 99) return "";
 
-        Article art= new Article(url);
-        if (articleRepository.findArticlesByName(art.getName())!=null) return "";
+        Article art = new Article(url);
+        if (articleRepository.findArticlesByName(art.getName()) != null) return "";
 
-        Author author=authorRepository.findByName(authorName);
-        if (author==null) authorRepository.save(author=new Author(authorName,realName));
+        Author author = authorRepository.findByName(authorName);
+        if (author == null) authorRepository.save(author = new Author(authorName, realName));
 
         art.setAuthor(author);
         art.setTitle(title);
-
-        Long wc=0L;
-        List<Text> text = new ArrayList<>();
         articleRepository.save(art);
 
-        System.out.print("#"+art.getId());
-        System.out.print(' '+url.replaceAll("http://www.stihi.ru/",""));
-        System.out.print(" length:"+stih.length());
-        System.out.println(" words:"+words.length);
+        List<Text> text = new ArrayList<>();
+        Long wc = 0L;
+
+        System.out.print("#" + art.getId());
+        System.out.print(' ' + url.replaceAll("http://www.stihi.ru/", ""));
+        System.out.print(" length:" + poem.length());
+        System.out.println(" lines:" + lines.length);
+
+        for (String line:lines)
+        {
+//            System.out.println(line);
+            String[] linewords = line.replaceAll("[^а-яёА-ЯЁa-zA-Z]", " ").split("\\s+");
+//            if (words.length < 33 || words.length > 555) return "";
 
 //        List<String> nw=new ArrayList<>(); // new words in wordbook
-        for (String word:words) // \\p{Alpha}
-            if (word.length()>0) {
-//                System.out.print(word+",");
-                Wordbook wbr=wordbookRepository.findByWord(word.toLowerCase());
+            Text t = null;
+            for (String word : linewords) // \\p{Alpha}
+                if (word.length() > 0) {
+                    System.out.print(word+" ");
+                    Wordbook wbr = wordbookRepository.findByWord(word.toLowerCase());
 //                if (wbr == null) System.out.print(".");
 //                if (wbr == null) nw.add(word.toLowerCase());
 //                if (wbr == null) System.out.print(' '+word.toLowerCase());
-                if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word.toLowerCase()));
-                text.add(new Text(art,wbr,++wc));
-            }
+                    if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word.toLowerCase()));
+                    text.add(t=new Text(art, wbr, ++wc));
+                }
+            if (t!=null) t.setClause(true);
+            System.out.println();
 //        System.out.println(' ');
 //        System.out.println(" WC:"+wc);
 //        System.out.println(nw);
+        }
 
         textRepository.saveAll(text);
         art.setWc(wc);
         articleRepository.save(art);
         authorRepository.save(author);
 
-        return stih;
+        return poem;
 //        return url;
     }
 

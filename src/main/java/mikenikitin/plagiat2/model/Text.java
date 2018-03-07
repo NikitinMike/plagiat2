@@ -2,8 +2,7 @@ package mikenikitin.plagiat2.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,6 +10,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
+//@AllArgsConstructor
+//@Getter
+//@Setter
 public class Text {
     @Id
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -41,6 +43,7 @@ public class Text {
         this.article=art;
         this.word=word;
         this.position=position;
+        clause=false;
 //        this.wbId=word.getId();
 //        this.articleId=art.getId();
     }
@@ -52,6 +55,8 @@ public class Text {
     public Wordbook getWord() {
         return word;
     }
+
+    public void setClause(boolean clause) {this.clause=clause;}
 
 //    public Wordbook getWord() {
 //        return word;

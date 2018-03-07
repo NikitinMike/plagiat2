@@ -5,23 +5,17 @@ import mikenikitin.plagiat2.model.Article;
 import mikenikitin.plagiat2.model.Text;
 import mikenikitin.plagiat2.model.Wordbook;
 import mikenikitin.plagiat2.repository.ArticleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static jdk.nashorn.internal.objects.NativeArray.reverse;
 
 @Controller
 @AllArgsConstructor
@@ -84,7 +78,6 @@ public class ArticleController {
     }
 
     @RequestMapping("/delete/{id}")
-//    @ResponseBody
     private String delete(@PathVariable Long id, HttpServletResponse response){
         Article art=articleRepository.findArticlesById(id);
         if(art==null) return "redirect:/articles/";
@@ -94,19 +87,14 @@ public class ArticleController {
 
     @RequestMapping("/flat/{id}")
     private String article2(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
-        if(articleRepository.findArticlesById(id)==null){response.sendRedirect("/article");return null;}
-        List<String> article = new ArrayList<>(); // = null;
-        for (Text t:articleRepository.findArticlesById(id).getText()) article.add(t.getWord().getWord());
-        model.addAttribute("article", article);
+        model.addAttribute("article", articleRepository.findArticlesById(id).getText());
         return "article";
     }
 
     @RequestMapping("{id}")
     private String article(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
-//        if(articleRepository.findArticlesById(id)==null){response.sendRedirect("/article");return null;}
-        List<Wordbook> article = new ArrayList<>(); // = null;
-        for (Text t:articleRepository.findArticlesById(id).getText()) article.add(t.getWord());
-        model.addAttribute("wordbook", article);
+        if(articleRepository.findArticlesById(id)==null){response.sendRedirect("/article");return null;}
+        model.addAttribute("wordbook", articleRepository.findArticlesById(id).getText());
         return "WordBook";
     }
 
