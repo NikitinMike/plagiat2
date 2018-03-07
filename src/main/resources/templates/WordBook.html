@@ -12,7 +12,8 @@
 <div>
     <a th:each ="word : ${wordbook}">
         <!--<i th:text="${word.getRevWord()}"/>-->
-        <a th:text="${word.word.word}" th:href="@{'http://localhost:8080/wordbook/word/'+${word.id}}"/>
+        <!--<a th:text="${word.word.word}" th:href="@{'http://localhost:8080/wordbook/word/'+${word.id}}"/>-->
+        <a th:text="${word.word}" th:href="@{'http://localhost:8080/wordbook/word/'+${word.id}}"/>
         <!--<i th:text="${word.getLetters(true)}"/>-->
         <!--<i th:text="${word.getWord(true)}"/>-->
         <!--&nbsp-->

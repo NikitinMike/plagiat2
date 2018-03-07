@@ -68,10 +68,10 @@ public class Wordbook {
 //    @OneToMany // (mappedBy = "wordbook")
 //    private List<Text> texts;
 
-    public Wordbook (String s){
+    public Wordbook(String s) {
         word = s;
-        ugly=0L;
-        size=this.getLetters(false).length();
+        ugly = 0L;
+        size = this.getLetters(false).length();
     }
 
     public String getWord() {
@@ -83,4 +83,7 @@ public class Wordbook {
 //        return (reverse)?new StringBuilder(getWord()).reverse().toString():getWord();
     }
 
+    public void setSize(int size) {
+        this.size = size;
+    }
 }

@@ -105,7 +105,7 @@ public class MainController {
 
         Integer c=poems.size();
         System.out.println("POEMS TO GO: " + c);
-        for (String p : poems) System.out.println(url.replaceAll(".+/avtor/","")+' '+--c + ":" + !stih2base(p).isEmpty());
+        for (String p : poems) System.out.println(--c +" : "+ p.replaceAll(".+/editor/","")+" :" + !stih2base(p).isEmpty());
 
         model.addAttribute("list", poems);
         return "poems";
@@ -123,7 +123,7 @@ public class MainController {
             List<String> poems=poems(a,root);
             Integer c=poems.size();
             System.out.println("POEMS TO GO: "+c);
-            for (String p:poems) System.out.println(url.replaceAll(".+/avtor/","")+' '+--c+":"+!stih2base(p).isEmpty());
+            for (String p:poems) System.out.println(a.replaceAll(".+/avtor/","")+' '+--c+":"+!stih2base(p).isEmpty());
     //        a.addAll(poems);
         }
         model.addAttribute("list",authors);
@@ -205,18 +205,6 @@ public class MainController {
         return result.toString();
     }
 
-/*
-    private String stripStih(String stih){ // <div class="copyright">
-//        System.out.println(stih);
-        Matcher m = Pattern.compile("<div class=\"text\">(.+?)</div>").matcher(stih);
-        if (!m.find()) return "";
-//        System.out.println(m.group(1));
-//        return Pattern.compile("&nbsp;|&quot;").matcher(m.group(1).replaceAll("<br>","\n")).replaceAll(" ");
-        return Pattern.compile("&nbsp;|&quot;").matcher(m.group(1)).replaceAll(" ");
-//        .replaceAll("<br>","\n")
-    }
-*/
-
     private String stih2base(String url){
 
         try {url = URLDecoder.decode(url,"UTF-8");}
@@ -237,9 +225,9 @@ public class MainController {
         Matcher sm = Pattern.compile("<div class=\"text\">(.+?)</div>").matcher(poem);
         if (!sm.find()) return "";
 //        System.out.println(m.group(1));
-//        return Pattern.compile("&nbsp;|&quot;").matcher(m.group(1).replaceAll("<br>","\n")).replaceAll(" ");
         poem = Pattern.compile("&nbsp;|&quot;").matcher(sm.group(1)).replaceAll(" ");
         poem = poem.replaceAll("\\s*<br>","\n");
+        poem = poem.replaceAll("<.+>"," ");
         if(poem.isEmpty())return "";
 
 //        System.out.println(poem);
@@ -260,8 +248,8 @@ public class MainController {
         Long wc = 0L;
 
         System.out.print("#" + art.getId());
-        System.out.print(' ' + url.replaceAll("http://www.stihi.ru/", ""));
-        System.out.print(" length:" + poem.length());
+        System.out.print(' ' + url.replaceAll(root, ""));
+        System.out.print(" vol:" + poem.length());
         System.out.println(" lines:" + lines.length);
 
         for (String line:lines)
@@ -274,19 +262,15 @@ public class MainController {
             Text t = null;
             for (String word : linewords) // \\p{Alpha}
                 if (word.length() > 0) {
-                    System.out.print(word+" ");
+//                    System.out.print(word+" ");
                     Wordbook wbr = wordbookRepository.findByWord(word.toLowerCase());
-//                if (wbr == null) System.out.print(".");
 //                if (wbr == null) nw.add(word.toLowerCase());
-//                if (wbr == null) System.out.print(' '+word.toLowerCase());
                     if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word.toLowerCase()));
                     text.add(t=new Text(art, wbr, ++wc));
                 }
             if (t!=null) t.setClause(true);
-            System.out.println();
-//        System.out.println(' ');
-//        System.out.println(" WC:"+wc);
-//        System.out.println(nw);
+//          System.out.println();
+//          System.out.println(nw);
         }
 
         textRepository.saveAll(text);

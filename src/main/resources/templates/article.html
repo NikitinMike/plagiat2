@@ -12,15 +12,18 @@
     <!--<p th:text="${article}" />-->
 
     <div>
-        <a th:each ="word : ${article}">
+        <a th:each="word : ${article}">
             <!--<i th:text="${word.getRevWord()}"/>-->
 
             <a th:if="${word.clause}">
-                <b th:text="${word.word.word}" />
+                <b th:text="${word.word.word}"/>
+                <sub th:text="${word.word.size}"/>
+                <b th:summary="${word.word.size}"/>
                 <br/>
             </a>
             <a th:unless="${word.clause}">
-                <a th:text="${word.word.word}" />
+                <a th:text="${word.word.word}"/>
+                <sub th:text="${word.word.size}"/>
             </a>
 
             <!--<a th:text="${word.word.word}" th:href="@{'http://localhost:8080/wordbook/word/'+${word.word.id}}"/>-->

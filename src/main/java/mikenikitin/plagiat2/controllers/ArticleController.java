@@ -85,13 +85,13 @@ public class ArticleController {
         return "redirect:/articles/";
     }
 
-    @RequestMapping("/flat/{id}")
+    @RequestMapping("{id}")
     private String article2(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
         model.addAttribute("article", articleRepository.findArticlesById(id).getText());
         return "article";
     }
 
-    @RequestMapping("{id}")
+    @RequestMapping("/flat/{id}")
     private String article(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
         if(articleRepository.findArticlesById(id)==null){response.sendRedirect("/article");return null;}
         model.addAttribute("wordbook", articleRepository.findArticlesById(id).getText());
