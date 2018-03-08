@@ -105,7 +105,7 @@ public class MainController {
 
         Integer c=poems.size();
         System.out.println("POEMS TO GO: " + c);
-        for (String p : poems) System.out.println(--c +" : "+ p.replaceAll(".+/editor/","")+" :" + !stih2base(p).isEmpty());
+        for (String p : poems) System.out.println(--c +": "+ p.replaceAll(".+/editor/","")+" :" + !stih2base(p).isEmpty());
 
         model.addAttribute("list", poems);
         return "poems";
@@ -258,7 +258,7 @@ public class MainController {
             String[] linewords = line.replaceAll("[^а-яёА-ЯЁa-zA-Z]", " ").split("\\s+");
 //            if (words.length < 33 || words.length > 555) return "";
 
-//        List<String> nw=new ArrayList<>(); // new words in wordbook
+            List<Wordbook> nw=new ArrayList<>(); // new words in wordbook
             Text t = null;
             for (String word : linewords) // \\p{Alpha}
                 if (word.length() > 0) {
@@ -266,8 +266,10 @@ public class MainController {
                     Wordbook wbr = wordbookRepository.findByWord(word.toLowerCase());
 //                if (wbr == null) nw.add(word.toLowerCase());
                     if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word.toLowerCase()));
+//                    nw.add(wbr);
                     text.add(t=new Text(art, wbr, ++wc));
                 }
+//            wordbookRepository.saveAll(nw);
             if (t!=null) t.setClause(true);
 //          System.out.println();
 //          System.out.println(nw);

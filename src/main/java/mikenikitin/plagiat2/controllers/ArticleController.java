@@ -25,8 +25,8 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 //    protected List<Article> articles = articleRepository.findAll();
 
-    static private String lastOrder="";
-    static private boolean reverse=false;
+    static private String lastOrder="id";
+    static private boolean reverse=true;
     @RequestMapping({"/","/order/"})
     private String index(Model model) {
         List<Article> articles = articleRepository.findAll();
@@ -87,6 +87,9 @@ public class ArticleController {
 
     @RequestMapping("{id}")
     private String article2(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
+        model.addAttribute("id",id);
+        model.addAttribute("author",articleRepository.findArticlesById(id).getAuthor().getRealname());
+        model.addAttribute("title",articleRepository.findArticlesById(id).getTitle());
         model.addAttribute("article", articleRepository.findArticlesById(id).getText());
         return "article";
     }

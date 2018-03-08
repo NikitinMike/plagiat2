@@ -50,8 +50,8 @@ public class AuthorController {
         return "authors";
     }
 
-    static private boolean reverse=false;
-    static private String lastOrder="";
+    static private boolean reverse=true;
+    static private String lastOrder="id";
     @RequestMapping("/order/{order}") // name wc title author
     private String orderBy(@PathVariable String order, Model model) {
         if(!order.isEmpty()) if (order.equals(lastOrder)) reverse=!reverse; else lastOrder=order;
