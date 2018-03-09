@@ -7,16 +7,16 @@ import mikenikitin.plagiat2.model.Wordbook;
 import mikenikitin.plagiat2.repository.ArticleRepository;
 import mikenikitin.plagiat2.repository.TextRepository;
 import mikenikitin.plagiat2.repository.WordbookRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.reverse;
@@ -33,18 +33,32 @@ public class WordbookController {
 
     @RequestMapping("/rest")
     @ResponseBody
-    private List<Wordbook> listall(){
-        return wordbookRepository.findAll();
+    private List<String> listall(){
+//        Set uniqueValues = new HashSet(wordbookRepository.findAll().forEach()); //now unique
+//        List<Wordbook> wb= wordbookRepository.findAll();
+//        wb.forEach(Wordbook::getWord);
+
+//        return new HashSet(wordbookRepository.findAll().stream()
+        return wordbookRepository.findAll().stream()
+                .map(Wordbook::getEnd).distinct() // .sorted()
+                .collect(Collectors.toList());
+
     }
 
     @RequestMapping({"/index", "/"})
-    private String index(Model model) {
-        List<Wordbook> wb=wordbookRepository.findAll();
+    private String index(Model model,Pageable pageable) {
+        List<Wordbook> wb= wordbookRepository.findAll();
 //        System.out.println(wb);
         sort(wb,(a, b)->(a.getWord(true).compareTo(b.getWord(true))));
 //        Collections.sort(wb,(a, b)->(a.getLetters().compareTo(b.getLetters())));
         reverse(wb);
-        model.addAttribute("wordbook", wb);
+        model.addAttribute("wordbook", wb); // .getContent()
+        return "WordBook";
+    }
+
+    @RequestMapping({"/page"})
+    private String pageable(Model model,Pageable pageable) { //
+        model.addAttribute("wordbook", wordbookRepository.findAll(pageable)); // .getContent()
         return "WordBook";
     }
 
@@ -82,7 +96,7 @@ public class WordbookController {
     @ResponseBody
     private void fillWB(){
         List<Wordbook> wb=wordbookRepository.findAll();
-        wb.forEach((a)->a.setSize(a.getLetters(false).length()));
+        wb.forEach(a->a.setSize(a.getLetters(false).length()));
 
 //        wb.forEach(System.out::println);
 //        wb.forEach(Wordbook::getWord);

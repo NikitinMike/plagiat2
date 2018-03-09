@@ -9,6 +9,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Data
 @NoArgsConstructor
@@ -38,7 +40,19 @@ public class Wordbook {
     @JsonIgnore
     private int size;
 
+    @JsonIgnore
     private boolean endtype; // Male/Female
+    //
+
+//    @Column(unique=true)
+    public String getEnd() { // ([аеёиоуыэюя] [^аеёиоуыэюя]
+        Matcher m = Pattern.compile("([^аеёиоуыэюя][ъь]??[аеёиоуыэюя]+[^аеёиоуыэюя]*)$")
+            .matcher(word
+//                .replaceAll("[ъь]","")
+            );
+        if(m.find()) return m.group(1);
+        return word;
+    }
 
 //    @Order
 //    @JsonIgnore
@@ -48,6 +62,7 @@ public class Wordbook {
     @JsonIgnore
     public int getSize() {return size;}
 
+    @JsonIgnore
     public String getLetters() {
         return getLetters(true,true);
     }
@@ -77,6 +92,7 @@ public class Wordbook {
     public String getWord() {
         return word;
     }
+
 
     public String getWord(boolean reverse) {
         return new StringBuilder(getWord().replaceAll("[ьъ]","")).reverse().toString();
