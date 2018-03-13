@@ -10,6 +10,8 @@ import mikenikitin.plagiat2.repository.WordbookRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,11 +58,6 @@ public class WordbookController {
         return "WordBook";
     }
 
-    @RequestMapping({"/page"})
-    private String pageable(Model model,Pageable pageable) { //
-        model.addAttribute("wordbook", wordbookRepository.findAll(pageable)); // .getContent()
-        return "WordBook";
-    }
 
     @RequestMapping("/order")
     private String order(Model model) {
@@ -68,6 +65,21 @@ public class WordbookController {
         wb.sort((a,b)->(a.getWord().compareTo(b.getWord())));
 //        Collections.sort(wb,(a,b)->(a.getWord().compareTo(b.getWord())));
         model.addAttribute("wordbook", wb);
+        return "WordBook";
+    }
+
+    /*
+        @PageableDefault(page = DEFAULT_PAGE_NUMBER, size = DEFAULT_PAGE_SIZE)
+        @SortDefault.SortDefaults({
+                @SortDefault(sort = "dateRecorded", direction = Sort.Direction.DESC),
+                @SortDefault(sort = "encounterId", direction = Sort.Direction.ASC)
+        })
+    */
+    @RequestMapping({"/page"})
+    private String pageable(Model model,
+        @SortDefault.SortDefaults(@SortDefault(sort = "word", direction = Sort.Direction.ASC))
+        @PageableDefault(size = 999)Pageable pageable) {
+        model.addAttribute("wordbook", wordbookRepository.findAll(pageable)); // .getContent() pageable = updatePageable(pageable,999)
         return "WordBook";
     }
 

@@ -206,6 +206,10 @@ public class MainController {
     }
 
     private String stih2base(String url){
+        return stih2base(url,0b11);
+    }
+
+    private String stih2base(String url,int track){
 
         try {url = URLDecoder.decode(url,"UTF-8");}
         catch (UnsupportedEncodingException e) {e.printStackTrace();}
@@ -252,29 +256,30 @@ public class MainController {
         System.out.print(" vol:" + poem.length());
         System.out.println(" lines:" + lines.length);
 
+        List<Wordbook> nw=new ArrayList<>(); // new words in wordbook
         for (String line:lines)
         {
-//            System.out.println(line);
+//            if ((track&0b1)>0) System.out.println(line);
             String[] linewords = line.replaceAll("[^а-яёА-ЯЁa-zA-Z]", " ").split("\\s+");
 //            if (words.length < 33 || words.length > 555) return "";
 
-            List<Wordbook> nw=new ArrayList<>(); // new words in wordbook
             Text t = null;
             for (String word : linewords) // \\p{Alpha}
                 if (word.length() > 0) {
-//                    System.out.print(word+" ");
+//                    if ((track&0b10)>0) System.out.print(word+" ");
                     Wordbook wbr = wordbookRepository.findByWord(word.toLowerCase());
-//                if (wbr == null) nw.add(word.toLowerCase());
-                    if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word.toLowerCase()));
+                    if (wbr == null) nw.add(wbr = new Wordbook(word.toLowerCase()));
+//                    if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word.toLowerCase()));
 //                    nw.add(wbr);
                     text.add(t=new Text(art, wbr, ++wc));
                 }
 //            wordbookRepository.saveAll(nw);
             if (t!=null) t.setClause(true);
-//          System.out.println();
-//          System.out.println(nw);
         }
 
+//          System.out.println();
+//          System.out.println(nw);
+        wordbookRepository.saveAll(nw);
         textRepository.saveAll(text);
         art.setWc(wc);
         articleRepository.save(art);
