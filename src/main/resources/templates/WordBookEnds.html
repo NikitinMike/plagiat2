@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>WordBook</title>
+</head>
+
+<body>
+
+<div th:include="header::header"> HEADER </div>
+<div>
+    <p th:each ="word : ${wordbook.entrySet()}">
+        <!--<b th:text="${word.keySet()}"/>-->
+        <a th:if="${word.getValue().size()}>2">
+            <b th:text="${word.getKey()}"/>:
+            <b th:text="${word.getValue().size()}"/>
+            <a th:each ="w : ${word.getValue()}">
+                <i th:text="${w.word}"/>
+            </a>
+        </a>
+    </p>
+</div>
+<div th:replace="footer::footer"> FOOTER </div>
+
+</body>
+
+</html>

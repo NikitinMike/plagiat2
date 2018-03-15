@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.reverse;
@@ -32,30 +33,67 @@ public class WordbookController {
     private TextRepository textRepository;
     private ArticleRepository articleRepository;
 
-    @RequestMapping("/rest")
-    @ResponseBody
-    private Map<String, List<Wordbook>> listall(){
+//    @RequestMapping("/rest")
+//    @ResponseBody
+
+    @RequestMapping("/ends")
+//    @ResponseBody
+    private String listAllByEnds(Model model){ // Map<String, List<Wordbook>>
+//    private Map<String, String> listall(){
 //        Set uniqueValues = new HashSet(wordbookRepository.findAll().forEach()); //now unique
 //        List<Wordbook> wb= wordbookRepository.findAll();
 //        wb.forEach(Wordbook::getWord);
 
+//        BinaryOperator<String> binaryOpt = (s1, s2)->s1+" "+s2;
 //        return new HashSet(wordbookRepository.findAll().stream()
-        return wordbookRepository.findAll().stream()
+        Map<String, List<Wordbook>> wb=wordbookRepository.findAll().stream()
 //                .map(Wordbook::getEnd)
 //                .map(Wordbook::getWord)
                 .filter(a->a.getWord().replaceAll("[а-яёА-ЯЁ]","").isEmpty())
-                .limit(10000L)
+//                .limit(10000L)
 //                .distinct()
-//                .sorted((b,a)->a.getWord().compareTo(b.getWord()))
+//                .sorted((b,a)->a.getEnd().compareTo(b.getEnd()))
 //                .sorted()
 //                .collect(Collectors.toMap(Function.identity(), data->data)); // ,(getEnd1, getEnd2) -> getEnd1+";"+getEnd2)
 //                .collect(Collectors.toMap(p->p,p->p,(x,y)->x+", "+y));
-//                .collect(Collectors.toMap(Wordbook::getWord,Wordbook::getEnd));
+//                .collect(Collectors.toMap(Wordbook::getEnd,Wordbook::getWord,(word1,word2)->word1+" "+word2)); // binaryOpt
                 .collect(Collectors.groupingBy(Wordbook::getEnd)); // Wordbook::getEnd,Wordbook::getWord
 //                .collect(Collectors.toList());
 //                .collect(Collectors.toSet());
+//                .forEach();
+//                .getContent()
 
+        List<Map.Entry<String, List<Wordbook>>> list = new LinkedList<Map.Entry<String, List<Wordbook>>>(wb.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<String, List<Wordbook>>>() {
+            public int compare(Map.Entry<String, List<Wordbook>> o1, Map.Entry<String, List<Wordbook>> o2) {
+                return o2.getValue().size()-o1.getValue().size();
+            }
+        });
+        Map<String, List<Wordbook>> result = new LinkedHashMap<String, List<Wordbook>>();
+        for (Map.Entry<String, List<Wordbook>> entry : list) result.put(entry.getKey(), entry.getValue());
+
+        model.addAttribute("wordbook",result );
+        return "WordBookEnds";
     }
+
+    /*
+public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> unsortMap) {
+
+    List<Map.Entry<K, V>> list =new LinkedList<Map.Entry<K, V>>(unsortMap.entrySet());
+
+    Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
+        public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
+            return (o1.getValue()).compareTo(o2.getValue());
+        }
+    });
+
+    Map<K, V> result = new LinkedHashMap<K, V>();
+    for (Map.Entry<K, V> entry : list) result.put(entry.getKey(), entry.getValue());
+
+    return result;
+
+}
+     */
 
     @RequestMapping({"/index", "/"})
     private String index(Model model,Pageable pageable) {
@@ -68,14 +106,13 @@ public class WordbookController {
         return "WordBook";
     }
 
-
     @RequestMapping("/order")
     private String order(Model model) {
         List<Wordbook> wb=wordbookRepository.findAll();
         wb.sort((a,b)->(a.getWord().compareTo(b.getWord())));
 //        Collections.sort(wb,(a,b)->(a.getWord().compareTo(b.getWord())));
         model.addAttribute("wordbook", wb);
-        return "WordBook";
+        return "WordBook2";
     }
 
     /*

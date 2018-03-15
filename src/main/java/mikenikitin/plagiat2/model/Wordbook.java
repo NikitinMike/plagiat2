@@ -44,14 +44,19 @@ public class Wordbook implements Comparable<Wordbook> {
     private boolean endtype; // Male/Female
     //
 
+    @JsonIgnore
+    public String getEnd() {
+        return getEnd(false);
+    }
+
 //    @Column(unique=true)
     @JsonIgnore
-    public String getEnd() { // ([аеёиоуыэюя] [^аеёиоуыэюя]
+    public String getEnd(boolean reverse) { // ([аеёиоуыэюя] [^аеёиоуыэюя]
         Matcher m = Pattern.compile("([^аеёиоуыэюя][ъь]??[аеёиоуыэюя]+[^аеёиоуыэюя]*)$")
             .matcher(word
 //                .replaceAll("[ъь]","")
             );
-        if(m.find()) return m.group(1);
+        if(m.find())return reverse?new StringBuilder(m.group(1)).reverse().toString():m.group(1);
         return word;
     }
 
@@ -94,8 +99,8 @@ public class Wordbook implements Comparable<Wordbook> {
         return word;
     }
 
-    public int compareTo(Wordbook wb){return getEnd().compareTo(wb.getEnd());}
-//    public int compareTo(Wordbook wb){return word.compareTo(wb.word);}
+//    public int compareTo(Wordbook wb){return getEnd().compareTo(wb.getEnd());}
+    public int compareTo(Wordbook wb){return word.compareTo(wb.word);}
 
     public String getWord(boolean reverse) {
         return new StringBuilder(getWord().replaceAll("[ьъ]","")).reverse().toString();
