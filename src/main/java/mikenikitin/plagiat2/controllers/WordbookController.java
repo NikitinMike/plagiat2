@@ -35,10 +35,7 @@ public class WordbookController {
 
 //    @RequestMapping("/rest")
 //    @ResponseBody
-
-    @RequestMapping("/ends")
-//    @ResponseBody
-    private String listAllByEnds(Model model){ // Map<String, List<Wordbook>>
+//private String listAllByEnds(Model model){ // Map<String, List<Wordbook>>
 //    private Map<String, String> listall(){
 //        Set uniqueValues = new HashSet(wordbookRepository.findAll().forEach()); //now unique
 //        List<Wordbook> wb= wordbookRepository.findAll();
@@ -46,10 +43,10 @@ public class WordbookController {
 
 //        BinaryOperator<String> binaryOpt = (s1, s2)->s1+" "+s2;
 //        return new HashSet(wordbookRepository.findAll().stream()
-        Map<String, List<Wordbook>> wb=wordbookRepository.findAll().stream()
+//    Map<String, List<Wordbook>> wb=wordbookRepository.findAll().stream()
 //                .map(Wordbook::getEnd)
 //                .map(Wordbook::getWord)
-                .filter(a->a.getWord().replaceAll("[а-яёА-ЯЁ]","").isEmpty())
+//            .filter(a->a.getWord().replaceAll("[а-яёА-ЯЁ]","").isEmpty())
 //                .limit(10000L)
 //                .distinct()
 //                .sorted((b,a)->a.getEnd().compareTo(b.getEnd()))
@@ -57,43 +54,36 @@ public class WordbookController {
 //                .collect(Collectors.toMap(Function.identity(), data->data)); // ,(getEnd1, getEnd2) -> getEnd1+";"+getEnd2)
 //                .collect(Collectors.toMap(p->p,p->p,(x,y)->x+", "+y));
 //                .collect(Collectors.toMap(Wordbook::getEnd,Wordbook::getWord,(word1,word2)->word1+" "+word2)); // binaryOpt
-                .collect(Collectors.groupingBy(Wordbook::getEnd)); // Wordbook::getEnd,Wordbook::getWord
+//            .collect(Collectors.groupingBy(Wordbook::getEnd)); // Wordbook::getEnd,Wordbook::getWord
 //                .collect(Collectors.toList());
 //                .collect(Collectors.toSet());
 //                .forEach();
 //                .getContent()
 
-        List<Map.Entry<String, List<Wordbook>>> list = new LinkedList<Map.Entry<String, List<Wordbook>>>(wb.entrySet());
-        Collections.sort(list, new Comparator<Map.Entry<String, List<Wordbook>>>() {
-            public int compare(Map.Entry<String, List<Wordbook>> o1, Map.Entry<String, List<Wordbook>> o2) {
-                return o2.getValue().size()-o1.getValue().size();
-            }
-        });
-        Map<String, List<Wordbook>> result = new LinkedHashMap<String, List<Wordbook>>();
-        for (Map.Entry<String, List<Wordbook>> entry : list) result.put(entry.getKey(), entry.getValue());
-
-        model.addAttribute("wordbook",result );
+    @RequestMapping("/ends")
+    private String listAllByEnds(Model model){
+        List<Map.Entry<String, List<Wordbook>>> list = new LinkedList(
+            wordbookRepository.findAll().stream()
+                .filter(a->a.getWord().replaceAll("[а-яёА-ЯЁ]","").isEmpty())
+                .collect(Collectors.groupingBy(Wordbook::getEnd)).entrySet()
+        );
+        Collections.sort(list,(o1,o2)->o2.getValue().size()-o1.getValue().size());
+        Map<String, List<Wordbook>> rythms = new LinkedHashMap();
+        for (Map.Entry<String, List<Wordbook>> item : list) rythms.put(item.getKey(), item.getValue());
+        model.addAttribute("wordbook",rythms);
+//        model.addAttribute("wordbook", sortByValue(wb) );
         return "WordBookEnds";
     }
 
     /*
-public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> unsortMap) {
-
-    List<Map.Entry<K, V>> list =new LinkedList<Map.Entry<K, V>>(unsortMap.entrySet());
-
-    Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
-        public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
-            return (o1.getValue()).compareTo(o2.getValue());
-        }
-    });
-
-    Map<K, V> result = new LinkedHashMap<K, V>();
-    for (Map.Entry<K, V> entry : list) result.put(entry.getKey(), entry.getValue());
-
-    return result;
-
-}
-     */
+    private <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> unsortMap) {
+        List<Map.Entry<K,V>> list =new LinkedList<Map.Entry<K, V>>(unsortMap.entrySet());
+        Collections.sort(list,(o1,o2)->o2.getValue().size()-o1.getValue().size());
+        Map<K,V> result = new LinkedHashMap<K,V>();
+        for (Map.Entry<K,V> entry:list) result.put(entry.getKey(), entry.getValue());
+        return result;
+    }
+    */
 
     @RequestMapping({"/index", "/"})
     private String index(Model model,Pageable pageable) {

@@ -260,19 +260,19 @@ public class MainController {
         for (String line:lines)
         {
 //            if ((track&0b1)>0) System.out.println(line);
-            String[] linewords = line.replaceAll("[^а-яёА-ЯЁa-zA-Z]", " ").split("\\s+");
+            String[] linewords = line.toLowerCase().replaceAll("[^а-яёa-z]", " ").split("\\s+");
 //            if (words.length < 33 || words.length > 555) return "";
-
             Text t = null;
             for (String word : linewords) // \\p{Alpha}
-                if (word.length() > 0) {
+                if (word.length() > 0)
 //                    if ((track&0b10)>0) System.out.print(word+" ");
-                    Wordbook wbr = wordbookRepository.findByWord(word.toLowerCase());
-                    if (wbr == null) nw.add(wbr = new Wordbook(word.toLowerCase()));
+                    try {
+                        Wordbook wbr=wordbookRepository.findByWord(word);
+                        if (wbr == null) nw.add(wbr = new Wordbook(word));
 //                    if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word.toLowerCase()));
 //                    nw.add(wbr);
-                    text.add(t=new Text(art, wbr, ++wc));
-                }
+                        text.add(t=new Text(art, wbr, ++wc));
+                    } catch(Exception e){System.out.println(e.getMessage()+" ["+word+"] ");}
 //            wordbookRepository.saveAll(nw);
             if (t!=null) t.setClause(true);
         }
