@@ -7,7 +7,6 @@ import mikenikitin.plagiat2.model.Wordbook;
 import mikenikitin.plagiat2.repository.ArticleRepository;
 import mikenikitin.plagiat2.repository.TextRepository;
 import mikenikitin.plagiat2.repository.WordbookRepository;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -35,15 +34,26 @@ public class WordbookController {
 
     @RequestMapping("/rest")
     @ResponseBody
-    private List<String> listall(){
+    private Map<String, List<Wordbook>> listall(){
 //        Set uniqueValues = new HashSet(wordbookRepository.findAll().forEach()); //now unique
 //        List<Wordbook> wb= wordbookRepository.findAll();
 //        wb.forEach(Wordbook::getWord);
 
 //        return new HashSet(wordbookRepository.findAll().stream()
         return wordbookRepository.findAll().stream()
-                .map(Wordbook::getEnd).distinct() // .sorted()
-                .collect(Collectors.toList());
+//                .map(Wordbook::getEnd)
+//                .map(Wordbook::getWord)
+                .filter(a->a.getWord().replaceAll("[а-яёА-ЯЁ]","").isEmpty())
+                .limit(10000L)
+//                .distinct()
+//                .sorted((b,a)->a.getWord().compareTo(b.getWord()))
+//                .sorted()
+//                .collect(Collectors.toMap(Function.identity(), data->data)); // ,(getEnd1, getEnd2) -> getEnd1+";"+getEnd2)
+//                .collect(Collectors.toMap(p->p,p->p,(x,y)->x+", "+y));
+//                .collect(Collectors.toMap(Wordbook::getWord,Wordbook::getEnd));
+                .collect(Collectors.groupingBy(Wordbook::getEnd)); // Wordbook::getEnd,Wordbook::getWord
+//                .collect(Collectors.toList());
+//                .collect(Collectors.toSet());
 
     }
 

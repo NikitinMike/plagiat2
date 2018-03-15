@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 @Data
 @NoArgsConstructor
 @Entity
-public class Wordbook {
+public class Wordbook implements Comparable<Wordbook> {
     @Id
 //    @GeneratedValue(strategy = GenerationType.TABLE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,6 +45,7 @@ public class Wordbook {
     //
 
 //    @Column(unique=true)
+    @JsonIgnore
     public String getEnd() { // ([аеёиоуыэюя] [^аеёиоуыэюя]
         Matcher m = Pattern.compile("([^аеёиоуыэюя][ъь]??[аеёиоуыэюя]+[^аеёиоуыэюя]*)$")
             .matcher(word
@@ -93,6 +94,8 @@ public class Wordbook {
         return word;
     }
 
+    public int compareTo(Wordbook wb){return getEnd().compareTo(wb.getEnd());}
+//    public int compareTo(Wordbook wb){return word.compareTo(wb.word);}
 
     public String getWord(boolean reverse) {
         return new StringBuilder(getWord().replaceAll("[ьъ]","")).reverse().toString();
