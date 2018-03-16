@@ -254,11 +254,10 @@ public class MainController {
         System.out.print("#" + art.getId());
         System.out.print(' ' + url.replaceAll(root, ""));
         System.out.print(" vol:" + poem.length());
-        System.out.println(" lines:" + lines.length);
+        System.out.print(" lines:" + lines.length);
 
         List<Wordbook> nw=new ArrayList<>(); // new words in wordbook
-        for (String line:lines)
-        {
+        for (String line:lines) {
 //            if ((track&0b1)>0) System.out.println(line);
             String[] linewords = line.toLowerCase().replaceAll("[^а-яёa-z]", " ").split("\\s+");
 //            if (words.length < 33 || words.length > 555) return "";
@@ -268,18 +267,19 @@ public class MainController {
 //                    if ((track&0b10)>0) System.out.print(word+" ");
                     try {
                         Wordbook wbr=wordbookRepository.findByWord(word);
-                        if (wbr == null) nw.add(wbr = new Wordbook(word));
-//                    if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word.toLowerCase()));
-//                    nw.add(wbr);
+                        if (wbr == null) nw.add(new Wordbook(word));
+                        if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word));
+//                      nw.add(wbr);
                         text.add(t=new Text(art, wbr, ++wc));
                     } catch(Exception e){System.out.println(e.getMessage()+" ["+word+"] ");}
 //            wordbookRepository.saveAll(nw);
             if (t!=null) t.setClause(true);
         }
 
-//          System.out.println();
-//          System.out.println(nw);
-        wordbookRepository.saveAll(nw);
+        System.out.print(" words:" +wc);
+        System.out.print(" new:" +nw.size());
+        System.out.println();
+//        wordbookRepository.saveAll(nw);
         textRepository.saveAll(text);
         art.setWc(wc);
         articleRepository.save(art);

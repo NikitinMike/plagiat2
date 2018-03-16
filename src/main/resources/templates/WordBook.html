@@ -9,6 +9,18 @@
 <body>
 
 <div th:include="header::header"> HEADER </div>
+
+<a href="http://localhost:8080/wordbook/page?page=0"> wordbook </a>
+<a href="http://localhost:8080/wordbook/page?page=1"> wordbook </a>
+<a href="http://localhost:8080/wordbook/page?page=2"> wordbook </a>
+<a href="http://localhost:8080/wordbook/page?page=3"> wordbook </a>
+<a href="http://localhost:8080/wordbook/page?page=4"> wordbook </a>
+<a href="http://localhost:8080/wordbook/page?page=5"> wordbook </a>
+<a href="http://localhost:8080/wordbook/page?page=6"> wordbook </a>
+<a href="http://localhost:8080/wordbook/page?page=7"> wordbook </a>
+<a href="http://localhost:8080/wordbook/page?page=8"> wordbook </a>
+<a href="http://localhost:8080/wordbook/page?page=9"> wordbook </a>
+
 <div>
     <a th:each ="word : ${wordbook}">
         <!--<i th:text="${word.getRevWord()}"/>-->
