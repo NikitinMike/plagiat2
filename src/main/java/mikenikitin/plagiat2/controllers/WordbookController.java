@@ -65,11 +65,16 @@ public class WordbookController {
         List<Map.Entry<String, List<Wordbook>>> list = new LinkedList(
             wordbookRepository.findAll().stream()
                 .filter(a->a.getWord().replaceAll("[а-яёА-ЯЁ]","").isEmpty())
+                .sorted((b,a)->a.getWord(true).compareTo(b.getWord(true)))
                 .collect(Collectors.groupingBy(Wordbook::getEnd)).entrySet()
         );
-        Collections.sort(list,(o1,o2)->o2.getValue().size()-o1.getValue().size());
+//        Collections.sort(list,(o1,o2)->o2.getValue().size()-o1.getValue().size());
+        Collections.sort(list,(o1,o2)->o1.getKey().compareTo(o2.getKey()));
         Map<String, List<Wordbook>> rythms = new LinkedHashMap();
-        for (Map.Entry<String, List<Wordbook>> item : list) rythms.put(item.getKey(), item.getValue());
+        for (Map.Entry<String, List<Wordbook>> item : list) {
+//            item.getValue().sort((a, b)->(a.getWord(true).compareTo(b.getWord(true))));
+            rythms.put(item.getKey(), item.getValue());
+        }
         model.addAttribute("wordbook",rythms);
 //        model.addAttribute("wordbook", sortByValue(wb) );
         return "WordBookEnds";

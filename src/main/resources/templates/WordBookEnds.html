@@ -12,7 +12,7 @@
 <div>
     <p th:each ="word : ${wordbook.entrySet()}">
         <!--<b th:text="${word.keySet()}"/>-->
-        <a th:if="${word.getValue().size()}>1">
+        <a th:if="${word.getValue().size()}>2">
             <b th:text="${word.getKey()}"/>:
             <b th:text="${word.getValue().size()}"/>
             <a th:each ="w : ${word.getValue()}">
