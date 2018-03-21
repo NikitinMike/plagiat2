@@ -60,6 +60,8 @@ public class WordbookController {
 //                .forEach();
 //                .getContent()
 
+    String revstr(String s){return new StringBuilder(s).reverse().toString();}
+
     @RequestMapping("/ends")
     private String listAllByEnds(Model model){
         List<Map.Entry<String, List<Wordbook>>> list = new LinkedList(
@@ -69,13 +71,11 @@ public class WordbookController {
                 .collect(Collectors.groupingBy(Wordbook::getEnd)).entrySet()
         );
 //        Collections.sort(list,(o1,o2)->o2.getValue().size()-o1.getValue().size());
-        Collections.sort(list,(o1,o2)->o1.getKey().compareTo(o2.getKey()));
-        Map<String, List<Wordbook>> rythms = new LinkedHashMap();
-        for (Map.Entry<String, List<Wordbook>> item : list) {
+        Collections.sort(list,(o1,o2)->revstr(o1.getKey()).compareTo(revstr(o2.getKey())));
+        Map<String, List<Wordbook>> rythm = new LinkedHashMap();
+        for (Map.Entry<String, List<Wordbook>> item : list) rythm.put(item.getKey(), item.getValue());
 //            item.getValue().sort((a, b)->(a.getWord(true).compareTo(b.getWord(true))));
-            rythms.put(item.getKey(), item.getValue());
-        }
-        model.addAttribute("wordbook",rythms);
+        model.addAttribute("wordbook",rythm);
 //        model.addAttribute("wordbook", sortByValue(wb) );
         return "WordBookEnds";
     }
