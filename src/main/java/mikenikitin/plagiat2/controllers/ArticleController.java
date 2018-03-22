@@ -88,7 +88,7 @@ public class ArticleController {
     @RequestMapping("{id}")
     private String article2(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
         model.addAttribute("id",id);
-        model.addAttribute("author",articleRepository.findArticlesById(id).getAuthor().getRealname());
+        model.addAttribute("author",articleRepository.findArticlesById(id).getAuthor());
         model.addAttribute("title",articleRepository.findArticlesById(id).getTitle());
         model.addAttribute("article", articleRepository.findArticlesById(id).getText());
         return "article";

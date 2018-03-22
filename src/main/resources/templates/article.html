@@ -7,12 +7,17 @@
     </head>
     <body>
 
-    <h3 th:text="${author}">Author</h3>
+    <h3 th:text="${author.realname}"/>
+
+    <a th:text="${author.realname}"  th:href="@{${author.name}}"/>
+    <a th:text="${author.id}"  th:href="@{'/authors/'+${author.id}}"/>
+
     <h2 th:text="${title}">Title</h2>
 
     <div th:include="header::header"> HEADER </div>
 
     <!--<p th:text="${article}" />-->
+    <a th:text="delete" th:href="@{'/article/delete/' + ${id}}"/>
 
     <div th:with="size=0">
         <a th:each="word : ${article}" th:with="size=${size}+${word.word.size}">

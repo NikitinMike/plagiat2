@@ -14,6 +14,7 @@
         <tr>
             <th><a href="/articles/order/id">ID</a></th>
             <th><a href="/articles/order/name">ARTICLE</a></th>
+            <th><a href="/articles/order/id">AuthorId</a></th>
             <th><a href="/articles/order/author">Author</a></th>
             <!--<th><a href="/articles/order/author">Author</a></th>-->
             <th><a href="/articles/order/title">Title</a></th>
@@ -22,6 +23,7 @@
         <tr th:each ="article : ${articles}">
             <td> <a th:text="${article.id}" th:href="@{'/article/' + ${article.id}}"/> </td>
             <td> <a th:text="${article.name.substring(20)}" th:href="@{${article.name}}"></a> </td>
+            <td> <a th:text="${article.author.id}"  th:href="@{'/authors/' + ${article.author.id}}"/> </td>
             <td> <a th:text="${article.author.realname}"  th:href="@{${article.author.name}}"/> </td>
             <!--<td> <a th:text="${article.author.realname}"  th:href="@{'/authors/'+${article.author.id}}"/> </td>-->
             <td> <a th:text="${article.title}" th:href="@{'/article/' + ${article.id}}"/> </td>
