@@ -298,7 +298,7 @@ public class MainController {
 //            for (String lst:todayList(url,root))
 //            for (String lst:mainPage(url,root))
                 if (!skiplst.contains(lst))
-                    poems.addAll(findAutorsPoems(lst,level-1,left+"-"));
+                    poems.addAll(findAutorsPoems(lst,level-1,left+"+"));
         if (level>0)
             System.out.println(level+": "+left+url+" :"+poems.size());
         return poems;

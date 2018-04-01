@@ -147,7 +147,8 @@ public class WordbookController {
     @RequestMapping("/{sym}")
     private String symbol(Model model,@PathVariable String sym) {
         List<Wordbook> wb=wordbookRepository.findAllByWordLike(sym+'%');
-        model.addAttribute("wordbook", wb);
+        wb.sort((a,b)->(a.getWord().compareTo(b.getWord())));
+        model.addAttribute("wordbook",wb);
         return "WordBook";
     }
 
