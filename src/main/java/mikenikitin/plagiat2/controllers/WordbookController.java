@@ -118,9 +118,14 @@ public class WordbookController {
         })
     */
     @RequestMapping({"/page"})
-    private String pageable(Model model,
+    private String pageable( Model model,
         @SortDefault.SortDefaults(@SortDefault(sort = "word", direction = Sort.Direction.ASC))
-        @PageableDefault(size = 999)Pageable pageable) {
+        @PageableDefault(size = 999) Pageable pageable)
+    {
+        int pagesCount=wordbookRepository.findAll().size()/pageable.getPageSize();
+        List<Integer> pages=new ArrayList<>();
+        for (int i = 0; i <= pagesCount; i++) pages.add(i);
+        model.addAttribute("pages",pages);
         model.addAttribute("wordbook", wordbookRepository.findAll(pageable)); // .getContent() pageable = updatePageable(pageable,999)
         return "WordBook";
     }
