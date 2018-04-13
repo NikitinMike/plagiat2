@@ -52,7 +52,10 @@ public class Wordbook implements Comparable<Wordbook> {
 //    @Column(unique=true)
     @JsonIgnore
     public String getEnd(boolean reverse) { // ([аеёиоуыэюя] [^аеёиоуыэюя]
-        Matcher m = Pattern.compile("([^аеёиоуыэюя][ъь]??[аеёиоуыэюя]+[^аеёиоуыэюя]*)$")
+//        Matcher m = Pattern.compile("([аеёиоуыэюя]?[^аеёиоуыэюя]*[ъь]??[аеёиоуыэюя]+[^аеёиоуыэюя]*)$")
+//        Matcher m = Pattern.compile("([аеёиоуыэюя]+[^аеёиоуыэюя]*)$")
+//        Matcher m = Pattern.compile("(.[аеёиоуыэюя]+)$")
+        Matcher m = Pattern.compile("(...)$")
             .matcher(word
 //                .replaceAll("[ъь]","")
             );

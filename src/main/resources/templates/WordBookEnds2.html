@@ -10,15 +10,15 @@
 
 <div th:include="header::header"> HEADER </div>
 <div>
-    <p th:each ="word,iterStat : ${wordbook.entrySet()}">
+    <p th:each ="word,iterStat  : ${wordbook.entrySet()}">
         <!--<b th:text="${word.keySet()}"/>-->
         <a th:if="${word.getValue().size()}>2">
             <b th:text="${iterStat.count}"/>.
             <b th:text="${word.getKey()}"/>:
             <b th:text="${word.getValue().size()}"/>
-            <!--<a th:each ="w : ${word.getValue()}">-->
-                <!--<i th:text="${w.word}"/>-->
-            <!--</a>-->
+            <a th:each ="w : ${word.getValue()}">
+                <i th:text="${w.word}"/>
+            </a>
         </a>
     </p>
 </div>

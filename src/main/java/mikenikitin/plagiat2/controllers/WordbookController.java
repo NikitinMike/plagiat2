@@ -77,7 +77,7 @@ public class WordbookController {
 //            item.getValue().sort((a, b)->(a.getWord(true).compareTo(b.getWord(true))));
         model.addAttribute("wordbook",rythm);
 //        model.addAttribute("wordbook", sortByValue(wb) );
-        return "WordBookEnds";
+        return "WordBookEnds2";
     }
 
     /*
