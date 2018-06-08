@@ -51,13 +51,13 @@ public class Wordbook implements Comparable<Wordbook> {
 
 //    @Column(unique=true)
     @JsonIgnore
-    public String getEnd(boolean reverse) { // ([аеёиоуыэюя] [^аеёиоуыэюя]
+    private String getEnd(boolean reverse) { // ([аеёиоуыэюя] [^аеёиоуыэюя]
 //        Matcher m = Pattern.compile("([аеёиоуыэюя]?[^аеёиоуыэюя]*[ъь]??[аеёиоуыэюя]+[^аеёиоуыэюя]*)$")
 //        Matcher m = Pattern.compile("([аеёиоуыэюя]+[^аеёиоуыэюя]*)$")
 //        Matcher m = Pattern.compile("(.[аеёиоуыэюя]+)$")
         Matcher m = Pattern.compile("(...)$")
             .matcher(word
-//                .replaceAll("[ъь]","")
+                .replaceAll("[ъь]","")
             );
         if(m.find())return reverse?new StringBuilder(m.group(1)).reverse().toString():m.group(1);
         return word;
@@ -80,7 +80,7 @@ public class Wordbook implements Comparable<Wordbook> {
         return getLetters(type,false);
     }
 
-    public String getLetters(boolean type,boolean reverse) {
+    private String getLetters(boolean type,boolean reverse) {
         return (type)?getWord(reverse).replaceAll("[аеёиоуыэюя]",""):
             getWord(reverse).replaceAll("[бвгджзйклмнпрстфхцчшщъь]","");
     }
