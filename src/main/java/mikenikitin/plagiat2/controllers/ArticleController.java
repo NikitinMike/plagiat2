@@ -94,6 +94,27 @@ public class ArticleController {
         return "article";
     }
 
+    class Clause{
+        public String clause;
+        public Integer parts;
+        Clause(String s){clause=s; parts=s.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮ]","").length(); }
+    }
+//    @ResponseBody
+// List <String>
+    @RequestMapping("/table/{id}")
+    private String article3(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
+//        return articleRepository.findArticlesById(id).getText();
+        List <Clause> table = new ArrayList<>();
+        List<String> list = new ArrayList<>(); // = null;
+        for (Text t:articleRepository.findArticlesById(id).getText())
+        {
+            list.add(t.getWord().getWord());
+            if (t.isClause()) { table.add(new Clause(list.toString())); list.clear(); }
+        }
+        model.addAttribute("table",table);
+        return "articleTable";
+    }
+
     @RequestMapping("/flat/{id}")
     private String article(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
         if(articleRepository.findArticlesById(id)==null){response.sendRedirect("/article");return null;}

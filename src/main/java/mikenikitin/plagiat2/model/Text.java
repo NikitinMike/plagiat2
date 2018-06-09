@@ -17,7 +17,7 @@ public class Text {
     @Id
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @JsonIgnore
+    @JsonIgnore
 //    @Column(name="TEXT_ID")
     private Long id;
 
@@ -28,6 +28,7 @@ public class Text {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn // (name="ARTICLE_ID")
+    @JsonIgnore
     private Article article;
 
 //    @Column(name="WORD_ID")

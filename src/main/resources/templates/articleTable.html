@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <div th:with="size=0">
+            <a th:each="clause : ${table}">
+                <i th:text="${clause.clause}"/>
+                <i th:text="${clause.parts}"/>
+                <br/>
+            </a>
+        </div>
+    </body>
+</html>
