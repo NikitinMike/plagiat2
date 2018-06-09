@@ -97,7 +97,7 @@ public class ArticleController {
     class Clause{
         public String clause;
         public Integer parts;
-        Clause(String s){clause=s; parts=s.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮ]","").length(); }
+        Clause(String s){clause=s.replaceAll(",",""); parts=s.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮ]","").length(); }
     }
 //    @ResponseBody
 // List <String>
