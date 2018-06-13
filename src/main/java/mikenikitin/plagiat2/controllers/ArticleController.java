@@ -112,6 +112,9 @@ public class ArticleController {
             if (t.isClause()) { table.add(new Clause(list.toString())); list.clear(); }
         }
         model.addAttribute("table",table);
+        model.addAttribute("id",id);
+        model.addAttribute("author",articleRepository.findArticlesById(id).getAuthor());
+        model.addAttribute("title",articleRepository.findArticlesById(id).getTitle());
         return "articleTable";
     }
 

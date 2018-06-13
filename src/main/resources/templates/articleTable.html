@@ -1,9 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
     <head>
         <meta charset="UTF-8">
+        <title th:text="${title}">Article</title>
     </head>
+
     <body>
+
+        <h3 th:text="${author.realname}"/>
+
+        <a th:text="${author.realname}"  th:href="@{${author.name}}"/>
+        <a th:text="${author.id}"  th:href="@{'/authors/'+${author.id}}"/>
+
+        <h2 th:text="${title}">Title</h2>
+
+        <div th:include="header::header"> HEADER </div>
+
         <div th:with="size=0">
             <a th:each="clause : ${table}">
                 <a th:text="${clause.parts}"/>
@@ -11,5 +24,9 @@
                 <br/>
             </a>
         </div>
+
+        <div th:replace="footer::footer"> FOOTER </div>
+
     </body>
+
 </html>
