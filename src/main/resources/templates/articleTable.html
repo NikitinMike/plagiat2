@@ -19,8 +19,8 @@
 
         <div th:with="size=0">
             <a th:each="clause : ${table}">
-                <a th:text="${clause.parts}"/>
-                <a th:text="${clause.clause}"/>
+                <b th:text="${clause.position}"/>
+                <i th:text="${clause.clause}"/>
                 <br/>
             </a>
         </div>

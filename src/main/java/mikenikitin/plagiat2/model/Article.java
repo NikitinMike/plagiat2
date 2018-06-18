@@ -30,6 +30,11 @@ public class Article {
 //    @JoinColumn(name="TEXT_ID", referencedColumnName="ARTICLE_ID") // nullable = false
     private List<Text> text;
 
+    @JsonIgnore
+    @OneToMany (mappedBy="article")
+//    @JoinColumn(name="TEXT_ID", referencedColumnName="ARTICLE_ID") // nullable = false
+    private List<Clause> clauses;
+
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn // (name="AUTHOR_ID")
     @JsonIgnore
@@ -88,6 +93,10 @@ public class Article {
 
     public List<Text> getText() {
         return text;
+    }
+
+    public List<Clause> getClause() {
+        return clauses;
     }
 
 //    public String getName() {

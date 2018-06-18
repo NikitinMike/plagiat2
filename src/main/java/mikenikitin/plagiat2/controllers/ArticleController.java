@@ -2,9 +2,10 @@ package mikenikitin.plagiat2.controllers;
 
 import lombok.AllArgsConstructor;
 import mikenikitin.plagiat2.model.Article;
+import mikenikitin.plagiat2.model.Clause;
 import mikenikitin.plagiat2.model.Text;
-import mikenikitin.plagiat2.model.Wordbook;
 import mikenikitin.plagiat2.repository.ArticleRepository;
+import mikenikitin.plagiat2.repository.ClauseRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,8 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping({"article","articles"})
 public class ArticleController {
+
+    private ClauseRepository clauseRepository;
 
     private ArticleRepository articleRepository;
 //    protected List<Article> articles = articleRepository.findAll();
@@ -94,8 +97,8 @@ public class ArticleController {
         return "article";
     }
 
-    /*
-    class Clause{
+/*
+    class Clause {
         public String clause;
         public Integer parts;
         public List<Wordbook> list;
@@ -105,26 +108,29 @@ public class ArticleController {
             parts=clause.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮ]","").length();
         }
     }
+*/
+
 //    @ResponseBody
-// List <String>
     @RequestMapping("/table/{id}")
     private String article3(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
 //        return articleRepository.findArticlesById(id).getText();
-        List <Clause> table = new ArrayList<>();
-        List <Wordbook> clause = new ArrayList<>(); // = null;
-        for (Text t:articleRepository.findArticlesById(id).getText())
-        {
-            clause.add(t.getWord()); //.getWord());
+
+//        List <Clause> table = new ArrayList<>();
+//        List <Wordbook> clause = new ArrayList<>(); // = null;
+//        for (Text t:articleRepository.findArticlesById(id).getText())
+//        {
+//            clause.add(t.getWord()); //.getWord());
 //            if (t.isClause()) { table.add(new Clause(list.toString())); list.clear(); }
-            if (t.isClause()) { table.add(new Clause(clause)); clause.clear(); }
-        }
-        model.addAttribute("table",table);
+//            if (t.isClause()) { table.add(new Clause(clause)); clause.clear(); }
+//        }
+
         model.addAttribute("id",id);
         model.addAttribute("author",articleRepository.findArticlesById(id).getAuthor());
         model.addAttribute("title",articleRepository.findArticlesById(id).getTitle());
+        model.addAttribute("table",clauseRepository.findClausesByArticle_Id(id));
         return "articleTable";
+//        return clauseRepository.findClausesByArticle_Id(id);
     }
-    */
 
     @RequestMapping("/flat/{id}")
     private String article(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
