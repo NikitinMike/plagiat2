@@ -1,14 +1,8 @@
 package mikenikitin.plagiat2.controllers;
 
 import lombok.AllArgsConstructor;
-import mikenikitin.plagiat2.model.Article;
-import mikenikitin.plagiat2.model.Author;
-import mikenikitin.plagiat2.model.Text;
-import mikenikitin.plagiat2.model.Wordbook;
-import mikenikitin.plagiat2.repository.ArticleRepository;
-import mikenikitin.plagiat2.repository.AuthorRepository;
-import mikenikitin.plagiat2.repository.TextRepository;
-import mikenikitin.plagiat2.repository.WordbookRepository;
+import mikenikitin.plagiat2.model.*;
+import mikenikitin.plagiat2.repository.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +32,8 @@ public class MainController {
     private TextRepository textRepository;
 
     private AuthorRepository authorRepository;
+
+    private ClauseRepository clauseRepository;
 
     @RequestMapping("/stih")
     @ResponseBody
@@ -257,11 +253,13 @@ public class MainController {
         System.out.print(" lines:" + lines.length);
 
         List<Wordbook> nw=new ArrayList<>(); // new words in wordbook
+        long cnum=0L;
         for (String line:lines) {
 //            if ((track&0b1)>0) System.out.println(line);
             String[] linewords = line.toLowerCase().replaceAll("[^а-яёa-z]", " ").split("\\s+");
 //            if (words.length < 33 || words.length > 555) return "";
             Text t = null;
+            String clause="";
             for (String word : linewords) // \\p{Alpha}
                 if (word.length() > 0)
 //                    if ((track&0b10)>0) System.out.print(word+" ");
@@ -271,9 +269,13 @@ public class MainController {
                         if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word));
 //                      nw.add(wbr);
                         text.add(t=new Text(art, wbr, ++wc));
+                        clause+=wbr.getWord()+' ';
                     } catch(Exception e){System.out.println(e.getMessage()+" ["+word+"] ");}
 //            wordbookRepository.saveAll(nw);
-            if (t!=null) t.setClause(true);
+            if (t!=null) {
+                t.setClause(true);
+                clauseRepository.save(new Clause(art,clause,++cnum));
+            }
         }
 
         System.out.print(" words:" +wc);

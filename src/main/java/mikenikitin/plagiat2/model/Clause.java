@@ -45,9 +45,10 @@ public class Clause {
 //    @JoinColumn(name="TEXT_ID", referencedColumnName="ARTICLE_ID") // nullable = false
 //    private List<Text> text;
 
-    public Clause(Article art, List<Wordbook> list, Long pos){
+//    public Clause(Article art, List<Wordbook> list, Long pos){
+    public Clause(Article art, String list, Long pos){
         article=art;
-        clause=list.toString();
+        clause=list; // list.toString();
         position=pos;
 //        clause=list.toString().replaceAll(",","");
 //        parts=clause.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮ]","").length();
