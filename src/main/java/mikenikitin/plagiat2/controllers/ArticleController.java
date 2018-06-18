@@ -94,10 +94,16 @@ public class ArticleController {
         return "article";
     }
 
+    /*
     class Clause{
         public String clause;
         public Integer parts;
-        Clause(String s){clause=s.replaceAll(",",""); parts=s.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮ]","").length(); }
+        public List<Wordbook> list;
+        Clause(List<Wordbook> lst){
+            list=lst;
+            clause=list.toString().replaceAll(",","");
+            parts=clause.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮ]","").length();
+        }
     }
 //    @ResponseBody
 // List <String>
@@ -105,11 +111,12 @@ public class ArticleController {
     private String article3(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
 //        return articleRepository.findArticlesById(id).getText();
         List <Clause> table = new ArrayList<>();
-        List<String> list = new ArrayList<>(); // = null;
+        List <Wordbook> clause = new ArrayList<>(); // = null;
         for (Text t:articleRepository.findArticlesById(id).getText())
         {
-            list.add(t.getWord().getWord());
-            if (t.isClause()) { table.add(new Clause(list.toString())); list.clear(); }
+            clause.add(t.getWord()); //.getWord());
+//            if (t.isClause()) { table.add(new Clause(list.toString())); list.clear(); }
+            if (t.isClause()) { table.add(new Clause(clause)); clause.clear(); }
         }
         model.addAttribute("table",table);
         model.addAttribute("id",id);
@@ -117,6 +124,7 @@ public class ArticleController {
         model.addAttribute("title",articleRepository.findArticlesById(id).getTitle());
         return "articleTable";
     }
+    */
 
     @RequestMapping("/flat/{id}")
     private String article(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
