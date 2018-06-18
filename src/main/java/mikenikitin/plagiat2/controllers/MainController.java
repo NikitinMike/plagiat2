@@ -253,7 +253,7 @@ public class MainController {
         System.out.print(" lines:" + lines.length);
 
         List<Wordbook> nw=new ArrayList<>(); // new words in wordbook
-        long cn=0L;
+        Long cn=0L;
         for (String line:lines) {
 //            if ((track&0b1)>0) System.out.println(line);
             String[] linewords = line.toLowerCase().replaceAll("[^а-яёa-z]", " ").split("\\s+");
@@ -261,7 +261,7 @@ public class MainController {
             Text t = null;
             String clause="";
             for (String word : linewords) // \\p{Alpha}
-                if (word.length() > 0)
+                if ((word.length() < 1000) && (word.length() > 0))
 //                    if ((track&0b10)>0) System.out.print(word+" ");
                     try {
                         Wordbook wbr=wordbookRepository.findByWord(word);
@@ -278,11 +278,13 @@ public class MainController {
             }
         }
 
+        System.out.print(" clauses:" +cn);
         System.out.print(" words:" +wc);
         System.out.print(" new:" +nw.size());
         System.out.println();
 //        wordbookRepository.saveAll(nw);
         textRepository.saveAll(text);
+        art.setCc(cn);
         art.setWc(wc);
         articleRepository.save(art);
         authorRepository.save(author);

@@ -25,7 +25,7 @@ public class Clause {
     private Long position;
 
     private String clause;
-//    private Integer parts;
+    private Integer parts;
 
 //    @OneToMany // (mappedBy="author")
 //    private List<Wordbook> clause;
@@ -44,6 +44,7 @@ public class Clause {
 //    @OneToMany(mappedBy="article")
 //    @JoinColumn(name="TEXT_ID", referencedColumnName="ARTICLE_ID") // nullable = false
 //    private List<Text> text;
+//    private List<Wordbook> list;
 
     public Clause() {}
     public Clause(Article art) {article=art;}
@@ -54,7 +55,7 @@ public class Clause {
         clause=list; // list.toString();
         position=pos;
 //        clause=list.toString().replaceAll(",","");
-//        parts=clause.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮ]","").length();
+        parts=clause.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮ]","").length();
     }
 
 }

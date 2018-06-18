@@ -17,13 +17,15 @@
 
         <div th:include="header::header"> HEADER </div>
 
-        <div th:with="size=0">
-            <a th:each="clause : ${table}">
-                <b th:text="${clause.position}"/>
-                <i th:text="${clause.clause}"/>
-                <br/>
-            </a>
-        </div>
+        <table th:with="size=0">
+            <tr th:each="clause : ${table}">
+                <td th:text="${clause.position}"/>
+                <td/>
+                <td th:text="${clause.clause}"/>
+                <td/>
+                <td th:text="${clause.parts}"/>
+            </tr>
+        </table>
 
         <div th:replace="footer::footer"> FOOTER </div>
 

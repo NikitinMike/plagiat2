@@ -23,6 +23,7 @@ public class Article {
     private String name; // link to article
     private String title;
     private Long wc;
+    private Long cc;
     private Long rating; // good=0 >> poor=9999
 
     @JsonIgnore
@@ -43,20 +44,20 @@ public class Article {
     public Article(String name, Long wc) {
         this.name = name;
         this.wc=wc;
-        this.rating=0L;
+        rating=0L;
     }
 
     public Article(String name) {
         this.name = name;
-        this.rating=0L;
-        wc=0L;
+        rating=0L;
+        cc = wc=0L;
     }
 
     public Article(String name,Author author) {
-        this.name = name;
-        this.author = author;
-        this.rating=0L;
-        wc=0L;
+        name = name;
+        author = author;
+        rating=0L;
+        cc = wc=0L;
     }
 
     public String getName() {
@@ -73,6 +74,10 @@ public class Article {
 
     public void setWc(Long wc) {
         this.wc = wc;
+    }
+
+    public void setCc(Long cc) {
+        this.cc = cc;
     }
 
     public Long getId() {
