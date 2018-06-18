@@ -18,6 +18,7 @@
             <th><a href="/articles/order/author">Author</a></th>
             <!--<th><a href="/articles/order/author">Author</a></th>-->
             <th><a href="/articles/order/title">Title</a></th>
+            <th><a href="/articles/order/wc">CC</a></th>
             <th><a href="/articles/order/wc">WC</a></th>
         </tr>
         <tr th:each ="article : ${articles}">
@@ -26,8 +27,9 @@
             <td> <a th:text="${article.author.id}"  th:href="@{'/authors/' + ${article.author.id}}"/> </td>
             <td> <a th:text="${article.author.realname}"  th:href="@{${article.author.name}}"/> </td>
             <!--<td> <a th:text="${article.author.realname}"  th:href="@{'/authors/'+${article.author.id}}"/> </td>-->
-            <td> <a th:text="${article.title}" th:href="@{'/article/' + ${article.id}}"/> </td>
+            <!--<td> <a th:text="${article.title}" th:href="@{'/article/' + ${article.id}}"/> </td>-->
             <td> <a th:text="${article.title}" th:href="@{'/article/table/' + ${article.id}}"/> </td>
+            <td th:text="${article.cc}" > </td>
             <td th:text="${article.wc}" > </td>
             <td> <a th:text="delete" th:href="@{'/article/delete/' + ${article.id}}"/> </td>
         </tr>

@@ -261,7 +261,8 @@ public class MainController {
             Text t = null;
             String clause="";
             for (String word : linewords) // \\p{Alpha}
-                if ((word.length() < 1000) && (word.length() > 0))
+                if (word.length() < 250)
+                    if (word.length() > 0)
 //                    if ((track&0b10)>0) System.out.print(word+" ");
                     try {
                         Wordbook wbr=wordbookRepository.findByWord(word);
