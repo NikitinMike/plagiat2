@@ -54,8 +54,8 @@ public class Article {
     }
 
     public Article(String name,Author author) {
-        name = name;
-        author = author;
+        this.name = name;
+        this.author = author;
         rating=0L;
         cc = wc=0L;
     }
@@ -98,7 +98,7 @@ public class Article {
 
     public List<Text> getText() {return text;}
 
-    public List<Clause> getClause() {
+    public List<Clause> getClauses() {
         return clauses;
     }
 

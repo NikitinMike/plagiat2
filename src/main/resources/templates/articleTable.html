@@ -24,6 +24,13 @@
                 <td th:text="${clause.clause}"/>
                 <td/>
                 <td th:text="${clause.parts}"/>
+                <td/>
+                <!--<td th:text="${clause.text}"/>-->
+                <td>
+                    <a th:each="word : ${clause.text}">
+                        <a th:text="${word.word.word}"/>
+                    </a>
+                </td>
             </tr>
         </table>
 

@@ -31,20 +31,11 @@ public class Clause {
 
     private Integer parts;
 
-//    @OneToMany // (mappedBy="author")
-//    private List<Wordbook> clause;
     private String clause;
 
-//    @ManyToOne(fetch=FetchType.LAZY)
-//    @JoinColumn // (name="WORDBOOK_ID")
-//    @JsonIgnore
-//    private Wordbook word;
-
-//    @JsonIgnore
-//    @OneToMany(mappedBy="article")
-//    @JoinColumn(name="TEXT_ID", referencedColumnName="ARTICLE_ID") // nullable = false
-//    private List<Text> text;
-//    private List<Wordbook> list;
+    @JsonIgnore
+    @OneToMany (mappedBy="clause")
+    private List<Text> text;
 
     public Clause() {}
     public Clause(Article art) {article=art;}
