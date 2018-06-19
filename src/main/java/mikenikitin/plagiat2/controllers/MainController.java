@@ -245,43 +245,36 @@ public class MainController {
         articleRepository.save(art);
 
         List<Text> text = new ArrayList<>();
-        Long wc = 0L;
+        Long cn=0L, wc = 0L;
 
         System.out.print("#" + art.getId());
         System.out.print(' ' + url.replaceAll(root, ""));
         System.out.print(" vol:" + poem.length());
         System.out.print(" lines:" + lines.length);
 
-        List<Wordbook> nw=new ArrayList<>(); // new words in wordbook
-        Long cn=0L;
+//        List<Wordbook> nw=new ArrayList<>(); // new words in wordbook
         for (String line:lines) {
-//            if ((track&0b1)>0) System.out.println(line);
+//          System.out.println(line);
             String[] linewords = line.toLowerCase().replaceAll("[^а-яёa-z]", " ").split("\\s+");
-//            if (words.length < 33 || words.length > 555) return "";
-            Text t = null;
-            String clause="";
+            if (linewords.length > 250 || linewords.length < 1) continue;
+            Text txt = null;
             for (String word : linewords) // \\p{Alpha}
-                if (word.length() < 250)
-                    if (word.length() > 0)
-//                    if ((track&0b10)>0) System.out.print(word+" ");
+                if (word.length() > 0)
                     try {
                         Wordbook wbr=wordbookRepository.findByWord(word);
-                        if (wbr == null) nw.add(new Wordbook(word));
+//                        if (wbr == null) nw.add(new Wordbook(word));
                         if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word));
 //                      nw.add(wbr);
-                        text.add(t=new Text(art, wbr, ++wc));
-                        clause+=wbr.getWord()+' ';
+                        text.add(txt=new Text(art, wbr, ++wc));
                     } catch(Exception e){System.out.println(e.getMessage()+" ["+word+"] ");}
 //            wordbookRepository.saveAll(nw);
-            if (t!=null) {
-                t.setClause(true);
-                clauseRepository.save(new Clause(art,clause,++cn));
-            }
+            if (txt!=null) txt.setClause(true);
+            clauseRepository.save(new Clause(art,line.trim(),++cn));
         }
 
         System.out.print(" clauses:" +cn);
         System.out.print(" words:" +wc);
-        System.out.print(" new:" +nw.size());
+//        System.out.print(" new:" +nw.size());
         System.out.println();
 //        wordbookRepository.saveAll(nw);
         textRepository.saveAll(text);
