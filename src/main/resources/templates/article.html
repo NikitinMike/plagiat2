@@ -29,11 +29,11 @@
 
             <sup th:with="size=${size+1}" th:text="${word.word.size}"/>
 
-            <a th:if="${word.clause}">
+            <a th:if="${word.lineBreak}">
                 <b th:text="${word.word.word}"/>
                 <br/>
             </a>
-            <a th:unless="${word.clause}">
+            <a th:unless="${word.lineBreak}">
                 <a th:text="${word.word.word}"/>
             </a>
 
