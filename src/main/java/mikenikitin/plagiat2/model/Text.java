@@ -24,42 +24,36 @@ public class Text {
 //    @JsonIgnore
     private Long position;
 
-    private boolean clause; // end clause=true
+    private boolean lineBreak; // end clause=true
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn // (name="ARTICLE_ID")
     @JsonIgnore
     private Article article;
 
-//    @Column(name="WORD_ID")
-//    @JsonIgnore
-//    private Long wbId;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn // (name="ARTICLE_ID")
+    @JsonIgnore
+    private Clause clause;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn // (name="WORDBOOK_ID")
     @JsonIgnore
     private Wordbook word;
 
-    public Text(Article art, Wordbook word, Long position){
-        this.article=art;
+    public Text(Article article, Clause clause, Wordbook word, Long position){
+        this.article=article;
+        this.clause=clause;
         this.word=word;
         this.position=position;
-        clause=false;
-//        this.wbId=word.getId();
-//        this.articleId=art.getId();
     }
 
-    public Article getArticle() {
-        return article;
-    }
+    public Article getArticle() {return article;}
 
     public Wordbook getWord() {
         return word;
     }
 
-    public void setClause(boolean clause) {this.clause=clause;}
+    public void setClause(boolean clause) {this.lineBreak=clause;}
 
-//    public Wordbook getWord() {
-//        return word;
-//    }
 }

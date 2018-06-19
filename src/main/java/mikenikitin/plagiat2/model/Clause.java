@@ -21,19 +21,19 @@ public class Clause {
 //    @Column(name="CLAUSE_ID")
     private Long id;
 
-    //    @JsonIgnore
-    private Long position;
-
-    private String clause;
-    private Integer parts;
-
-//    @OneToMany // (mappedBy="author")
-//    private List<Wordbook> clause;
-
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn // (name="ARTICLE_ID")
     @JsonIgnore
     private Article article;
+
+    //    @JsonIgnore
+    private Long number;
+
+    private Integer parts;
+
+//    @OneToMany // (mappedBy="author")
+//    private List<Wordbook> clause;
+    private String clause;
 
 //    @ManyToOne(fetch=FetchType.LAZY)
 //    @JoinColumn // (name="WORDBOOK_ID")
@@ -50,12 +50,17 @@ public class Clause {
     public Clause(Article art) {article=art;}
 
 //    public Clause(Article art, List<Wordbook> list, Long pos){
-    public Clause(Article art, String list, Long pos){
+    public Clause(Article art, String list, Long num){
         article=art;
         clause=list; // list.toString();
-        position=pos;
+        number=num;
 //        clause=list.toString().replaceAll(",","");
-        parts=clause.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮ]","").length();
+        parts=clause.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮaouieAOUIE]","").length();
+    }
+
+    public void addWord(Wordbook wbr,long position){
+//        this.position=position;
+//        System.out.println(wbr);
     }
 
 }

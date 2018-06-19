@@ -136,9 +136,11 @@ public class WordbookController {
         List<Article> articles=new ArrayList<>();
         for (Text txt:textRepository.getAllByWord(wordbookRepository.getById(id)))
 //            System.out.println(txt.getArticle().getTitle());
-            if (!articles.contains(txt.getArticle()))
-                if (articleRepository.existsById(txt.getArticle().getId()))
-                    articles.add(txt.getArticle());
+
+//            if (!articles.contains(txt.getArticle()))
+//                if (articleRepository.existsById(txt.getArticle().getId()))
+//                    articles.add(txt.getArticle());
+
         model.addAttribute("articles", articles);
         return "indexArticles";
 //        return texts.stream().map(text -> text.getArticle()).collect(Collectors.toList());

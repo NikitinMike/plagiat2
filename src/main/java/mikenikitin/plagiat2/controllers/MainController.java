@@ -244,47 +244,40 @@ public class MainController {
         art.setTitle(title);
         articleRepository.save(art);
 
-        List<Text> text = new ArrayList<>();
-        Long cn=0L, wc = 0L;
-
         System.out.print("#" + art.getId());
         System.out.print(' ' + url.replaceAll(root, ""));
         System.out.print(" vol:" + poem.length());
         System.out.print(" lines:" + lines.length);
 
-//        List<Wordbook> nw=new ArrayList<>(); // new words in wordbook
+        Long cn=0L, wc = 0L;
+        List<Text> text = new ArrayList<>();
+        Text txt=null;
         for (String line:lines) {
 //          System.out.println(line);
-            String[] linewords = line.toLowerCase().replaceAll("[^а-яёa-z]", " ").split("\\s+");
+            String[] linewords = line.toLowerCase().replaceAll("[^а-яёa-z]", " ").trim().split("\\s+");
             if (linewords.length > 250 || linewords.length < 1) continue;
-            Text txt = null;
+            Clause clause = new Clause(art,line.trim(),++cn);
             for (String word : linewords) // \\p{Alpha}
                 if (word.length() > 0)
                     try {
                         Wordbook wbr=wordbookRepository.findByWord(word);
-//                        if (wbr == null) nw.add(new Wordbook(word));
                         if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word));
-//                      nw.add(wbr);
-                        text.add(txt=new Text(art, wbr, ++wc));
+                        text.add(txt=new Text(art, clause, wbr, ++wc));
+                        clause.addWord(wbr, ++wc);
                     } catch(Exception e){System.out.println(e.getMessage()+" ["+word+"] ");}
-//            wordbookRepository.saveAll(nw);
             if (txt!=null) txt.setClause(true);
-            clauseRepository.save(new Clause(art,line.trim(),++cn));
+            clauseRepository.save(clause);
         }
+        textRepository.saveAll(text);
 
         System.out.print(" clauses:" +cn);
-        System.out.print(" words:" +wc);
-//        System.out.print(" new:" +nw.size());
-        System.out.println();
-//        wordbookRepository.saveAll(nw);
-        textRepository.saveAll(text);
         art.setCc(cn);
+        System.out.print(" words:" +wc);
         art.setWc(wc);
+        System.out.println();
         articleRepository.save(art);
-        authorRepository.save(author);
 
         return poem;
-//        return url;
     }
 
     private List<String> findAutorsPoems(String url,Long level,String left) {

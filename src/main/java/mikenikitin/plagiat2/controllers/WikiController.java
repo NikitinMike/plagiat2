@@ -72,19 +72,13 @@ public class WikiController {
         Article art=new Article(URLDecoder.decode(conn.getURL().toString(),"UTF-8"));
         articleRepository.save(art);
 
-//        List<Wordbook> wordbook = new ArrayList<>();
-//        wordbook=wordbookRepository.findAll();
-//        System.out.println("WordBook:"+wordbook);
-
         List<Text> text = new ArrayList<>();
         Long wc=0L;
         for (String word:result.toString().replaceAll("[^а-яёА-ЯЁ]"," ").split("\\s+")) // \\p{Alpha}
             if (word.length()>2) {
                 Wordbook wbr=wordbookRepository.findByWord(word.toLowerCase());
                 if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word.toLowerCase()));
-                // wordbook.add(new Wordbook(w.toLowerCase(),++wc));
-                text.add(new Text(art,wbr,++wc));
-//                text.add(new Text(++wc));
+                text.add(new Text(art,null,wbr,++wc));
             }
 //                System.out.print(++wc+":"+w.toLowerCase()+" ");
         System.out.println();

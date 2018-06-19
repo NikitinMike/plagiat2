@@ -96,42 +96,10 @@ public class Article {
         return author;
     }
 
-    public List<Text> getText() {
-        return text;
-    }
+    public List<Text> getText() {return text;}
 
     public List<Clause> getClause() {
         return clauses;
     }
-
-//    public String getName() {
-//        return name;
-//    }
-
-//    public Long getId() {return id;}
-
-//    public List<Text> getText() {
-//        return text;
-//    }
-
-//    public Long getWc() {
-//        return wc;
-//    }
-
-//    public void setWc(Long wc) {
-//        this.wc = wc;
-//    }
-
-//    public void setAuthor(Author author) {
-//        this.author = author;
-//    }
-
-//    public void setTitle(String title) {this.title = title;}
-
-//    public String getTitle() {return title;}
-
-//    public void setwords(List<String> words){
-//        this.words=words;
-//    }
 
 }
