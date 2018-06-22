@@ -40,6 +40,9 @@ public class ArticleController {
             case "wc":
                 Collections.sort(articles,(b,a)->(a.getWc().intValue()-b.getWc().intValue()));
                 break;
+            case "cc":
+                Collections.sort(articles,(b,a)->(a.getCc().intValue()-b.getCc().intValue()));
+                break;
             case "title":
                 Collections.sort(articles,(b,a)->(a.getTitle().compareTo(b.getTitle())));
                 break;
