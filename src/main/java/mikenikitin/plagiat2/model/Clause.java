@@ -48,11 +48,14 @@ public class Clause {
     public Clause(Article art, String list, Long num){
         article=art;
         clause=list; // list.toString();
+        end=clause.trim().toLowerCase();
+//        end=end.substring(end.length()-3);
         number=num;
 //        clause=list.toString().replaceAll(",","");
         parts=clause.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮaouieAOUIE]","").length();
-        end = text.get(text.size()-1).getWord().getEnd();
     }
+
+    public String getEnd(){ return text.get(text.size()-1).getWord().getEnd();}
 
     public void addWord(Wordbook wbr,long position){
 //        this.position=position;

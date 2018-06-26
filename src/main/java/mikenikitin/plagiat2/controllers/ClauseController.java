@@ -26,7 +26,7 @@ public class ClauseController {
 //    @ResponseBody
 //    private Page<Clause> pageable(Model model,
     private String pageable(Model model,
-        @SortDefault.SortDefaults(@SortDefault(sort = "getEnd()", direction = Sort.Direction.ASC)) // article
+        @SortDefault.SortDefaults(@SortDefault(sort = "article", direction = Sort.Direction.ASC))
         @PageableDefault(size = 999) Pageable pageable)
     {
         int pagesCount=clauseRepository.findAll().size()/pageable.getPageSize();
