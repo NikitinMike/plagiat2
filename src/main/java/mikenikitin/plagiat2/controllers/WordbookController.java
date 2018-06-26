@@ -123,8 +123,7 @@ public class WordbookController {
         @PageableDefault(size = 999) Pageable pageable)
     {
         int pagesCount=wordbookRepository.findAll().size()/pageable.getPageSize();
-        List<Integer> pages=new ArrayList<>();
-        for (int i = 0; i <= pagesCount; i++) pages.add(i);
+        List<Integer> pages=new ArrayList<Integer>() {{for (int i = 0; i <= pagesCount; i++) add(i); }};
         model.addAttribute("pages",pages);
         model.addAttribute("wordbook", wordbookRepository.findAll(pageable)); // .getContent() pageable = updatePageable(pageable,999)
         return "WordBook";

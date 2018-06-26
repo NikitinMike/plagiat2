@@ -29,12 +29,12 @@
             <!--<td/>-->
             <td th:text="${clause.article.id}" />
             <td/>
-            <!--<td th:text="${clause.clause}" />-->
+            <!--<td th:text="${clause.clause}" width="30%"/>-->
             <!--<td/>-->
             <td th:text="${clause.number}"/>
             <td/>
-            <!--<td th:text="${clause.text}"/>-->
-            <td>
+            <!--<td th:text="${clause.text}" width="30%"/>-->
+            <td width="50%">
                 <a th:each="word : ${clause.text}">
                     <!--<a th:text="${word.word.word}"/>-->
                     <a th:if="${word.lineBreak}">
@@ -48,9 +48,9 @@
             </td>
             <td/>
             <td th:text="${clause.parts}"/>
+            <td/>
+            <td th:text="${clause.getEnd()}"/>
         </tr>
-
-    </a>
 
     </table>
 </div>
