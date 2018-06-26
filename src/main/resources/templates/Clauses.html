@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>WordBook</title>
+    <title>CLAUSES</title>
 </head>
 
 <body>
@@ -25,8 +25,12 @@
 
         <!--<i th:text="${#strings.replace(clause.word,word.getEnd(),'('+clause.getEnd()+')')}" />-->
         <tr th:each ="clause : ${clauses}">
-            <td th:text="${clause.clause}" />
+            <!--<td th:text="${clause.article.author.realname}" />-->
+            <!--<td/>-->
+            <td th:text="${clause.article.id}" />
             <td/>
+            <!--<td th:text="${clause.clause}" />-->
+            <!--<td/>-->
             <td th:text="${clause.number}"/>
             <td/>
             <!--<td th:text="${clause.text}"/>-->

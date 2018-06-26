@@ -119,7 +119,11 @@ public class MainController {
             List<String> poems=poems(a,root);
             Integer c=poems.size();
             System.out.println("POEMS TO GO: "+c);
-            for (String p:poems) System.out.println(a.replaceAll(".+/avtor/","")+' '+--c+":"+!stih2base(p).isEmpty());
+            for (String p:poems)
+                System.out.println(
+                    a.replaceAll(".+/avtor/","")
+                    +' '+--c+":"+!stih2base(p).isEmpty()
+                );
     //        a.addAll(poems);
         }
         model.addAttribute("list",authors);
@@ -201,9 +205,7 @@ public class MainController {
         return result.toString();
     }
 
-    private String stih2base(String url){
-        return stih2base(url,0b11);
-    }
+    private String stih2base(String url){return stih2base(url,0b11);}
 
     private String stih2base(String url,int track){
 

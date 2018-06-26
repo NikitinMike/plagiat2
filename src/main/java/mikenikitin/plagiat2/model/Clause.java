@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,6 +20,8 @@ public class Clause {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    @Column(name="CLAUSE_ID")
+//    @Order
+//    @OrderColumn
     private Long id;
 
     @ManyToOne(fetch=FetchType.LAZY)
