@@ -7,63 +7,50 @@
 </head>
 
 <body>
-
 <div th:include="header::header"> HEADER </div>
 
-    <a th:each ="page : ${pages}">
-        <a th:text="${page}" th:href="@{'http://localhost:8080/clause/page?page='+${page}}">
-            page
-        </a>
+<a th:each ="page : ${pages}">
+    <a th:text="${page}" th:href="@{'http://localhost:8080/clause/page?page='+${page}}">
+        page
     </a>
+</a>
 
-<div>
+<table>
+    <!--<i th:text="${#strings.replace(clause.word,word.getEnd(),'('+clause.getEnd()+')')}" />-->
+    <tr th:each ="clause : ${clauses}">
+        <td th:if="${clause.number}==1" width="20%" bgcolor="#f5f5f5">
+            <a th:text="${clause.article.id}"/>
+            <b th:text="${clause.article.title}"/><br/>
+            <i th:text="${clause.article.author.realname}"/>
+        </td>
+        <td th:unless="${clause.number}==1"/>
 
-</div>
-
-<div>
-    <table>
-
-        <!--<i th:text="${#strings.replace(clause.word,word.getEnd(),'('+clause.getEnd()+')')}" />-->
-        <tr th:each ="clause : ${clauses}">
-            <!--<td th:text="${clause.article.author.realname}" />-->
-            <!--<td/>-->
-
-            <td th:switch="${clause.number}"align="right" width="1%">
-                <b th:case="1" th:text="${clause.article.id}" />
-                <!--<b th:case="2" th:text="${clause.article.id}" />-->
-                <!--<a th:case="*" th:text="${clause.article.id}" />-->
-            </td>
-
-            <!--<td th:with="last=${clause.article.id}" />-->
-            <td width="1%"/>
-            <!--<td th:text="${clause.clause}" width="30%"/>-->
-            <!--<td/>-->
-            <td th:text="${clause.number}" width="1%" align="right"/>
-            <td width="1%"/>
-            <td th:text="${clause.parts}" width="1%" align="center"/>
-            <td width="1%"/>
-            <!--<td th:text="${clause.text}" width="30%"/>-->
-            <!--<td bgcolor="#d3d3d3">-->
-            <td>
-                <a th:each="word : ${clause.text}">
-                    <!--<a th:text="${word.word.word}"/>-->
-                    <a th:if="${word.lineBreak}">
-                        <b th:text="${word.word.word}"/>
-                    </a>
-                    <a th:unless="${word.lineBreak}">
-                        <i th:text="${word.word.word}"/>
-                    </a>
+        <td width="1%"/>
+        <!--<td th:text="${clause.clause}" width="30%"/>-->
+        <!--<td/>-->
+        <td th:text="${clause.number}" width="1%" align="right"/>
+        <td width="1%"/>
+        <td width="1%" th:text="${clause.end}"/>
+        <td width="1%"/>
+        <td th:text="${clause.parts}" width="1%" align="center"/>
+        <td width="1%"/>
+        <!--<td th:text="${clause.text}" width="30%"/>-->
+        <td>
+            <a th:each="word : ${clause.text}">
+                <!--<a th:text="${word.word.word}"/>-->
+                <a th:if="${word.lineBreak}">
+                    <b th:text="${word.word.word}"/>
                 </a>
-            </td>
-            <td width="1%"/>
-            <!--<td th:text="${clause.end}"/>-->
-        </tr>
-
-    </table>
-</div>
+                <a th:unless="${word.lineBreak}">
+                    <i th:text="${word.word.word}"/>
+                </a>
+            </a>
+        </td>
+        <td width="1%"/>
+    </tr>
+</table>
 
 <div th:replace="footer::footer"> FOOTER </div>
 
 </body>
-
 </html>

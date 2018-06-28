@@ -8,14 +8,14 @@
 
     <body>
 
+        <div th:include="header::header"> HEADER </div>
+
         <h3 th:text="${author.realname}"/>
 
         <a th:text="${author.realname}"  th:href="@{${author.name}}"/>
         <a th:text="${author.id}"  th:href="@{'/authors/'+${author.id}}"/>
 
         <h2 th:text="${title}">Title</h2>
-
-        <div th:include="header::header"> HEADER </div>
 
         <table th:with="size=0">
             <tr th:each="clause : ${table}">

@@ -253,7 +253,6 @@ public class MainController {
 
         Long cn=0L, wc = 0L;
         List<Text> text = new ArrayList<>();
-        Text clauseTerm=null;
         for (String line:lines) {
 //          System.out.println(line);
             if(line.trim().length()>250) continue;
@@ -261,15 +260,19 @@ public class MainController {
             String[] linewords = line.toLowerCase().replaceAll("[^а-яёa-z]", " ").trim().split("\\s+");
             if (linewords.length < 1||linewords.length > 250) continue;
             Clause clause = new Clause(art,line.trim(),++cn);
+            Text clauseEnd=null;
             for (String word : linewords) // \\p{Alpha}
                 if (word.length() > 0)
                     try {
                         Wordbook wbr=wordbookRepository.findByWord(word);
                         if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word));
-                        text.add(clauseTerm=new Text(art, clause, wbr, ++wc));
-                        clause.addWord(wbr, ++wc);
+//                        clause.addWord(wbr, ++wc);
+                        text.add(clauseEnd=new Text(art, clause, wbr, ++wc));
                     } catch(Exception e){System.out.println(e.getMessage()+" ["+word+"] ");}
-            if (clauseTerm!=null) clauseTerm.setClause(true);
+            if (clauseEnd!=null) {
+                clauseEnd.setClause(true);
+                clause.setEnd(clauseEnd.getWord().getWord());
+            }
             clauseRepository.save(clause);
         }
         textRepository.saveAll(text);

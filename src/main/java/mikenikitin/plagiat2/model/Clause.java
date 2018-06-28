@@ -35,7 +35,7 @@ public class Clause {
     private Integer parts;
 
     private String clause;
-//    private String end;
+    private String end;
 
     @JsonIgnore
     @OneToMany (mappedBy="clause")
@@ -55,7 +55,9 @@ public class Clause {
         parts=clause.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮaouieAOUIE]","").length();
     }
 
-    public String getEnd(){ return text.get(text.size()-1).getWord().getEnd();}
+    public void setEnd(String end){this.end=end;}
+//    public String getEnd(){ return text.get(text.size()-1).getWord().getEnd();}
+    public String getEnd(){ return end;}
 
     public void addWord(Wordbook wbr,long position){
 //        this.position=position;

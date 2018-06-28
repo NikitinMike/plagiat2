@@ -88,6 +88,7 @@ public class ArticleController {
         Article art=articleRepository.findArticlesById(id);
         if(art==null) return "redirect:/articles/";
         articleRepository.delete(art);
+//        clauseRepository.findClausesByArticle_Id(art.getId()).forEach((t)->(deleteById(t.getId())));
         return "redirect:/articles/";
     }
 
