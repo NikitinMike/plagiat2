@@ -257,10 +257,10 @@ public class MainController {
         for (String line:lines) {
 //          System.out.println(line);
             if(line.trim().length()>250) continue;
+            if (line.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮaouieAOUIE]","").length()<1) continue;
             String[] linewords = line.toLowerCase().replaceAll("[^а-яёa-z]", " ").trim().split("\\s+");
             if (linewords.length < 1||linewords.length > 250) continue;
             Clause clause = new Clause(art,line.trim(),++cn);
-            if (clause.getParts()<1) continue;
             for (String word : linewords) // \\p{Alpha}
                 if (word.length() > 0)
                     try {

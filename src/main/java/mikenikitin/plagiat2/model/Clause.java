@@ -35,7 +35,7 @@ public class Clause {
     private Integer parts;
 
     private String clause;
-    private String end;
+//    private String end;
 
     @JsonIgnore
     @OneToMany (mappedBy="clause")
@@ -48,7 +48,7 @@ public class Clause {
     public Clause(Article art, String list, Long num){
         article=art;
         clause=list; // list.toString();
-        end=clause.trim().toLowerCase();
+//        end=clause.trim().toLowerCase();
 //        end=end.substring(end.length()-3);
         number=num;
 //        clause=list.toString().replaceAll(",","");

@@ -21,35 +21,42 @@
 </div>
 
 <div>
-    <table th:with="size=0">
+    <table>
 
         <!--<i th:text="${#strings.replace(clause.word,word.getEnd(),'('+clause.getEnd()+')')}" />-->
         <tr th:each ="clause : ${clauses}">
             <!--<td th:text="${clause.article.author.realname}" />-->
             <!--<td/>-->
-            <td th:text="${clause.article.id}" />
-            <td/>
+
+            <td th:switch="${clause.number}"align="right" width="1%">
+                <b th:case="1" th:text="${clause.article.id}" />
+                <!--<b th:case="2" th:text="${clause.article.id}" />-->
+                <!--<a th:case="*" th:text="${clause.article.id}" />-->
+            </td>
+
+            <!--<td th:with="last=${clause.article.id}" />-->
+            <td width="1%"/>
             <!--<td th:text="${clause.clause}" width="30%"/>-->
             <!--<td/>-->
-            <td th:text="${clause.number}"/>
-            <td/>
+            <td th:text="${clause.number}" width="1%" align="right"/>
+            <td width="1%"/>
+            <td th:text="${clause.parts}" width="1%" align="center"/>
+            <td width="1%"/>
             <!--<td th:text="${clause.text}" width="30%"/>-->
-            <td width="50%">
+            <!--<td bgcolor="#d3d3d3">-->
+            <td>
                 <a th:each="word : ${clause.text}">
                     <!--<a th:text="${word.word.word}"/>-->
                     <a th:if="${word.lineBreak}">
                         <b th:text="${word.word.word}"/>
-                        <br/>
                     </a>
                     <a th:unless="${word.lineBreak}">
-                        <a th:text="${word.word.word}"/>
+                        <i th:text="${word.word.word}"/>
                     </a>
                 </a>
             </td>
-            <td/>
-            <td th:text="${clause.parts}"/>
-            <td/>
-            <td th:text="${clause.end}"/>
+            <td width="1%"/>
+            <!--<td th:text="${clause.end}"/>-->
         </tr>
 
     </table>
