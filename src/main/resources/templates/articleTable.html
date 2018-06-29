@@ -17,14 +17,12 @@
 
         <h2 th:text="${title}">Title</h2>
 
-        <table th:with="size=0">
+        <table th:with="size=0" border="0" width="50%">
             <tr th:each="clause : ${table}">
-                <td th:text="${clause.clause}"/>
-                <td/>
-                <td th:text="${clause.number}"/>
-                <td/>
-                <!--<td th:text="${clause.text}"/>-->
-                <td>
+                <td th:text="${clause.number}" width="1%" align="right"/>
+                <td width="1%"/>
+                <td th:text="${clause.clause}" width="10%"/>
+                <td width="10%">
                     <a th:each="word : ${clause.text}">
                         <!--<a th:text="${word.word.word}"/>-->
                         <a th:if="${word.lineBreak}">
@@ -36,11 +34,23 @@
                         </a>
                     </a>
                 </td>
-                <td/>
-                <td th:text="${clause.parts}"/>
+                <!--<td width="1%"/>-->
+                <td th:text="${clause.parts}" width="1%" align="center"/>
+                <td width="1%"/>
+                <td width="1%" th:text="${clause.end}"/>
+                <!--<td width="1%"/>-->
+                <!--<td th:text="${clause.text}"/>-->
             </tr>
         </table>
 
+    <!--
+        <tr th:each ="clause : ${clauses}" valign="bottom">
+            <td th:if="${clause.number}==1" width="20%" bgcolor="#f5f5f5"></td>
+            <td th:unless="${clause.number}==1"/>
+        </tr>
+    -->
+
+        <br/>
         <a th:text="delete" th:href="@{'/article/delete/' + ${id}}"/>
 
         <div th:replace="footer::footer"> FOOTER </div>
