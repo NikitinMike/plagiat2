@@ -54,6 +54,6 @@ public class Text {
         return word;
     }
 
-    public void setClause(boolean clause) {this.lineBreak=clause;}
+    public Wordbook setClause(boolean clause) {this.lineBreak=clause; return clause?word:null;}
 
 }

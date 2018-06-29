@@ -269,10 +269,7 @@ public class MainController {
 //                        clause.addWord(wbr, ++wc);
                         text.add(clauseEnd=new Text(art, clause, wbr, ++wc));
                     } catch(Exception e){System.out.println(e.getMessage()+" ["+word+"] ");}
-            if (clauseEnd!=null) {
-                clauseEnd.setClause(true);
-                clause.setEnd(clauseEnd.getWord().getWord());
-            }
+            if (clauseEnd!=null) clause.setEnd(clauseEnd.setClause(true));
             clauseRepository.save(clause);
         }
         textRepository.saveAll(text);

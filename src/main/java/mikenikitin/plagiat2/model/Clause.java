@@ -35,7 +35,12 @@ public class Clause {
     private Integer parts;
 
     private String clause;
-    private String end;
+
+    //    private String end;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn // (name="WORDBOOK_ID")
+    @JsonIgnore
+    private Wordbook end;
 
     @JsonIgnore
     @OneToMany (mappedBy="clause")
@@ -55,9 +60,9 @@ public class Clause {
         parts=clause.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮaouieAOUIE]","").length();
     }
 
-    public void setEnd(String end){this.end=end;}
+    public void setEnd(Wordbook end){this.end=end;}
 //    public String getEnd(){ return text.get(text.size()-1).getWord().getEnd();}
-    public String getEnd(){ return end;}
+    public String getEnd(){ return end.getEnd();}
 
     public void addWord(Wordbook wbr,long position){
 //        this.position=position;
