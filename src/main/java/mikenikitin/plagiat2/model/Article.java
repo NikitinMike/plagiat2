@@ -27,12 +27,12 @@ public class Article {
     private Long rating; // good=0 >> poor=9999
 
     @JsonIgnore
-    @OneToMany (mappedBy="article")
+    @OneToMany (mappedBy="article", cascade = CascadeType.REMOVE, orphanRemoval = true)
 //    @JoinColumn(name="TEXT_ID", referencedColumnName="ARTICLE_ID") // nullable = false
     private List<Text> text;
 
     @JsonIgnore
-    @OneToMany (mappedBy="article")
+    @OneToMany (mappedBy="article", cascade = CascadeType.REMOVE, orphanRemoval = true)
 //    @JoinColumn(name="TEXT_ID", referencedColumnName="ARTICLE_ID") // nullable = false
     private List<Clause> clauses;
 
