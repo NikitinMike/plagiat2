@@ -9,6 +9,12 @@
 
 <div th:include="header::header"> HEADER </div>
 
+<a th:each ="page : ${pages}">
+    <a th:text="${page}" th:href="@{'http://localhost:8080/articles/page?page='+${page}}">
+        page
+    </a>
+</a>
+
 <div>
     <table border="0">
         <tr>

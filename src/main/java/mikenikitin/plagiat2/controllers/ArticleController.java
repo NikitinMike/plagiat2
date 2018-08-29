@@ -2,10 +2,14 @@ package mikenikitin.plagiat2.controllers;
 
 import lombok.AllArgsConstructor;
 import mikenikitin.plagiat2.model.Article;
-import mikenikitin.plagiat2.model.Clause;
 import mikenikitin.plagiat2.model.Text;
 import mikenikitin.plagiat2.repository.ArticleRepository;
 import mikenikitin.plagiat2.repository.ClauseRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,10 +32,33 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 //    protected List<Article> articles = articleRepository.findAll();
 
+/*
+    @RequestMapping({"/page"})
+//    @ResponseBody
+//    private Page<Clause> pageable(Model model,
+    private String pageable(Model model,
+        @SortDefault.SortDefaults({
+            @SortDefault(sort = "article", direction = Sort.Direction.ASC),@SortDefault(sort = "number", direction = Sort.Direction.ASC)
+        }) @PageableDefault(size = 999) Pageable pageable)
+    {
+        int pagesCount=articleRepository.findAll().size()/pageable.getPageSize();
+        List<Integer> pages=new ArrayList<Integer>() {{for (int i = 0; i <= pagesCount; i++) add(i); }};
+        model.addAttribute("pages",pages);
+        model.addAttribute("articles", articleRepository.findAll(pageable));
+        // .getContent() pageable = updatePageable(pageable,999)
+        return "indexArticles";
+    }
+*/
+
     static private String lastOrder="id";
     static private boolean reverse=true;
-    @RequestMapping({"/","/order/"})
-    private String index(Model model) {
+    @RequestMapping({"/","/order/","/page"})
+    private String index(Model model,
+        @SortDefault.SortDefaults({
+//            @SortDefault(sort="article", direction=Sort.Direction.ASC),@SortDefault(sort="number", direction=Sort.Direction.ASC)
+        }) @PageableDefault(size = 999) Pageable pageable
+    ) {
+
         List<Article> articles = articleRepository.findAll();
         switch (lastOrder) {
             case "name":
@@ -55,7 +82,11 @@ public class ArticleController {
                 break;
         }
         if (reverse) Collections.reverse(articles);
-        model.addAttribute("articles", articles );
+
+        List<Integer> pages=new ArrayList<Integer>(){{for (int i = 0; i <= articles.size()/pageable.getPageSize(); i++) add(i); }};
+        model.addAttribute("pages",pages);
+        model.addAttribute("numberpages",articles.size()/pageable.getPageSize());
+        model.addAttribute("articles", articleRepository.findAll(pageable));
         return "indexArticles";
     }
 
@@ -65,9 +96,9 @@ public class ArticleController {
         return "redirect:/articles/";
     }
 
-    @RequestMapping
-    @ResponseBody
-    private List<Article> listall(){return articleRepository.findAll();}
+//    @RequestMapping
+//    @ResponseBody
+//    private List<Article> listall(){return articleRepository.findAll();}
 
     //    @RequestMapping("{id}")
     @ResponseBody

@@ -10,7 +10,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 public interface ClauseRepository extends CrudRepository<Clause, Long> {
-    List<Clause> findAll();
     List<Clause> findClausesByArticle_Id(Long id);
     Page<Clause> findAll(Pageable pageable);
+    List<Clause> findAll();
 }
