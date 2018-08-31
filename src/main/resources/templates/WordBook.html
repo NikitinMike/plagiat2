@@ -20,7 +20,12 @@
 <!--<a href="http://localhost:8080/wordbook/page?page=7"> 7 </a>-->
 <!--<a href="http://localhost:8080/wordbook/page?page=8"> 8 </a>-->
 
-    <a th:each ="page : ${pages}">
+    <!--<a th:each ="page : ${pages}">-->
+        <!--<a th:text="${page}" th:href="@{'http://localhost:8080/wordbook/page?page='+${page}}">-->
+            <!--page-->
+        <!--</a>-->
+    <!--</a>-->
+    <a th:each="page : ${#numbers.sequence( 0, pages)}">
         <a th:text="${page}" th:href="@{'http://localhost:8080/wordbook/page?page='+${page}}">
             page
         </a>
