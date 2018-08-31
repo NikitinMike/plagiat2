@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ArticleRepository extends CrudRepository<Article, Long>{
     Article findArticlesById(Long id);
-    Article findArticlesByName(String name);
+    List<Article> findArticlesByName(String name);
     Page<Article> findAll(Pageable pageable);
     List<Article> findAll();
 }

@@ -237,7 +237,7 @@ public class MainController {
         if (lines.length < 4 || lines.length > 99) return "";
 
         Article art = new Article(url);
-        if (articleRepository.findArticlesByName(art.getName()) != null) return "";
+        if (!articleRepository.findArticlesByName(art.getName()).isEmpty()) return "";
 
         Author author = authorRepository.findByName(authorName);
         if (author == null) authorRepository.save(author = new Author(authorName, realName));
