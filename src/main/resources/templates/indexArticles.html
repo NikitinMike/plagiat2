@@ -7,9 +7,10 @@
 </head>
 <body>
 
+
 <div th:include="header::header"> HEADER </div>
 
-<a th:each ="page : ${pages}">
+<a th:each="page : ${#numbers.sequence( 0, pages)}">
     <a th:text="${page}" th:href="@{'http://localhost:8080/articles/page?page='+${page}}">
         page
     </a>

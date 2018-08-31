@@ -30,9 +30,9 @@ public class ClauseController {
             @SortDefault(sort = "article", direction = Sort.Direction.ASC),@SortDefault(sort = "number", direction = Sort.Direction.ASC)
         }) @PageableDefault(size = 999) Pageable pageable)
     {
-        int pagesCount=clauseRepository.findAll().size()/pageable.getPageSize();
-        List<Integer> pages=new ArrayList<Integer>() {{for (int i = 0; i <= pagesCount; i++) add(i); }};
-        model.addAttribute("pages",pages);
+//        int pagesCount=clauseRepository.findAll().size()/pageable.getPageSize();
+//        List<Integer> pages=new ArrayList<Integer>() {{for (int i = 0; i <= pagesCount; i++) add(i); }};
+        model.addAttribute("pages",clauseRepository.count()/pageable.getPageSize());
         model.addAttribute("clauses", clauseRepository.findAll(pageable));
         // .getContent() pageable = updatePageable(pageable,999)
         return "Clauses";

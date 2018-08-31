@@ -32,33 +32,14 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 //    protected List<Article> articles = articleRepository.findAll();
 
-/*
-    @RequestMapping({"/page"})
-//    @ResponseBody
-//    private Page<Clause> pageable(Model model,
-    private String pageable(Model model,
-        @SortDefault.SortDefaults({
-            @SortDefault(sort = "article", direction = Sort.Direction.ASC),@SortDefault(sort = "number", direction = Sort.Direction.ASC)
-        }) @PageableDefault(size = 999) Pageable pageable)
-    {
-        int pagesCount=articleRepository.findAll().size()/pageable.getPageSize();
-        List<Integer> pages=new ArrayList<Integer>() {{for (int i = 0; i <= pagesCount; i++) add(i); }};
-        model.addAttribute("pages",pages);
-        model.addAttribute("articles", articleRepository.findAll(pageable));
-        // .getContent() pageable = updatePageable(pageable,999)
-        return "indexArticles";
-    }
-*/
-
     static private String lastOrder="id";
     static private boolean reverse=true;
-    @RequestMapping({"/","/order/","/page"})
+    @RequestMapping({"/","/order/"}) // ,"/page"
     private String index(Model model,
         @SortDefault.SortDefaults({
 //            @SortDefault(sort="article", direction=Sort.Direction.ASC),@SortDefault(sort="number", direction=Sort.Direction.ASC)
         }) @PageableDefault(size = 999) Pageable pageable
     ) {
-
         List<Article> articles = articleRepository.findAll();
         switch (lastOrder) {
             case "name":
@@ -76,17 +57,31 @@ public class ArticleController {
             case "author":
                 Collections.sort(articles,(b,a)->(a.getAuthor().getRealname().compareTo(b.getAuthor().getRealname())));
                 break;
-            case "id":
-                break;
-            default:
-                break;
+            case "id":break;
+            default:break;
         }
         if (reverse) Collections.reverse(articles);
+//        List<Integer> pages=new ArrayList<Integer>(){{for (int i = 0; i <= articles.size()/pageable.getPageSize(); i++) add(i); }};
+//        model.addAttribute("pages",pages);
+        model.addAttribute("pages",articles.size()/pageable.getPageSize());
+        model.addAttribute("articles", articles);
+//        model.addAttribute("articles", articleRepository.findAll(pageable));
+        return "indexArticles";
+    }
 
-        List<Integer> pages=new ArrayList<Integer>(){{for (int i = 0; i <= articles.size()/pageable.getPageSize(); i++) add(i); }};
-        model.addAttribute("pages",pages);
-        model.addAttribute("numberpages",articles.size()/pageable.getPageSize());
+    @RequestMapping({"/page"})
+//    @ResponseBody
+//    private Page<Clause> pageable(Model model,
+    private String page(Model model,
+        @SortDefault.SortDefaults({
+//            @SortDefault(sort = "article", direction = Sort.Direction.ASC),@SortDefault(sort = "number", direction = Sort.Direction.ASC)
+        }) @PageableDefault(size = 999) Pageable pageable)
+    {
+//        int pagesCount=articleRepository.findAll().size()/pageable.getPageSize();
+//        List<Integer> pages=new ArrayList<Integer>() {{for (int i = 0; i <= pagesCount; i++) add(i); }};
+        model.addAttribute("pages",articleRepository.count()/pageable.getPageSize());
         model.addAttribute("articles", articleRepository.findAll(pageable));
+        // .getContent() pageable = updatePageable(pageable,999)
         return "indexArticles";
     }
 
