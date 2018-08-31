@@ -27,8 +27,13 @@
         <td th:if="${clause.number}==1" width="20%" bgcolor="#f5f5f5">
             <br/>
             <a th:text="${clause.article.id}"/>
-            <b th:text="${clause.article.title}"/><br/>
-            <i th:text="${clause.article.author.realname}"/>
+            <a th:href="@{'http://localhost:8080/article/table/'+${clause.article.id}}">
+                <b th:text="${clause.article.title}" />
+            </a>
+            <br/>
+            <a th:href="@{'http://localhost:8080/authors/'+${clause.article.author.id}}">
+                <i th:text="${clause.article.author.realname}" />
+            </a>
         </td>
         <td th:unless="${clause.number}==1"/>
 

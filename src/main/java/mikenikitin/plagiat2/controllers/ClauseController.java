@@ -24,10 +24,29 @@ public class ClauseController {
 
     @RequestMapping({"/page"})
 //    @ResponseBody
-//    private Page<Clause> pageable(Model model,
-    private String pageable(Model model,
+//    private Page<Clause> page(Model model,
+    private String page(Model model,
         @SortDefault.SortDefaults({
-            @SortDefault(sort = "article", direction = Sort.Direction.ASC),@SortDefault(sort = "number", direction = Sort.Direction.ASC)
+            @SortDefault(sort = "article", direction = Sort.Direction.ASC)
+            ,@SortDefault(sort = "number", direction = Sort.Direction.ASC)
+        }) @PageableDefault(size = 1000) Pageable pageable)
+    {
+//        int pagesCount=clauseRepository.findAll().size()/pageable.getPageSize();
+//        List<Integer> pages=new ArrayList<Integer>() {{for (int i = 0; i <= pagesCount; i++) add(i); }};
+        model.addAttribute("pages",clauseRepository.count()/pageable.getPageSize());
+        model.addAttribute("clauses", clauseRepository.findAll(pageable));
+        // .getContent() pageable = updatePageable(pageable,999)
+        return "Clauses";
+//        return clauseRepository.findAll(pageable);
+    }
+
+    @RequestMapping({"/ends"})
+//    @ResponseBody
+//    private Page<Clause> pageable(Model model,
+    private String ends(Model model,
+        @SortDefault.SortDefaults({
+            @SortDefault(sort = "parts", direction = Sort.Direction.DESC),
+            @SortDefault(sort = "end", direction = Sort.Direction.ASC)
         }) @PageableDefault(size = 1000) Pageable pageable)
     {
 //        int pagesCount=clauseRepository.findAll().size()/pageable.getPageSize();
