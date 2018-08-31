@@ -120,7 +120,7 @@ public class WordbookController {
     @RequestMapping({"/page"})
     private String pageable( Model model,
         @SortDefault.SortDefaults(@SortDefault(sort = "word", direction = Sort.Direction.ASC))
-        @PageableDefault(size = 999) Pageable pageable)
+        @PageableDefault(size = 1000) Pageable pageable)
     {
 //        int pagesCount=wordbookRepository.count()/pageable.getPageSize();
 //        List<Integer> pages=new ArrayList<Integer>() {{for (int i = 0; i <= pagesCount; i++) add(i); }};

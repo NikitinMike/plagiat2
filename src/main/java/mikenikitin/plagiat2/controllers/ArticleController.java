@@ -38,7 +38,7 @@ public class ArticleController {
     private String index(Model model,
         @SortDefault.SortDefaults({
 //            @SortDefault(sort="article", direction=Sort.Direction.ASC),@SortDefault(sort="number", direction=Sort.Direction.ASC)
-        }) @PageableDefault(size = 999) Pageable pageable
+        }) @PageableDefault(size = 100) Pageable pageable
     ) {
         List<Article> articles = articleRepository.findAll();
         switch (lastOrder) {
@@ -75,7 +75,7 @@ public class ArticleController {
     private String page(Model model,
         @SortDefault.SortDefaults({
 //            @SortDefault(sort = "article", direction = Sort.Direction.ASC),@SortDefault(sort = "number", direction = Sort.Direction.ASC)
-        }) @PageableDefault(size = 999) Pageable pageable)
+        }) @PageableDefault(size = 99) Pageable pageable)
     {
 //        int pagesCount=articleRepository.findAll().size()/pageable.getPageSize();
 //        List<Integer> pages=new ArrayList<Integer>() {{for (int i = 0; i <= pagesCount; i++) add(i); }};
