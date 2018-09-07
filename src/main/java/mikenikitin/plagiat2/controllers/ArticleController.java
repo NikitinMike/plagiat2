@@ -123,8 +123,10 @@ public class ArticleController {
         articleRepository.delete(art);
 //        clauseRepository.findClausesByArticle_Id(art.getId()).forEach((t)->(deleteById(t.getId())));
 //        return "redirect:/articles/";
-        return getPreviousPageByRequest(request).orElse("/"); //else go to home page
+        return "redirect:"+ request.getHeader("Referer");
+//        return getPreviousPageByRequest(request).orElse("/"); //else go to home page
     }
+
 
     @RequestMapping("{id}")
     private String article2(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
@@ -139,8 +141,11 @@ public class ArticleController {
 
 //    @ResponseBody
     @RequestMapping("/table/{id}")
-    private String article3(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
+    private String article3(HttpServletRequest request, @PathVariable Long id , Model model, HttpServletResponse response) throws IOException {
+//        if (id==null) return "redirect:"+ request.getHeader("Referer");
         Article art=articleRepository.findArticlesById(id);
+//        if (art==null) return "redirect:"+ request.getHeader("Referer");
+        if (art == null) return "redirect:/";
         model.addAttribute("id",id);
         model.addAttribute("author",art.getAuthor());
         model.addAttribute("title",art.getTitle());
