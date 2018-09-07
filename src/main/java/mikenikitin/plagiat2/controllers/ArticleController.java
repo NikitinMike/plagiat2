@@ -5,6 +5,7 @@ import mikenikitin.plagiat2.model.Article;
 import mikenikitin.plagiat2.model.Text;
 import mikenikitin.plagiat2.repository.ArticleRepository;
 import mikenikitin.plagiat2.repository.ClauseRepository;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -109,13 +111,19 @@ public class ArticleController {
         return list;
     }
 
+    protected Optional<String> getPreviousPageByRequest(HttpServletRequest request)
+    {
+        return Optional.ofNullable(request.getHeader("Referer")).map(requestUrl -> "redirect:" + requestUrl);
+    }
+
     @RequestMapping("/delete/{id}")
-    private String delete(@PathVariable Long id, HttpServletResponse response){
+    private String delete(HttpServletRequest request, @PathVariable Long id, HttpServletResponse response){
         Article art=articleRepository.findArticlesById(id);
         if(art==null) return "redirect:/articles/";
         articleRepository.delete(art);
 //        clauseRepository.findClausesByArticle_Id(art.getId()).forEach((t)->(deleteById(t.getId())));
-        return "redirect:/articles/";
+//        return "redirect:/articles/";
+        return getPreviousPageByRequest(request).orElse("/"); //else go to home page
     }
 
     @RequestMapping("{id}")
