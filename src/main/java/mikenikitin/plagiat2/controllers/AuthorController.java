@@ -61,12 +61,16 @@ public class AuthorController {
     @RequestMapping("{id}")
 //    @ResponseBody
     private String articles(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
-        if(authorRepository.findAuthorsById(id)==null){response.sendRedirect("/authors");return null;}
+        Author author = authorRepository.findAuthorsById(id);
+        if(author==null){response.sendRedirect("/authors");return null;}
 //        System.out.println(authorRepository.findAuthorsById(id));
-        List<Article> articles = new ArrayList<>(); // = null;
-        for (Article a:authorRepository.findAuthorsById(id).getArticles()) articles.add(a);
+
+//        List<Article> articles = new ArrayList<>(); // = null;
+//        for (Article a:authorRepository.findAuthorsById(id).getArticles()) articles.add(a);
+
+        model.addAttribute("pages",9);
         model.addAttribute("author", authorRepository.findAuthorsById(id).getRealname());
-        model.addAttribute("articles", articles);
+        model.addAttribute("articles", articleRepository.findArticleByAuthor(author));
         return "indexArticles";
 //        return articles;
     }

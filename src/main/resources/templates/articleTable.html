@@ -15,7 +15,9 @@
         <a th:text="${author.realname}"  th:href="@{${author.name}}"/>
         <a th:text="${author.id}"  th:href="@{'/authors/'+${author.id}}"/>
 
-        <h2 th:text="${title}">Title</h2>
+        <h2>
+            <a th:text="${title}" th:href="@{'/article/'+${id}}"/>
+        </h2>
 
         <table th:with="size=0" border="0" width="50%">
             <tr th:each="clause : ${table}">

@@ -12,7 +12,9 @@
     <a th:text="${author.realname}"  th:href="@{${author.name}}"/>
     <a th:text="${author.id}"  th:href="@{'/authors/'+${author.id}}"/>
 
-    <h2 th:text="${title}">Title</h2>
+    <h2>
+        <a th:href="@{${origin}}" th:text="${title}"/>
+    </h2>
 
     <div th:include="header::header"> HEADER </div>
 

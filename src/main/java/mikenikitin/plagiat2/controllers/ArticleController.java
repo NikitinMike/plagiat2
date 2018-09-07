@@ -120,19 +120,22 @@ public class ArticleController {
 
     @RequestMapping("{id}")
     private String article2(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
+        Article art=articleRepository.findArticlesById(id);
         model.addAttribute("id",id);
-        model.addAttribute("author",articleRepository.findArticlesById(id).getAuthor());
-        model.addAttribute("title",articleRepository.findArticlesById(id).getTitle());
-        model.addAttribute("article", articleRepository.findArticlesById(id).getText());
+        model.addAttribute("origin", art.getName());
+        model.addAttribute("author",art.getAuthor());
+        model.addAttribute("title",art.getTitle());
+        model.addAttribute("article", art.getText());
         return "article";
     }
 
 //    @ResponseBody
     @RequestMapping("/table/{id}")
     private String article3(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
+        Article art=articleRepository.findArticlesById(id);
         model.addAttribute("id",id);
-        model.addAttribute("author",articleRepository.findArticlesById(id).getAuthor());
-        model.addAttribute("title",articleRepository.findArticlesById(id).getTitle());
+        model.addAttribute("author",art.getAuthor());
+        model.addAttribute("title",art.getTitle());
         model.addAttribute("table",clauseRepository.findClausesByArticle_Id(id));
         return "articleTable";
     }

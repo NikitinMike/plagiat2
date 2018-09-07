@@ -45,8 +45,8 @@ public class ClauseController {
 //    private Page<Clause> pageable(Model model,
     private String ends(Model model,
         @SortDefault.SortDefaults({
-            @SortDefault(sort = "end", direction = Sort.Direction.ASC),
             @SortDefault(sort = "parts", direction = Sort.Direction.DESC),
+            @SortDefault(sort = "end", direction = Sort.Direction.ASC),
         }) @PageableDefault(size = 1000) Pageable pageable)
     {
 //        int pagesCount=clauseRepository.findAll().size()/pageable.getPageSize();
@@ -54,7 +54,7 @@ public class ClauseController {
         model.addAttribute("pages",clauseRepository.count()/pageable.getPageSize());
         model.addAttribute("clauses", clauseRepository.findAll(pageable));
         // .getContent() pageable = updatePageable(pageable,999)
-        return "Clauses";
+        return "ClauseEnds";
 //        return clauseRepository.findAll(pageable);
     }
 

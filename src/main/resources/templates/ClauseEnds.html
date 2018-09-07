@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CLAUSES</title>
+</head>
+
+<body>
+<div th:include="header::header"> HEADER </div>
+
+<a th:each="page : ${#numbers.sequence( 0, pages)}">
+    <a th:text="${page}" th:href="@{'http://localhost:8080/clause/ends?page='+${page}}">
+        page
+    </a>
+</a>
+
+<table>
+    <tr th:each ="clause : ${clauses}" valign="bottom">
+        <td width="1%" th:text="${clause.end}"/>
+        <td width="1%"/>
+        <td th:text="${clause.parts}" width="1%" align="center"/>
+        <td width="1%"/>
+        <td width="10%" >
+            <a th:each="word : ${clause.text}">
+                <a th:if="${word.lineBreak}">
+                    <b th:text="${word.word.word}"/>
+                </a>
+                <a th:unless="${word.lineBreak}">
+                    <i th:text="${word.word.word}"/>
+                </a>
+            </a>
+        </td>
+        <td width="1%"/>
+        <td th:text="${clause.number}" width="1%" align="right"/>
+        <td width="1%"/>
+        <td th:unless="${clause.number}==0" width="20%" bgcolor="#f5f5f5">
+            <!--<br/>-->
+            <a th:href="@{'http://localhost:8080/article/table/'+${clause.article.id}}">
+                <b th:text="${clause.article.title}" />
+            </a>
+            <!--<br/>-->
+            <a th:href="@{'http://localhost:8080/authors/'+${clause.article.author.id}}">
+                <i th:text="${clause.article.author.realname}" />
+            </a>
+        </td>
+        <td th:if="${clause.number}==0"/>
+        <td width="1%"/>
+        <td width="10%" >
+            <a th:text="${clause.article.id}"/>
+        </td>
+    </tr>
+</table>
+
+<div th:replace="footer::footer"> FOOTER </div>
+
+</body>
+</html>
