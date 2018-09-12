@@ -260,6 +260,7 @@ public class MainController {
             String[] linewords = line.toLowerCase().replaceAll("[^а-яёa-z]", " ").trim().split("\\s+");
             if (linewords.length < 1||linewords.length > 250) continue;
             Clause clause = new Clause(art,line.trim(),++cn);
+//            if(clause.getParts()<2) continue; // skip garbage texts
             if(clause.getParts()>30) continue; // skip garbage texts
             Text clauseEnd=null;
             for (String word : linewords) // \\p{Alpha}

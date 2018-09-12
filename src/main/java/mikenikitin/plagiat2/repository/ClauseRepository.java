@@ -13,4 +13,5 @@ public interface ClauseRepository extends CrudRepository<Clause, Long> {
     List<Clause> findClausesByArticle_Id(Long id);
     Page<Clause> findAll(Pageable pageable);
     List<Clause> findAll();
+    List<Clause> findAllByPartsEquals(Integer parts);
 }
