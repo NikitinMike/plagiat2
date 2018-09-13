@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
@@ -44,29 +46,32 @@ public class ClauseController {
     }
 
     @RequestMapping({"/parts/{parts}"})
-    private String ends(Model model,@PathVariable Integer parts)
-//        @SortDefault.SortDefaults({
+    private String ends(Model model,@PathVariable Integer parts,
+        @SortDefault.SortDefaults({
 //            @SortDefault(sort = "parts", direction = Sort.Direction.DESC),
-//            @SortDefault(sort = "end", direction = Sort.Direction.ASC),
-//        }) @PageableDefault(size = 10000) Pageable pageable)
+            @SortDefault(sort = "end", direction = Sort.Direction.ASC),
+        }) @PageableDefault(size = 100) Pageable pageable)
     {
-        model.addAttribute("pages",30); // clauses.getSize()/pageable.getPageSize()
+        model.addAttribute("pages",clauseRepository.findAllByPartsEquals(parts).size()/pageable.getPageSize());
+        Page<Clause> clauses = clauseRepository.findAllByPartsEquals(pageable,parts);
+//        List<Clause> clauses = clauseRepository.findAllByPartsEquals(parts); // .stream().distinct().collect(Collectors.toList());
+//        clauses.sort((c1, c2)->{return c1.getEnd().compareTo(c2.getEnd());});
+//        clauses.removeIf(clause -> {return clauses.contains(clause);});
+        model.addAttribute("clauses",clauses);
         model.addAttribute("parts",parts);
-//        Page<Clause> clauses = clauseRepository.findAllByPartsEquals(pageable,parts);
-        model.addAttribute("clauses",clauseRepository.findAllByPartsEquals(parts));
         return "ClauseEnds";
     }
 
     @RequestMapping({"/parts"})
-    private String ends(Model model,
-        @SortDefault.SortDefaults({
-            @SortDefault(sort = "parts", direction = Sort.Direction.DESC),
-            @SortDefault(sort = "end", direction = Sort.Direction.ASC),
-        }) @PageableDefault(size = 1000) Pageable pageable)
-    {
-        model.addAttribute("pages", 30); // clauseRepository.count()/pageable.getPageSize());
+    private String ends(Model model
+//        @SortDefault.SortDefaults({
+//            @SortDefault(sort = "parts", direction = Sort.Direction.DESC),
+//            @SortDefault(sort = "end", direction = Sort.Direction.ASC),
+//        }) @PageableDefault(size = 1000) Pageable pageable
+    ){
+        model.addAttribute("pages", 1); // clauseRepository.count()/pageable.getPageSize());
         model.addAttribute("clauses", null); // clauseRepository.findAll(pageable));
-        model.addAttribute("parts",0);
+        model.addAttribute("parts",30);
         return "ClauseParts";
     }
 
