@@ -11,7 +11,6 @@
 
 <a th:each="page : ${#numbers.sequence( 0, pages)}">
     <a th:text="${page}" th:href="@{'http://localhost:8080/clause/parts/'+${page}}">
-    <!--<a th:text="${page}" th:href="@{'http://localhost:8080/clause/parts/'+${parts}+'/?page='+${page}}">-->
         page
     </a>
 </a>
