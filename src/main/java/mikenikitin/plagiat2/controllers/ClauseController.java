@@ -50,7 +50,7 @@ public class ClauseController {
         @SortDefault.SortDefaults({
 //            @SortDefault(sort = "parts", direction = Sort.Direction.DESC),
             @SortDefault(sort = "end", direction = Sort.Direction.ASC),
-        }) @PageableDefault(size = 100) Pageable pageable)
+        }) @PageableDefault(size = 1000) Pageable pageable)
     {
         model.addAttribute("pages",clauseRepository.findAllByPartsEquals(parts).size()/pageable.getPageSize());
         Page<Clause> clauses = clauseRepository.findAllByPartsEquals(pageable,parts);

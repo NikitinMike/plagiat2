@@ -101,7 +101,8 @@ public class MainController {
 
         Integer c=poems.size();
         System.out.println("POEMS TO GO: " + c);
-        for (String p : poems) System.out.println(--c +": "+ p.replaceAll(".+/editor/","")+" :" + !stih2base(p).isEmpty());
+        for (String p : poems)
+            System.out.println(--c +": "+ p.replaceAll(".+/editor/","")+" :" + !stih2base(p).isEmpty());
 
         model.addAttribute("list", poems);
         return "poems";
@@ -260,6 +261,13 @@ public class MainController {
             String[] linewords = line.toLowerCase().replaceAll("[^а-яёa-z]", " ").trim().split("\\s+");
             if (linewords.length < 1||linewords.length > 250) continue;
             Clause clause = new Clause(art,line.trim(),++cn);
+
+            List<Clause> ex = clauseRepository.findClauseByClause(line.trim());
+            if (!ex.isEmpty()) {
+                System.out.println("\n [ "+line.trim()+" ] ");
+                ex.forEach((c)->{System.out.println(c.getClause());});
+            }
+
 //            if(clause.getParts()<2) continue; // skip garbage texts
             if(clause.getParts()>30) continue; // skip garbage texts
             Text clauseEnd=null;

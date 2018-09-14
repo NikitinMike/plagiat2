@@ -23,19 +23,20 @@
 
         <a href="http://localhost:8080/clause/page?page=0"> clauses </a>
 
-        <!--<a href="http://localhost:8080/clause/parts"> clauseends </a>-->
-        <a th:each="i : ${#numbers.sequence( 1, 30)}">
-            <a th:text="${i}" th:href="@{'http://localhost:8080/clause/parts/'+${i}}">
-                page
-            </a>
-        </a>
-
         <a href="http://localhost:8080/wordbook/page?page=0"> wordbook </a>
         <a href="http://localhost:8080/wordbook/ends"> ends </a>
 
         <a href="http://localhost:8080/links/1"> links1 </a>
         <a href="http://localhost:8080/links/2"> links2 </a>
         <a href="http://localhost:8080/links/3"> links3 </a>
+
+        <br/>
+        <!--<a href="http://localhost:8080/clause/parts"> clauseends </a>-->
+        <a th:each="i : ${#numbers.sequence( 1, 30)}">
+            <a th:text="${i}" th:href="@{'http://localhost:8080/clause/parts/'+${i}}">
+                page
+            </a>
+        </a>
 
     </h3>
 </div>
