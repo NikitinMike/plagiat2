@@ -254,33 +254,37 @@ public class MainController {
 
         Long cn=0L, wc = 0L;
         List<Text> text = new ArrayList<>();
-        for (String line:lines) {
+        for (String inline:lines) {
 //          System.out.println(line);
-            if(line.trim().length()>250) continue;
-            if (line.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮaouieAOUIE]","").length()<1) continue;
+            String line=inline.trim();
+            if (line.trim().length()>250) continue;
+            Integer parts=line.replaceAll("[^аяёоуыиеэюАЯЁОУЫИЕЭЮaouieAOUIE]","").length();
+            if ((parts<1)||(parts>30)) continue; // skip garbage texts
             String[] linewords = line.toLowerCase().replaceAll("[^а-яёa-z]", " ").trim().split("\\s+");
             if (linewords.length < 1||linewords.length > 250) continue;
-            Clause clause = new Clause(art,line.trim(),++cn);
 
-            List<Clause> ex = clauseRepository.findClauseByClause(line.trim());
+            cn++;
+            Clause clause;
+            List<Clause> ex = clauseRepository.findClauseByClause(line);
             if (!ex.isEmpty()) {
-                System.out.println("\n [ "+line.trim()+" ] ");
-                ex.forEach((c)->{System.out.println(c.getClause());});
-            }
-
-//            if(clause.getParts()<2) continue; // skip garbage texts
-            if(clause.getParts()>30) continue; // skip garbage texts
-            Text clauseEnd=null;
+                System.out.println(" [ "+line+" ] ");
+//                ex.forEach((c)->{System.out.println(c.getClause());});
+                clause = ex.get(0);
+                System.out.println(clause.getClause());
+            } else clause = new Clause(art,line,cn);
+//            Text clauseEnd=null;
             for (String word : linewords) // \\p{Alpha}
                 if (word.length() > 0)
                     try {
                         Wordbook wbr=wordbookRepository.findByWord(word);
                         if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word));
 //                        clause.addWord(wbr, ++wc);
-                        text.add(clauseEnd=new Text(art, clause, wbr, ++wc));
+//                        text.add(clauseEnd=new Text(art, clause, wbr, ++wc));
+                        text.add(new Text(art, clause, wbr, ++wc));
                     } catch(Exception e){System.out.println(e.getMessage()+" ["+word+"] ");}
-            if (clauseEnd!=null) clause.setEnd(clauseEnd.setClause(true));
+//            if (clauseEnd!=null) clause.setEnd(clauseEnd.setClause(true));
             clauseRepository.save(clause);
+
         }
         textRepository.saveAll(text);
 
