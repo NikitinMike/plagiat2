@@ -23,8 +23,9 @@
             <tr th:each="clause : ${table}">
                 <td th:text="${clause.number}" width="1%" align="right"/>
                 <td width="1%"/>
-                <td th:text="${clause.clause}" width="10%"/>
-                <td width="10%">
+                <td th:text="${clause.clause}" width="20%"/>
+                <td width="1%"/>
+                <td width="20%">
                     <a th:each="word : ${clause.text}">
                         <!--<a th:text="${word.word.word}"/>-->
                         <a th:if="${word.lineBreak}">
@@ -37,9 +38,9 @@
                     </a>
                 </td>
                 <!--<td width="1%"/>-->
-                <td th:text="${clause.parts}" width="1%" align="center"/>
+                <td th:text="${clause.parts}" width="2%" align="center"/>
                 <td width="1%"/>
-                <td width="1%" th:text="${clause.end}"/>
+                <td width="1%" th:text="${clause.end.getEnd()}"/>
                 <!--<td width="1%"/>-->
                 <!--<td th:text="${clause.text}"/>-->
             </tr>

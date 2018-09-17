@@ -26,10 +26,10 @@ public class Article {
     private Long cc;
     private Long rating; // good=0 >> poor=9999
 
-    @JsonIgnore
-    @OneToMany (mappedBy="article", cascade = CascadeType.REMOVE, orphanRemoval = true)
+//    @JsonIgnore
+//    @OneToMany (mappedBy="article", cascade = CascadeType.REMOVE, orphanRemoval = true)
 //    @JoinColumn(name="TEXT_ID", referencedColumnName="ARTICLE_ID") // nullable = false
-    private List<Text> text;
+//    private List<Text> text;
 
     @JsonIgnore
     @OneToMany (mappedBy="article", cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -96,10 +96,8 @@ public class Article {
         return author;
     }
 
-    public List<Text> getText() {return text;}
+//    public List<Text> getText() {return text;}
 
-    public List<Clause> getClauses() {
-        return clauses;
-    }
+    public List<Clause> getClauses() {return clauses;}
 
 }

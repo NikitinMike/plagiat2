@@ -252,7 +252,7 @@ public class MainController {
         System.out.print(" vol:" + poem.length());
         System.out.print(" lines:" + lines.length);
 
-        Long cn=0L, wc = 0L;
+        Long cn=art.getId()*1000L,wc = 0L;
         List<Text> text = new ArrayList<>();
         for (String inline:lines) {
 //          System.out.println(line);
@@ -263,33 +263,42 @@ public class MainController {
             String[] linewords = line.toLowerCase().replaceAll("[^а-яёa-z]", " ").trim().split("\\s+");
             if (linewords.length < 1||linewords.length > 250) continue;
 
-            cn++;
-            Clause clause;
             List<Clause> ex = clauseRepository.findClauseByClause(line);
-            if (!ex.isEmpty()) {
-                System.out.println(" [ "+line+" ] ");
-//                ex.forEach((c)->{System.out.println(c.getClause());});
-                clause = ex.get(0);
+//            if (ex.isEmpty())
+            {
+                Clause clause = new Clause(art, line, ++cn);
+                Long cwc = 0L;
+                Text clauseEnd = null;
+                for (String word : linewords) // \\p{Alpha}
+                    if (word.length() > 0)
+                        try {
+                            Wordbook wbr = wordbookRepository.findByWord(word);
+                            if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word));
+                            // clause.addWord(wbr, ++wc);
+                            text.add(clauseEnd = new Text(art, clause, wbr, ++cwc));
+                            wc++;
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage() + " [" + word + "] ");
+                        }
+                if (clauseEnd != null) clause.setEnd(clauseEnd.setClause(true));
+                clause.setWc(cwc);
+                clauseRepository.save(clause);
+            }
+            /*
+            else
+            {
+                System.out.println(" ("+cn+"):[ "+line+" ] ");
+//                ex.forEach((c)->{System.out.print(c.getArticle().getId()+" : "+c.getClause());});
+                Clause clause = new Clause(ex.get(0),art,cn);
                 System.out.println(clause.getClause());
-            } else clause = new Clause(art,line,cn);
-//            Text clauseEnd=null;
-            for (String word : linewords) // \\p{Alpha}
-                if (word.length() > 0)
-                    try {
-                        Wordbook wbr=wordbookRepository.findByWord(word);
-                        if (wbr == null) wordbookRepository.save(wbr = new Wordbook(word));
-//                        clause.addWord(wbr, ++wc);
-//                        text.add(clauseEnd=new Text(art, clause, wbr, ++wc));
-                        text.add(new Text(art, clause, wbr, ++wc));
-                    } catch(Exception e){System.out.println(e.getMessage()+" ["+word+"] ");}
-//            if (clauseEnd!=null) clause.setEnd(clauseEnd.setClause(true));
-            clauseRepository.save(clause);
-
+                clauseRepository.save(clause);
+            }
+            */
         }
         textRepository.saveAll(text);
 
         System.out.print(" clauses:" +cn);
-        art.setCc(cn);
+        art.setCc(cn%1000);
         System.out.print(" words:" +wc);
         art.setWc(wc);
         System.out.println();

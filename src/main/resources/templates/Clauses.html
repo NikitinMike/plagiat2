@@ -24,7 +24,7 @@
 <table>
     <!--<i th:text="${#strings.replace(clause.word,word.getEnd(),'('+clause.getEnd()+')')}" />-->
     <tr th:each ="clause : ${clauses}" valign="bottom">
-        <td th:if="${clause.number}==1" width="20%" bgcolor="#f5f5f5">
+        <td th:if="${clause.number}%1000==1" bgcolor="#f5f5f5" width="20%">
             <br/>
             <a th:text="${clause.article.id}"/>
             <a th:href="@{'http://localhost:8080/article/table/'+${clause.article.id}}">
@@ -35,12 +35,12 @@
                 <i th:text="${clause.article.author.realname}" />
             </a>
         </td>
-        <td th:unless="${clause.number}==1"/>
+        <td th:unless="${clause.number}%1000==1"/>
 
         <td width="1%"/>
         <!--<td th:text="${clause.clause}" width="30%"/>-->
         <!--<td/>-->
-        <td th:text="${clause.number}" width="1%" align="right"/>
+        <td th:text="${clause.number}%1000" width="1%" align="right"/>
         <td width="1%"/>
         <td width="1%" th:text="${clause.end}"/>
         <td width="1%"/>

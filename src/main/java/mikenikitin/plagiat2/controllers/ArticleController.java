@@ -102,7 +102,7 @@ public class ArticleController {
     private List<String> article(@PathVariable Long id, HttpServletResponse response) throws IOException {
         if(articleRepository.findArticlesById(id)==null){response.sendRedirect("/article");return null;}
         List<String> list = new ArrayList<>(); // = null;
-        for (Text t:articleRepository.findArticlesById(id).getText()) list.add(t.getWord().getWord());
+//        for (Text t:articleRepository.findArticlesById(id).getText()) list.add(t.getWord().getWord());
         // System.out.print(t.getWord().getWord());
         // .forEach((b) -> System.out.println(b))
 //        articleRepository.findArticlesById(id).getText().forEach((t)->System.out.print(t.getWord().getWord()+" "));
@@ -135,7 +135,7 @@ public class ArticleController {
         model.addAttribute("origin", art.getName());
         model.addAttribute("author",art.getAuthor());
         model.addAttribute("title",art.getTitle());
-        model.addAttribute("article", art.getText());
+//        model.addAttribute("article", art.getText());
         return "article";
     }
 
@@ -156,7 +156,7 @@ public class ArticleController {
     @RequestMapping("/flat/{id}")
     private String article(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
         if(articleRepository.findArticlesById(id)==null){response.sendRedirect("/article");return null;}
-        model.addAttribute("wordbook", articleRepository.findArticlesById(id).getText());
+//        model.addAttribute("wordbook", articleRepository.findArticlesById(id).getText());
         return "WordBook";
     }
 
