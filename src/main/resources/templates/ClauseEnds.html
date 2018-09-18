@@ -18,7 +18,7 @@
 
 <table>
     <tr th:each ="clause : ${clauses}" valign="bottom">
-        <td width="1%" th:text="${clause.end}"/>
+        <td width="1%" th:text="${clause.end.getEnd()}"/>
         <td width="1%"/>
         <td th:text="${clause.parts}" width="1%" align="center"/>
         <td width="1%"/>

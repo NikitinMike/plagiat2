@@ -19,7 +19,7 @@
             <a th:text="${title}" th:href="@{'/article/'+${id}}"/>
         </h2>
 
-        <table th:with="size=0" border="0" width="50%">
+        <table th:with="size=0" border="0" width="60%">
             <tr th:each="clause : ${table}">
                 <td th:text="${clause.number}" width="1%" align="right"/>
                 <td width="1%"/>
