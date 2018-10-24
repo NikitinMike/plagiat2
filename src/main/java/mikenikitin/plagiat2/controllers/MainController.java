@@ -39,7 +39,7 @@ public class MainController {
     @ResponseBody
     private String stih(@RequestParam String url){return stih2base(url);}
 
-    private final String root = "http://www.stihi.ru",
+    private final String root = "https://www.stihi.ru",
             localHost = "http://localhost:8080",
             linkClass=" class=[\"\'].+[\"\']",
             href = "<a href=(.+?)>";
@@ -48,10 +48,10 @@ public class MainController {
 
     //"http://www.stihi.ru/poems/list.html?type=selected" //
     //"http://www.stihi.ru/poems/list.html?topic=all"
-    private final String editor2="http://www.stihi.ru/authors/",
-            start = "http://www.stihi.ru/poems/list.html?topic=all",
-            selected="http://www.stihi.ru/poems/selected.html",
-            editor1="http://www.stihi.ru/authors/editor.html";
+    private final String editor2="https://www.stihi.ru/authors/",
+            start = "https://www.stihi.ru/poems/list.html?topic=all",
+            selected="https://www.stihi.ru/poems/selected.html",
+            editor1="https://www.stihi.ru/authors/editor.html";
 
     @ResponseBody
     @RequestMapping("/links/{level}")
