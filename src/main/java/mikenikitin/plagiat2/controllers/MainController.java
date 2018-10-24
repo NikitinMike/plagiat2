@@ -220,9 +220,11 @@ public class MainController {
         Matcher tm = Pattern.compile("<h1>(.+?)</h1>").matcher(poem);
         if (tm.find()) title=tm.group(1);
 
-        Matcher am = Pattern.compile("<a href=\"(.+?)\">(.+?)</a>").matcher(poem);
+        //System.out.println(poem);
+        Matcher am = Pattern.compile("<div class=\"titleauthor\"><em><a href=\"(.+?)\">(.+?)</a></em></div>").matcher(poem);
         String authorName=am.find()?root+am.group(1):localHost;
-        String realName=am.find()?am.group(2):localHost;
+        String realName=am.group(2); // am.find()?am.group(2):localHost;
+//        System.out.println(realName);
 
 //        poem=stripStih(poem);
         Matcher sm = Pattern.compile("<div class=\"text\">(.+?)</div>").matcher(poem);
