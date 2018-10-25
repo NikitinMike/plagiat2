@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MAIN PAGE</title>
+</head>
+
+<body>
+
+<div th:include="header::header"> HEADER </div>
+
+<div th:each ="item : ${list}">
+    <b>
+        <a th:text="${item}" th:href="@{${item}}"> </a>
+    </b>
+</div>
+
+<div th:replace="footer::footer"> FOOTER </div>
+
+</body>
+
+</html>
