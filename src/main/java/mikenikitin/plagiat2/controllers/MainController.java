@@ -299,7 +299,7 @@ public class MainController {
         }
         textRepository.saveAll(text);
 
-        System.out.print(" clauses:" +cn);
+        System.out.print(" clauses:" +cn%1000);
         art.setCc(cn%1000);
         System.out.print(" words:" +wc);
         art.setWc(wc);

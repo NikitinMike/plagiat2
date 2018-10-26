@@ -50,6 +50,10 @@ public class Clause {
     @OneToMany (mappedBy="clause")
     private List<Text> text;
 
+    public String getTextString(){
+        return "textString";
+    }
+
     public Clause() {}
     public Clause(Article art) {article=art;}
 

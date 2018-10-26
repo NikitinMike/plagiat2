@@ -2,9 +2,11 @@ package mikenikitin.plagiat2.controllers;
 
 import lombok.AllArgsConstructor;
 import mikenikitin.plagiat2.model.Article;
+import mikenikitin.plagiat2.model.Clause;
 import mikenikitin.plagiat2.model.Text;
 import mikenikitin.plagiat2.repository.ArticleRepository;
 import mikenikitin.plagiat2.repository.ClauseRepository;
+import mikenikitin.plagiat2.services.Combiner;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -108,6 +110,7 @@ public class ArticleController {
 //        articleRepository.findArticlesById(id).getText().forEach((t)->System.out.print(t.getWord().getWord()+" "));
 //        articleRepository.findArticlesById(id).getText().map((t)->(t.getWord().getWord()));
 //        articleRepository.findArticlesById(id).getText().forEach((t)->(t.getWord().getWord()));
+
         return list;
     }
 
@@ -149,7 +152,19 @@ public class ArticleController {
         model.addAttribute("id",id);
         model.addAttribute("author",art.getAuthor());
         model.addAttribute("title",art.getTitle());
-        model.addAttribute("table",clauseRepository.findClausesByArticle_Id(id));
+
+        ArrayList<String> text = new ArrayList<>();
+        List<Clause> table = clauseRepository.findClausesByArticle_Id(id);
+//        for(String a:table) text.add(new Combiner(a).randomOut());
+
+        for(Clause c:table) {
+            System.out.println(c.getTextString()); // c.getClause()
+//            c.getText().forEach(t -> System.out.print(t.getWord().getWord()+' '));
+        }
+//            System.out.println(c.getClause());
+
+        model.addAttribute("table",table);
+
         return "articleTable";
     }
 
