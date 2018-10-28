@@ -56,7 +56,7 @@ public class Clause {
         String comb="";
         for (Text t:text) comb+=t.getWord().getWord()+" "; // .subList(0,text.size()-1)
 
-        String predlogi="не ни "+"в без до из к на по о от перед при через с у за над об под про для "+"как ";
+        String predlogi="в без до из к на по о от перед при через с у за над об под про для "+"как "+"не ни ";
         String pred[]=predlogi.split(" ");
         for (String p:pred) comb=comb.replaceAll(" "+p+" "," "+p+"_");
 
