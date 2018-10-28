@@ -39,7 +39,12 @@ public class Combiner {
         amount=combiner(words.length);
     }
 
-    public String randomOut(){return out(comb[(int)(Math.random()*amount)]);}
+    public String randomOut(){
+//        System.out.println();
+        for (String s:words) System.out.print(s+",");System.out.println(words.length);
+        return out(comb[(int)(Math.random()*words.length)]);
+//        return out(comb[(int)(Math.random()*amount)]);
+    }
 
     int factorial(int n) {
         if (n>0) return factorial(n-1)*n;

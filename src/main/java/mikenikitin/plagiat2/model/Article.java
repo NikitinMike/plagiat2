@@ -79,6 +79,7 @@ public class Article {
     public void setCc(Long cc) {
         this.cc = cc;
     }
+    public Long getCc() {return cc;}
 
     public Long getId() {
         return id;

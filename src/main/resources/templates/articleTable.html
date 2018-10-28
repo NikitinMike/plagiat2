@@ -19,7 +19,7 @@
             <a th:text="${title}" th:href="@{'/article/'+${id}}"/>
         </h2>
 
-        <table th:with="size=0" border="0" width="60%">
+        <table th:with="size=0" border="0" width="90%">
             <tr th:each="clause : ${table}">
                 <td th:text="${clause.number}" width="1%" align="right"/>
                 <td width="1%"/>
@@ -41,8 +41,8 @@
                 <td th:text="${clause.parts}" width="2%" align="center"/>
                 <td width="1%"/>
                 <td width="1%" th:text="${clause.end.getEnd()}"/>
-                <!--<td width="1%"/>-->
-                <!--<td th:text="${clause.text}"/>-->
+                <td width="1%"/>
+                <td th:text="${clause.getTextString()}"/>
             </tr>
         </table>
 

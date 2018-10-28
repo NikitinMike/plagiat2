@@ -153,14 +153,16 @@ public class ArticleController {
         model.addAttribute("author",art.getAuthor());
         model.addAttribute("title",art.getTitle());
 
-        ArrayList<String> text = new ArrayList<>();
+//        ArrayList<String> text = new ArrayList<>();
         List<Clause> table = clauseRepository.findClausesByArticle_Id(id);
 //        for(String a:table) text.add(new Combiner(a).randomOut());
 
-        for(Clause c:table) {
-            System.out.println(c.getTextString()); // c.getClause()
+//        ArrayList<String> comb=new ArrayList<>();
+//        for(Clause c:table) comb.add(new Combiner(c.getTextString()).randomOut());
+//        int i=0; System.out.println(); for (String s:comb) System.out.println(++i+": "+s); System.out.println();
+
+//            System.out.println(++i+": "+c.getTextString()); // c.getClause()
 //            c.getText().forEach(t -> System.out.print(t.getWord().getWord()+' '));
-        }
 //            System.out.println(c.getClause());
 
         model.addAttribute("table",table);

@@ -6,9 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mikenikitin.plagiat2.repository.WordbookRepository;
+import mikenikitin.plagiat2.services.Combiner;
 import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 //@AllArgsConstructor
@@ -51,7 +53,17 @@ public class Clause {
     private List<Text> text;
 
     public String getTextString(){
-        return "textString";
+        String comb="";
+        for (Text t:text) comb+=t.getWord().getWord()+" "; // .subList(0,text.size()-1)
+
+        String predlogi="не ни "+"в без до из к на по о от перед при через с у за над об под про для "+"как ";
+        String pred[]=predlogi.split(" ");
+        for (String p:pred) comb=comb.replaceAll(" "+p+" "," "+p+"_");
+
+//        if (text.size()>2)
+        if(comb.split(" ").length>2)
+            return new Combiner(comb).randomOut();
+        else return comb;
     }
 
     public Clause() {}
@@ -111,4 +123,7 @@ public class Clause {
         wc++;
     }
 
+    public void setWc(Long wc) {
+        this.wc = wc;
+    }
 }
