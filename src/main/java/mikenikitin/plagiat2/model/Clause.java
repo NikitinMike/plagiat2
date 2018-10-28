@@ -53,14 +53,17 @@ public class Clause {
     private List<Text> text;
 
     public String getTextString(){
+        String predlogi=" да а но в без до из к на по о от перед при через с у за над об под про для как не ни ";
+//        String pred[]=predlogi.split(" ");
         String comb="";
-        for (Text t:text) comb+=t.getWord().getWord()+" "; // .subList(0,text.size()-1)
-
-        String predlogi="в без до из к на по о от перед при через с у за над об под про для "+"как "+"не ни ";
-        String pred[]=predlogi.split(" ");
-        for (String p:pred) comb=comb.replaceAll(" "+p+" "," "+p+"_");
-
-//        if (text.size()>2)
+        for (Text t:text)
+//            System.out.print("["+t.getWord().getWord()+"]");
+//            System.out.print(predlogi.indexOf(t.getWord().getWord()));
+            if (predlogi.indexOf(t.getWord().getWord()) >= 0)
+                comb += t.getWord().getWord() + "_";
+            else comb += t.getWord().getWord() + " ";
+//        System.out.println();
+        if(text.size()>11) return comb;
         if(comb.split(" ").length>2)
             return new Combiner(comb).randomOut();
         else return comb;

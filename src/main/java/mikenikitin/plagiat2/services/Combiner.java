@@ -40,8 +40,7 @@ public class Combiner {
     }
 
     public String randomOut(){
-//        System.out.println();
-        for (String s:words) System.out.print(s+",");System.out.println(words.length);
+//        for (String s:words) System.out.print(s+",");System.out.println(words.length);
         return out(comb[(int)(Math.random()*words.length)]);
 //        return out(comb[(int)(Math.random()*amount)]);
     }
