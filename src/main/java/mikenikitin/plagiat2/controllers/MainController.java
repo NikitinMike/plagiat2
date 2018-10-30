@@ -7,19 +7,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.aspectj.util.LangUtil.split;
 
 @Controller
 @AllArgsConstructor
@@ -34,6 +36,47 @@ public class MainController {
     private AuthorRepository authorRepository;
 
     private ClauseRepository clauseRepository;
+
+    public void readFileLineByLine(String fileName) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line = br.readLine();
+            while (line != null) {
+
+                System.out.println(line);
+
+                String word[] = line.split("#");
+                Wordbook wbr = wordbookRepository.findByWord(word[0]);
+                if (wbr != null) wbr.setDescription(word[1]);
+                // else wordbookRepository.save(wbr = new Wordbook(word));
+
+                line = br.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/lopatin")
+    @ResponseBody
+    private
+    int // String // List<String>
+    wordbook(){
+        List<String> lines = Collections.emptyList();
+        try { lines = Files.readAllLines(Paths.get("file.txt"), StandardCharsets.UTF_8);
+        } catch (IOException e) {e.printStackTrace();}
+        System.out.println("LOPATIN");
+        for (String line:lines) {
+            String word[] = line.split("#");
+            Wordbook wbr = wordbookRepository.findByWord(word[0]);
+            if (wbr != null) {
+                wbr.setDescription(word[1].split("%")[0]);
+                wordbookRepository.save(wbr); System.out.print(word[0]);
+            } else System.out.print('.');
+        }
+//        return "LOPATIN";
+//        return lines;
+        return lines.size();
+    }
 
     @RequestMapping("/stih")
     @ResponseBody

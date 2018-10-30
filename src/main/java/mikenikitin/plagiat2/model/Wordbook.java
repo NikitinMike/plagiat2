@@ -27,6 +27,9 @@ public class Wordbook implements Comparable<Wordbook> {
     @Order
     private String word;
 
+    private int strike;
+    private String description;
+
     //    @Order
     @JsonIgnore
     private Long ugly;
@@ -112,5 +115,9 @@ public class Wordbook implements Comparable<Wordbook> {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    public void setDescription(String desc) {
+        description=desc;
     }
 }
