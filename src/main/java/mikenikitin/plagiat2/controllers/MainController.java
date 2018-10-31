@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.aspectj.util.LangUtil.split;
 
 @Controller
@@ -37,44 +38,57 @@ public class MainController {
 
     private ClauseRepository clauseRepository;
 
-    public void readFileLineByLine(String fileName) {
+    @RequestMapping("/wbload")
+    @ResponseBody
+    public int readFileLineByLine(
+        @RequestParam(name = "file", defaultValue = "wordbook.txt") String fileName
+    ) {
+        System.out.println("loading WORDBOOK "+fileName);
+        int ln=0;
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line = br.readLine();
             while (line != null) {
-
-                System.out.println(line);
-
-                String word[] = line.split("#");
-                Wordbook wbr = wordbookRepository.findByWord(word[0]);
-                if (wbr != null) wbr.setDescription(word[1]);
-                // else wordbookRepository.save(wbr = new Wordbook(word));
-
+//                System.out.println(line);
+                String lines[] = line.split("#");
+                String words[] = lines[1].split(",");
+//                System.out.print(" "+lines[0]+":"+words.length);
+                ln+=words.length;
+                System.out.print("*");
+                for (String word:words){
+                    String w=word.replaceAll("[^а-яё]","");
+                    Wordbook wbr = wordbookRepository.findByWord(w);
+                    if (wbr == null) continue;
+                    wbr.setDescription(word);
+                    wordbookRepository.save(wbr);
+                    System.out.print(word);
+                    System.out.print(" ");
+                    ln++;
+                }
                 line = br.readLine();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) {e.printStackTrace();}
+        System.out.println();
+        System.out.println(ln);
+        return ln;
     }
 
     @RequestMapping("/lopatin")
     @ResponseBody
-    private
-    int // String // List<String>
-    wordbook(){
+    private int WordBook(
+        @RequestParam(name = "file", defaultValue = "lop1v2.utf8.txt") String file
+    ){
+        System.out.println("loading LOPATIN "+file);
         List<String> lines = Collections.emptyList();
-        try { lines = Files.readAllLines(Paths.get("file.txt"), StandardCharsets.UTF_8);
+        try { lines = Files.readAllLines(Paths.get(file), UTF_8);
         } catch (IOException e) {e.printStackTrace();}
-        System.out.println("LOPATIN");
         for (String line:lines) {
             String word[] = line.split("#");
             Wordbook wbr = wordbookRepository.findByWord(word[0]);
             if (wbr != null) {
-                wbr.setDescription(word[1].split("%")[0]);
+                wbr.setDescription(word[1].split("%")[0]); // %
                 wordbookRepository.save(wbr); System.out.print(word[0]);
             } else System.out.print('.');
         }
-//        return "LOPATIN";
-//        return lines;
         return lines.size();
     }
 
