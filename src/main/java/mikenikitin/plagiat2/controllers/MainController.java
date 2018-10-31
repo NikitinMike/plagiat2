@@ -14,10 +14,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,31 +35,52 @@ public class MainController {
 
     private ClauseRepository clauseRepository;
 
+    @RequestMapping("/wbcheck")
+    @ResponseBody
+    public void wordbookcheck(){
+//      List<Wordbook> wblist = wordbookRepository.findAll();
+//      wblist.sort((a,b)->(a.getWord().compareTo(b.getWord())));
+//      for (Wordbook word:wblist) System.out.print(word.getWord()+" ");
+        Map<String, Wordbook> map = new HashMap <>();
+        for (Wordbook w:wordbookRepository.findAll()) map.put(w.getWord(),w);
+//      map.forEach((key,word)-> System.out.print(word.getWord()+" "));
+        System.out.println(map.size());
+    }
+
     @RequestMapping("/wbload")
     @ResponseBody
     public int readFileLineByLine(
         @RequestParam(name = "file", defaultValue = "wordbook.txt") String fileName
     ) {
         System.out.println("loading WORDBOOK "+fileName);
+
+        Map<String, Wordbook> map = new HashMap <>();
+        for (Wordbook wb:wordbookRepository.findAll()) map.put(wb.getWord(),wb);
+        System.out.println(map.size());
+
         int ln=0;
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line = br.readLine();
             while (line != null) {
 //                System.out.println(line);
-                String lines[] = line.split("#");
-                String words[] = lines[1].split(",");
-//                System.out.print(" "+lines[0]+":"+words.length);
-                ln+=words.length;
                 System.out.print("*");
-                for (String word:words){
-                    String w=word.replaceAll("[^а-яё]","");
-                    Wordbook wbr = wordbookRepository.findByWord(w);
-                    if (wbr == null) continue;
-                    wbr.setDescription(word);
-                    wordbookRepository.save(wbr);
-                    System.out.print(word);
-                    System.out.print(" ");
-                    ln++;
+                String words[] = line.toLowerCase().split("#")[1].split(",");
+                for (String str:words)
+                {
+                    Wordbook wb=map.get(str.replaceAll("[^а-яё]",""));
+                    if (wb==null) continue;
+//                    if (wb.getDescription()!=null&&wb.getDescription()!="") continue;
+//                    System.out.print(word+" ");
+//                    wb = wordbookRepository.findByWord(word);
+//                    if (wb == null) continue;
+//                    if (wb.getDescription()==null||wb.getDescription()=="")
+                    {
+                        System.out.print(str);
+                        wb.setDescription(str);
+                        wordbookRepository.save(wb);
+                        System.out.print(" ");
+                        ln++;
+                    }
                 }
                 line = br.readLine();
             }

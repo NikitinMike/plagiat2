@@ -24,7 +24,7 @@ public class Wordbook implements Comparable<Wordbook> {
     private Long id;
 
     //    Long wc;
-    @Order
+    @OrderBy
     private String word;
 
     private int strike;
@@ -119,5 +119,9 @@ public class Wordbook implements Comparable<Wordbook> {
 
     public void setDescription(String desc) {
         description=desc;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
