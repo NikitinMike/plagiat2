@@ -49,6 +49,41 @@ public class MainController {
 
     @RequestMapping("/wbload")
     @ResponseBody
+    public void mapWBFile(@RequestParam(name = "file", defaultValue = "wordbook.txt") String fileName)
+    {
+        int n=0,m=0;
+//        Map<String, String> map = new HashMap<>();
+        System.out.println("loading WORDBOOK " + fileName);
+        ArrayList<String> list = new ArrayList<String>();
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line = br.readLine();
+            while (line != null) {
+//                if (n++%100==0) System.out.print(" ");
+//                System.out.print("*"); // System.out.println(line);
+                String words[] = line.toLowerCase().split("#")[1].split(",");
+                m+=words.length;
+                for (String str : words)
+//                    if (list.indexOf(str)>0)
+                    if (list.contains(str)) n++;
+//                        System.out.print(" "+n++);
+                    else list.add(str);
+//                    map.put(str.replaceAll("[^а-яё]",""),str);
+                line = br.readLine();
+            }
+//            map.forEach((key,word)-> System.out.print(key+":"+word+" "));
+        } catch (FileNotFoundException e) {e.printStackTrace();
+        } catch (IOException e) {e.printStackTrace();}
+//        System.out.println(n);
+//        list.sort((a,b)->(a.compareTo(b)));
+//        list.forEach(i-> System.out.print(i+" "));
+        System.out.println(n);
+        System.out.println(m);
+        System.out.println(list.size());
+//        System.out.println(map.size());
+    }
+
+    @RequestMapping("/wbload2")
+    @ResponseBody
     public int readFileLineByLine(
         @RequestParam(name = "file", defaultValue = "wordbook.txt") String fileName
     ) {
