@@ -85,7 +85,7 @@ public class Wordbook implements Comparable<Wordbook> {
 
     private String getLetters(boolean type,boolean reverse) {
         return (type)?getWord(reverse).replaceAll("[аеёиоуыэюя]",""):
-            getWord(reverse).replaceAll("[бвгджзйклмнпрстфхцчшщъь]","");
+            getWord(reverse).replaceAll("[^аеёиоуыэюя]",""); // "[бвгджзйклмнпрстфхцчшщъь]"
     }
 
 //    @OneToMany // (mappedBy="article")

@@ -52,35 +52,28 @@ public class MainController {
     public int readFileLineByLine(
         @RequestParam(name = "file", defaultValue = "wordbook.txt") String fileName
     ) {
-        System.out.println("loading WORDBOOK "+fileName);
-
         Map<String, Wordbook> map = new HashMap <>();
         for (Wordbook wb:wordbookRepository.findAll()) map.put(wb.getWord(),wb);
-        System.out.println(map.size());
-
+//        System.out.println(map.size());
         int ln=0;
+        System.out.println("loading WORDBOOK "+fileName);
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line = br.readLine();
             while (line != null) {
-//                System.out.println(line);
-                System.out.print("*");
+                System.out.print("*"); // System.out.println(line);
                 String words[] = line.toLowerCase().split("#")[1].split(",");
                 for (String str:words)
                 {
                     Wordbook wb=map.get(str.replaceAll("[^а-яё]",""));
-                    if (wb==null) continue;
-//                    if (wb.getDescription()!=null&&wb.getDescription()!="") continue;
-//                    System.out.print(word+" ");
-//                    wb = wordbookRepository.findByWord(word);
-//                    if (wb == null) continue;
-//                    if (wb.getDescription()==null||wb.getDescription()=="")
-                    {
+                    if (wb!=null)
+                      if ((wb.getDescription()==null)||(wb.getDescription()==""))
+                      {
                         System.out.print(str);
                         wb.setDescription(str);
                         wordbookRepository.save(wb);
                         System.out.print(" ");
                         ln++;
-                    }
+                      }
                 }
                 line = br.readLine();
             }
