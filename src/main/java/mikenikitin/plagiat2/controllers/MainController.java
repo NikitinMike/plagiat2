@@ -3,6 +3,7 @@ package mikenikitin.plagiat2.controllers;
 import lombok.AllArgsConstructor;
 import mikenikitin.plagiat2.model.*;
 import mikenikitin.plagiat2.repository.*;
+import mikenikitin.plagiat2.services.LoadDictionary;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,108 +36,85 @@ public class MainController {
 
     private ClauseRepository clauseRepository;
 
-    @RequestMapping("/wbcheck")
-    @ResponseBody
-    public void wordbookcheck(){
-//      List<Wordbook> wblist = wordbookRepository.findAll();
-//      wblist.sort((a,b)->(a.getWord().compareTo(b.getWord())));
-//      for (Wordbook word:wblist) System.out.print(word.getWord()+" ");
-        Map<String, Wordbook> map = new HashMap <>();
-        for (Wordbook w:wordbookRepository.findAll()) map.put(w.getWord(),w);
-//      map.forEach((key,word)-> System.out.print(word.getWord()+" "));
-        System.out.println(map.size());
-    }
-
-    @RequestMapping("/wbload")
-    @ResponseBody
-    public void mapWBFile(@RequestParam(name = "file", defaultValue = "wordbook.txt") String fileName)
-    {
+    public void mapWBFile(String fileName) throws IOException {
         int n=0,m=0;
-//        Map<String, String> map = new HashMap<>();
+        Map<String, String> dict = new HashMap<>();
         System.out.println("loading WORDBOOK " + fileName);
         ArrayList<String> list = new ArrayList<String>();
+        BufferedWriter output1 = new BufferedWriter(new FileWriter(new File("wordsin.txt")));
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line = br.readLine();
             while (line != null) {
-//                if (n++%100==0) System.out.print(" ");
+                if (n++%1000==0) System.out.print("*");
 //                System.out.print("*"); // System.out.println(line);
                 String words[] = line.toLowerCase().split("#")[1].split(",");
                 m+=words.length;
-                for (String str : words)
+
+                for (String word : words) {
+                    String key=word.replaceAll("[^а-яё]", "");
+                    if (key.isEmpty()) continue;
+                    dict.put(key, word);
+                    output1.write(key+":"+word+"\n");
+                }
+//                    map.put(word,word);
 //                    if (list.indexOf(str)>0)
-                    if (list.contains(str)) n++;
+//                    if (list.contains(str)) n++;
 //                        System.out.print(" "+n++);
-                    else list.add(str);
-//                    map.put(str.replaceAll("[^а-яё]",""),str);
+//                    else list.add(str);
                 line = br.readLine();
             }
-//            map.forEach((key,word)-> System.out.print(key+":"+word+" "));
         } catch (FileNotFoundException e) {e.printStackTrace();
         } catch (IOException e) {e.printStackTrace();}
-//        System.out.println(n);
+        if ( output1 != null ) output1.close();
+
+        BufferedWriter output = new BufferedWriter(new FileWriter(new File("words.txt")));
+//            map.forEach((key,word)-> System.out.print(key+":"+word+" "));
+        dict.forEach((key, word)-> {
+            try {output.write(key+":"+word+"\n");
+            } catch (IOException e) {e.printStackTrace();}
+        });
+        if ( output != null ) output.close();
+
+        System.out.println();
 //        list.sort((a,b)->(a.compareTo(b)));
 //        list.forEach(i-> System.out.print(i+" "));
-        System.out.println(n);
-        System.out.println(m);
-        System.out.println(list.size());
-//        System.out.println(map.size());
-    }
-
-    @RequestMapping("/wbload2")
-    @ResponseBody
-    public int readFileLineByLine(
-        @RequestParam(name = "file", defaultValue = "wordbook.txt") String fileName
-    ) {
-        Map<String, Wordbook> map = new HashMap <>();
-        for (Wordbook wb:wordbookRepository.findAll()) map.put(wb.getWord(),wb);
-//        System.out.println(map.size());
-        int ln=0;
-        System.out.println("loading WORDBOOK "+fileName);
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String line = br.readLine();
-            while (line != null) {
-                System.out.print("*"); // System.out.println(line);
-                String words[] = line.toLowerCase().split("#")[1].split(",");
-                for (String str:words)
-                {
-                    Wordbook wb=map.get(str.replaceAll("[^а-яё]",""));
-                    if (wb!=null)
-                      if ((wb.getDescription()==null)||(wb.getDescription()==""))
-                      {
-                        System.out.print(str);
-                        wb.setDescription(str);
+        System.out.println("LINES:"+n);
+        System.out.println("WORDS:"+m);
+//        System.out.println(list.size());
+        System.out.println("MAP:"+dict.size());
+        int z=0;
+        for (Wordbook wb:wordbookRepository.findAll()) {
+            if ((wb.getDescription()==null)||(wb.getDescription()==""))
+                if (dict.containsKey(wb.getWord()))
+                    {
+//            String s = dict.get(wb.getWord());
+//            System.out.print(z+" ");
+                        wb.setDescription(dict.get(wb.getWord()));
                         wordbookRepository.save(wb);
-                        System.out.print(" ");
-                        ln++;
-                      }
-                }
-                line = br.readLine();
-            }
-        } catch (IOException e) {e.printStackTrace();}
-        System.out.println();
-        System.out.println(ln);
-        return ln;
+                        System.out.print(".");
+                        if (z++%100==0) System.out.println();
+                        if (z%10000==0) System.out.println(z);
+                    }
+        }
+        System.out.println("UPDATED:"+z);
     }
 
-    @RequestMapping("/lopatin")
     @ResponseBody
-    private int WordBook(
-        @RequestParam(name = "file", defaultValue = "lop1v2.utf8.txt") String file
-    ){
-        System.out.println("loading LOPATIN "+file);
-        List<String> lines = Collections.emptyList();
-        try { lines = Files.readAllLines(Paths.get(file), UTF_8);
-        } catch (IOException e) {e.printStackTrace();}
-        for (String line:lines) {
-            String word[] = line.split("#");
-            Wordbook wbr = wordbookRepository.findByWord(word[0]);
-            if (wbr != null) {
-                wbr.setDescription(word[1].split("%")[0]); // %
-                wordbookRepository.save(wbr); System.out.print(word[0]);
-            } else System.out.print('.');
-        }
-        return lines.size();
-    }
+    @RequestMapping("/wbload")
+    public void wbload(@RequestParam(name = "file", defaultValue = "wordbook.txt") String fileName)
+        throws IOException {mapWBFile(fileName);}
+
+    @ResponseBody
+    @RequestMapping("/wbcheck")
+    public void wordbookcheck(){wordbookcheck();}
+
+    @ResponseBody
+    @RequestMapping("/wbload2")
+    public void readFileLineByLine(@RequestParam(name = "file", defaultValue = "wordbook.txt") String fileName){}
+
+    @ResponseBody
+    @RequestMapping("/lopatin")
+    private void WordBook(@RequestParam(name = "file", defaultValue = "lop1v2.utf8.txt") String file){}
 
     @RequestMapping("/stih")
     @ResponseBody
