@@ -65,10 +65,10 @@ public class Clause {
 //            System.out.print("["+t.getWord().getWord()+"]");
 //            System.out.print(predlogi.indexOf(t.getWord().getWord()));
 //        System.out.println();
-        if(text.size()>9) return comb;
+        if(text.size()>9) return comb.replaceAll("_"," ");
         if(comb.split(" ").length>2)
             return new Combiner(comb).randomOut().replaceAll("_"," ");
-        else return comb;
+        else return comb.replaceAll("_"," ");
     }
 
     public Clause() {}

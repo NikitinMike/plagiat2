@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static sun.swing.MenuItemLayoutHelper.max;
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -27,7 +29,7 @@ public class Wordbook implements Comparable<Wordbook> {
     @OrderBy
     private String word;
 
-    private int strike;
+    private int accent;
     private String description;
 
     //    @Order
@@ -119,17 +121,17 @@ public class Wordbook implements Comparable<Wordbook> {
 
     public void setDescription(String desc) {
         description=desc;
+        accent=max(description.indexOf("`"),description.indexOf("'"));
+        char[] glas = description.replaceAll("[^аеёиоуыэюя]","").toCharArray();
+        String sogl[] = description.split("[аеёиоуыэюя]");
     }
 
     public String getDescription() {
         if (description==null) return "";
-        if(description.replaceAll("[аеёиоуыэюя]","")==description) return description;
-
-        Matcher m=Pattern.compile("([`'][аеёиоуыэюя]|[аеёиоуыэюя][`'])").matcher(description);
-        if(m.find()) return description.replaceFirst(m.group(1),m.group(1).toUpperCase());
-        if(m.find()) System.out.println(m.group(1).toUpperCase()+" : "+description);
-
         if(description.indexOf("ё")>0) return description.replaceAll("ё","Ё");
+        if(description.replaceAll("[аеёиоуыэюя]","")==description) return description.replaceAll("[`']","");
+        Matcher m=Pattern.compile("([`'][аеёиоуыэюя]|[аеёиоуыэюя][`'])").matcher(description);
+        if(m.find()) return description.replaceFirst(m.group(1),m.group(1).toUpperCase().replaceAll("[`']",""));
         return description;
     }
 }

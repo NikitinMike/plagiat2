@@ -31,24 +31,35 @@
         </a>
     </a>
 
-<div>
+<div></div>
 
+<div style="display: flex; flex-direction: column; flex-wrap: wrap; max-height: 85vh;">
+    <div style="display: flex;" th:each ="word : ${wordbook}">
+        <!--<div>-->
+        <!--<a th:text="${word.word}" th:href="@{'http://localhost:8080/word/'+${word.id}}"> </a>-->
+        <!--<i th:text="${word.getDescription()}"/> : -->
+        <a th:text="${#strings.replace(word.getDescription(),word.getEnd(),'('+word.getEnd()+')')}"
+           th:href="@{'http://localhost:8080/word/'+${word.id}}"/>
+        <!--<i th:text="${#strings.replace(word.word,word.getEnd(),'('+word.getEnd()+')')}" />-->
+        <!--th:href="@{'http://localhost:8080/wordbook/word/'+${word.id}}"/>-->
+        <!--</div>-->
+    </div>
 </div>
 
-<div>
-    <a th:each ="word : ${wordbook}">
-        <!--<i th:text="${word.getRevWord()}"/>-->
-        <!--<a th:text="${word.word.word}" th:href="@{'http://localhost:8080/wordbook/word/'+${word.id}}"/>-->
-        <!--<a th:text="${word.word}" th:href="@{'http://localhost:8080/wordbook/word/'+${word.id}}"/>-->
-        <i th:text="${#strings.replace(word.word,word.getEnd(),'('+word.getEnd()+')')}" />
-           <!--th:href="@{'http://localhost:8080/wordbook/word/'+${word.id}}"/>-->
-        <s th:text="${word.getDescription()}"/>
-        <!--</a>-->
-        <!--<i th:text="${word.getLetters(true)}"/>-->
-        <!--<i th:text="${word.getWord(true)}"/>-->
-        <!--&nbsp-->
-    </a>
-</div>
+<!--<div>-->
+    <!--<a th:each ="word : ${wordbook}">-->
+        <!--&lt;!&ndash;<i th:text="${word.getRevWord()}"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;<a th:text="${word.word.word}" th:href="@{'http://localhost:8080/wordbook/word/'+${word.id}}"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;<a th:text="${word.word}" th:href="@{'http://localhost:8080/wordbook/word/'+${word.id}}"/>&ndash;&gt;-->
+        <!--<i th:text="${#strings.replace(word.word,word.getEnd(),'('+word.getEnd()+')')}" />-->
+           <!--&lt;!&ndash;th:href="@{'http://localhost:8080/wordbook/word/'+${word.id}}"/>&ndash;&gt;-->
+        <!--<s th:text="${word.getDescription()}"/>-->
+        <!--&lt;!&ndash;</a>&ndash;&gt;-->
+        <!--&lt;!&ndash;<i th:text="${word.getLetters(true)}"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;<i th:text="${word.getWord(true)}"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;&nbsp&ndash;&gt;-->
+    <!--</a>-->
+<!--</div>-->
 
 <div th:replace="footer::footer"> FOOTER </div>
 
