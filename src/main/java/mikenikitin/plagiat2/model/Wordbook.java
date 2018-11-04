@@ -122,6 +122,14 @@ public class Wordbook implements Comparable<Wordbook> {
     }
 
     public String getDescription() {
+        if (description==null) return "";
+        if(description.replaceAll("[аеёиоуыэюя]","")==description) return description;
+
+        Matcher m=Pattern.compile("([`'][аеёиоуыэюя]|[аеёиоуыэюя][`'])").matcher(description);
+        if(m.find()) return description.replaceFirst(m.group(1),m.group(1).toUpperCase());
+        if(m.find()) System.out.println(m.group(1).toUpperCase()+" : "+description);
+
+        if(description.indexOf("ё")>0) return description.replaceAll("ё","Ё");
         return description;
     }
 }

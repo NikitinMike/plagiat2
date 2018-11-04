@@ -42,7 +42,7 @@
         <!--<a th:text="${word.word}" th:href="@{'http://localhost:8080/wordbook/word/'+${word.id}}"/>-->
         <i th:text="${#strings.replace(word.word,word.getEnd(),'('+word.getEnd()+')')}" />
            <!--th:href="@{'http://localhost:8080/wordbook/word/'+${word.id}}"/>-->
-        <!--<b th:text="${word.getEnd()}"/>-->
+        <s th:text="${word.getDescription()}"/>
         <!--</a>-->
         <!--<i th:text="${word.getLetters(true)}"/>-->
         <!--<i th:text="${word.getWord(true)}"/>-->

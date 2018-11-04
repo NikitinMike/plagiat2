@@ -83,19 +83,18 @@ public class MainController {
 //        System.out.println(list.size());
         System.out.println("MAP:"+dict.size());
         int z=0;
-        for (Wordbook wb:wordbookRepository.findAll()) {
+        for (Wordbook wb:wordbookRepository.findAll())
             if ((wb.getDescription()==null)||(wb.getDescription()==""))
-                if (dict.containsKey(wb.getWord()))
-                    {
+            if (dict.containsKey(wb.getWord()))
+                {
 //            String s = dict.get(wb.getWord());
 //            System.out.print(z+" ");
-                        wb.setDescription(dict.get(wb.getWord()));
-                        wordbookRepository.save(wb);
-                        System.out.print(".");
-                        if (z++%100==0) System.out.println();
-                        if (z%10000==0) System.out.println(z);
-                    }
-        }
+                    wb.setDescription(dict.get(wb.getWord()));
+                    wordbookRepository.save(wb);
+                    System.out.print(".");
+                    if (z++%100==0) System.out.println();
+                    if (z%10000==0) System.out.println(z);
+                }
         System.out.println("UPDATED:"+z);
     }
 

@@ -56,16 +56,18 @@ public class Clause {
         String predlogi=" да ж что а но в без до из к на по о от перед уже при через с у за над об под про для как не ни ";
 //        String pred[]=predlogi.split(" ");
         String comb="";
-        for (Text t:text)
-            if (predlogi.indexOf(t.getWord().getWord()) >= 0)
-                comb += t.getWord().getWord() + "_";
-            else comb += t.getWord().getWord() + " ";
+        for (Text t:text) {
+            String w=t.getWord().getDescription();
+//            System.out.println("["+w+"]");
+            if(w.isEmpty())w=t.getWord().getWord();
+            comb += (predlogi.indexOf(t.getWord().getWord()) >= 0)? w+"_":w+" ";
+        }
 //            System.out.print("["+t.getWord().getWord()+"]");
 //            System.out.print(predlogi.indexOf(t.getWord().getWord()));
 //        System.out.println();
-        if(text.size()>11) return comb;
+        if(text.size()>9) return comb;
         if(comb.split(" ").length>2)
-            return new Combiner(comb).randomOut();
+            return new Combiner(comb).randomOut().replaceAll("_"," ");
         else return comb;
     }
 

@@ -13,6 +13,8 @@ import java.util.List;
 public interface WordbookRepository extends PagingAndSortingRepository<Wordbook,Long> {  // CrudRepository
     List<Wordbook> findAll();
 
+//    List<Wordbook> findAllByDescriptionIsEmpty();
+
 //    Page<Wordbook> listAllByPage(Pageable pageable);
 //    List<Wordbook> findAll(Sort sort);
     Page<Wordbook> findAll(Pageable pageable);
