@@ -38,8 +38,10 @@
         <!--<div>-->
         <!--<a th:text="${word.word}" th:href="@{'http://localhost:8080/word/'+${word.id}}"> </a>-->
         <!--<i th:text="${word.getDescription()}"/> : -->
-        <a th:text="${#strings.replace(word.getDescription(),word.getEnd(),'('+word.getEnd()+')')}"
-           th:href="@{'http://localhost:8080/word/'+${word.id}}"/>
+        <!--<i th:text="${word.getParts()}"/> :-->
+        <!--<a th:text="${#strings.replace(word.getDescription(),word.getEnd(),'('+word.getEnd()+')')}"-->
+        <a th:text="${word.getParts()}"
+           th:href="@{'http://localhost:8080/wordbook/word/'+${word.id}}"/>
         <!--<i th:text="${#strings.replace(word.word,word.getEnd(),'('+word.getEnd()+')')}" />-->
         <!--th:href="@{'http://localhost:8080/wordbook/word/'+${word.id}}"/>-->
         <!--</div>-->

@@ -130,8 +130,13 @@ public class WordbookController {
     }
 
     @RequestMapping("/word/{id}")
-//    @ResponseBody
+    @ResponseBody
     private String id(@PathVariable Long id,Model model) {
+//    private Wordbook id(@PathVariable Long id,Model model) {
+        Wordbook word=wordbookRepository.getById(id);
+        System.out.println(word.getParts());
+        return word.getParts();
+/*
         List<Article> articles=new ArrayList<>();
         for (Text txt:textRepository.getAllByWord(wordbookRepository.getById(id)))
 //            System.out.println(txt.getArticle().getTitle());
@@ -143,6 +148,7 @@ public class WordbookController {
         model.addAttribute("articles", articles);
         return "indexArticles";
 //        return texts.stream().map(text -> text.getArticle()).collect(Collectors.toList());
+*/
     }
 
     @RequestMapping("/{sym}")

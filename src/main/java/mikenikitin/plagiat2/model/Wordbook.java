@@ -57,15 +57,17 @@ public class Wordbook implements Comparable<Wordbook> {
 //    @Column(unique=true)
     @JsonIgnore
     private String getEnd(boolean reverse) { // ([аеёиоуыэюя] [^аеёиоуыэюя]
+
+        String parts[] = getParts().split("-");
+        return parts[parts.length-1];
+
 //        Matcher m = Pattern.compile("([аеёиоуыэюя]?[^аеёиоуыэюя]*[ъь]??[аеёиоуыэюя]+[^аеёиоуыэюя]*)$")
 //        Matcher m = Pattern.compile("([аеёиоуыэюя]+[^аеёиоуыэюя]*)$")
 //        Matcher m = Pattern.compile("(.[аеёиоуыэюя]+)$")
-        Matcher m = Pattern.compile("(...)$")
-            .matcher(word
-                .replaceAll("[ъь]","")
-            );
-        if(m.find())return reverse?new StringBuilder(m.group(1)).reverse().toString():m.group(1);
-        return word;
+
+//        Matcher m = Pattern.compile("(...)$").matcher(word.replaceAll("[ъь]",""));
+//        if(m.find())return reverse?new StringBuilder(m.group(1)).reverse().toString():m.group(1);
+//        return word;
     }
 
 //    @Order
@@ -122,9 +124,43 @@ public class Wordbook implements Comparable<Wordbook> {
     public void setDescription(String desc) {
         description=desc;
         accent=max(description.indexOf("`"),description.indexOf("'"));
-        char[] glas = description.replaceAll("[^аеёиоуыэюя]","").toCharArray();
-        String sogl[] = description.split("[аеёиоуыэюя]");
     }
+
+
+    /* Пошаговое объяснение разбивки слова "список" на слоги - результат в конце страницы
+
+    1 Слог начинается с согласного, который стоит перед гласной: мо-ло-ко, ко-ра
+    2 Буквы ь, ъ (которые не означают звуков) нельзя отрывать от предыдущего слога: конь-ки, подъ-езд
+    3 Глухие согласные отходят к следующему слогу, звонкие согласные ([й], [р], [р’], [л], [л’], [м], [м’], [н], [н’]) — к предыдущему слогу: то-чка, мо-шка, кор-ка, бул-ка
+    4 Согласные буквы, образующие один звук, нельзя разносить в разные слоги. Один звук образуют сочетания зж [ж:], тся, ться [ц:]. у-е-зжать, но-си-тся, де-ла-ться
+    5 Согласные в середине слова относят к следующему слогу: кла-ссный, хо-ккей, те-ннис
+
+    Определяю границы слова с-п-и-с-о-к#
+    #с#п#и-с-о-к
+    Согласная + гласная (если есть согласная перед гласной, то она относется к этому слогу)
+    Количество слогов = количеству гласных : спи-с#о-к
+    Все согласные прилепляю к последнему слогу : спи-со#к
+    */
+
+    public String getParts(){
+        String w="";
+        String zvon="йрлмн";
+        String g="аеёиоуыэюя";g+=g.toUpperCase();
+
+        String wrd=description.isEmpty()?word:getDescription();
+        char[] glas = wrd.replaceAll("[^"+g+"]","").toCharArray();
+        String sogl[] = wrd.split("["+g+"]");
+
+        for (int i=0; i<glas.length; i++)
+            w+=((i<sogl.length)?sogl[i]:"") + glas[i] + ((i<glas.length-1)?"-":"");
+//            if(sogl[i].length()==1)
+//            w+=((i<sogl.length)?"["+sogl[i]+"]":"") + glas[i] + ((i<glas.length-1)?"-":"");
+        if(sogl.length>glas.length) w+=sogl[sogl.length-1];
+
+//        System.out.println(w);
+        return w;
+    }
+
 
     public String getDescription() {
         if (description==null) return "";
