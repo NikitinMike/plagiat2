@@ -121,11 +121,13 @@ public class Wordbook implements Comparable<Wordbook> {
         this.size = size;
     }
 
-    public void setDescription(String desc) {
-        description=desc;
-        accent=max(description.indexOf("`"),description.indexOf("'"));
+    public void setDescription(String description) {
+        this.description=description;
+//        accent=max(description.indexOf("`"),description.indexOf("'"));
+//        accent=description.replaceFirst("[аеёиоуыэюя]?[`'][аеёиоуыэюя]?","@")
+        accent=description.replaceFirst("'[аеёиоуыэюя]?","@")
+            .replaceAll("[^@аеёиоуыэюя]","").indexOf("@")+1;
     }
-
 
     /* Пошаговое объяснение разбивки слова "список" на слоги - результат в конце страницы
 
@@ -144,30 +146,34 @@ public class Wordbook implements Comparable<Wordbook> {
 
     public String getParts(){
         String w="";
-        String zvon="йрлмн";
-        String g="аеёиоуыэюя";g+=g.toUpperCase();
+//        String g="аеёиоуыэюя";g+=g.toUpperCase();
 
-        String wrd=description.isEmpty()?word:getDescription();
-        char[] glas = wrd.replaceAll("[^"+g+"]","").toCharArray();
-        String sogl[] = wrd.split("["+g+"]");
+        String parts[] = word.split("(?<=[^аеёиоуыэюя]?[аеёиоуыэюя])"); // ?
+        int l=parts.length-1;
+        if(l>0&&parts[l].replaceAll("[^аеёиоуыэюя]","").isEmpty())
+            {parts[l-1]+=parts[l]; parts[l]="";}
 
-        for (int i=0; i<glas.length; i++)
-            w+=((i<sogl.length)?sogl[i]:"") + glas[i] + ((i<glas.length-1)?"-":"");
-//            if(sogl[i].length()==1)
-//            w+=((i<sogl.length)?"["+sogl[i]+"]":"") + glas[i] + ((i<glas.length-1)?"-":"");
-        if(sogl.length>glas.length) w+=sogl[sogl.length-1];
+        for (String p:parts) {
+//            String s[] = p.split("(?<=[йрлмн][^аеёиоуыэюя])"); //
+//            if(s.length>1)System.out.print(s[0]+"-"+s[1]+" ");
+            String ps[] = p.split("(?<=[ьъ])");
+            if(ps.length>1) w+=ps[0]+((w.isEmpty())?"":"-")+ps[1];
+            else if(!p.isEmpty()) w+=((w.isEmpty())?"":"-")+p;
+        }
 
-//        System.out.println(w);
         return w;
     }
 
-
     public String getDescription() {
+//        String g="аеёиоуыэюя"; // g+=g.toUpperCase();
         if (description==null) return "";
-        if(description.indexOf("ё")>0) return description.replaceAll("ё","Ё");
-        if(description.replaceAll("[аеёиоуыэюя]","")==description) return description.replaceAll("[`']","");
-        Matcher m=Pattern.compile("([`'][аеёиоуыэюя]|[аеёиоуыэюя][`'])").matcher(description);
-        if(m.find()) return description.replaceFirst(m.group(1),m.group(1).toUpperCase().replaceAll("[`']",""));
+        if (description.replaceAll("[аеёиоуыэюя]","")==description) return description;
+//            return description.replaceAll("[`']","");
+        if(description.indexOf("ё")>0) return description.replaceFirst("ё","Ё");
+//        Matcher m=Pattern.compile("([`'][аеёиоуыэюя]|[аеёиоуыэюя][`'])").matcher(description);
+//        Matcher m=Pattern.compile("([аеёиоуыэюя]?[`'][аеёиоуыэюя]?)").matcher(description);
+        Matcher m=Pattern.compile("([аеёиоуыэюя])'").matcher(description);
+        if(m.find()) return description.replaceFirst(m.group(1),m.group(1).toUpperCase());//.replaceAll("'","")); // [`']
         return description;
     }
 }
