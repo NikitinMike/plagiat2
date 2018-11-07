@@ -149,16 +149,26 @@ public class Wordbook implements Comparable<Wordbook> {
 //        String g="аеёиоуыэюя";g+=g.toUpperCase();
 
         String parts[] = word.split("(?<=[^аеёиоуыэюя]?[аеёиоуыэюя])"); // ?
-        int l=parts.length-1;
-        if(l>0&&parts[l].replaceAll("[^аеёиоуыэюя]","").isEmpty())
-            {parts[l-1]+=parts[l]; parts[l]="";}
+        int n=parts.length-1;
+        if(n>0&&parts[n].replaceAll("[^аеёиоуыэюя]","").isEmpty())
+            {parts[n-1]+=parts[n];parts[n]="";}
 
         for (String p:parts) {
 //            String s[] = p.split("(?<=[йрлмн][^аеёиоуыэюя])"); //
-//            if(s.length>1)System.out.print(s[0]+"-"+s[1]+" ");
-            String ps[] = p.split("(?<=[ьъ])");
+//            if (p.matches("[^аеёиоуыэюя]+[аеёиоуыэюя]")) System.out.print(p+" ");
+            String ps[] = p.split("(?<=[ьъйЬЪЙ])");
             if(ps.length>1) w+=ps[0]+((w.isEmpty())?"":"-")+ps[1];
-            else if(!p.isEmpty()) w+=((w.isEmpty())?"":"-")+p;
+            else {
+                String s=p.replaceAll("[аеёиоуыэюя].*","");
+
+                if(!w.isEmpty()&&s.length()>1)
+                    p=s.toUpperCase()+p.replaceFirst(s,""); // System.out.print(p+" ");
+//                String left= String.valueOf(p.toCharArray()[0]);
+//                String right=p.substring(1);
+
+                if(!p.isEmpty()) w+=((w.isEmpty())?"":"-")+p;
+            }
+
         }
 
         return w;
