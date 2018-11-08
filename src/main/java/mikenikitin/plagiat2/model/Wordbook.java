@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,6 +49,10 @@ public class Wordbook implements Comparable<Wordbook> {
     @JsonIgnore
     private boolean endtype; // Male/Female
     //
+
+//    @Transient
+//    static Set<String> set;
+//    public Set getSet(){return set;}
 
     @JsonIgnore
     public String getEnd() {
@@ -147,31 +152,33 @@ public class Wordbook implements Comparable<Wordbook> {
     public String getParts(){
         String w="";
 //        String g="аеёиоуыэюя";g+=g.toUpperCase();
-
         String parts[] = word.split("(?<=[^аеёиоуыэюя]?[аеёиоуыэюя])"); // ?
         int n=parts.length-1;
         if(n>0&&parts[n].replaceAll("[^аеёиоуыэюя]","").isEmpty())
             {parts[n-1]+=parts[n];parts[n]="";}
 
         for (String p:parts) {
-//            String s[] = p.split("(?<=[йрлмн][^аеёиоуыэюя])"); //
-//            if (p.matches("[^аеёиоуыэюя]+[аеёиоуыэюя]")) System.out.print(p+" ");
             String ps[] = p.split("(?<=[ьъйЬЪЙ])");
             if(ps.length>1) w+=ps[0]+((w.isEmpty())?"":"-")+ps[1];
             else {
                 String s=p.replaceAll("[аеёиоуыэюя].*","");
+                if(!w.isEmpty()&&s.length()>1) {
 
-                if(!w.isEmpty()&&s.length()>1)
-                    p=s.toUpperCase()+p.replaceFirst(s,""); // System.out.print(p+" ");
-//                String left= String.valueOf(p.toCharArray()[0]);
-//                String right=p.substring(1);
+//            String s[] = p.split("(?<=[йрлмн][^аеёиоуыэюя])"); //
+//            if (p.matches("[^аеёиоуыэюя]+[аеёиоуыэюя]")) System.out.print(p+" ");
+//                    p = s.toUpperCase() + p.replaceFirst(s, "");
+//                    w+=((w.isEmpty())?"":"-")+p;
 
-                if(!p.isEmpty()) w+=((w.isEmpty())?"":"-")+p;
+                    String left= String.valueOf(s.toCharArray()[0]).toUpperCase();
+                    String right= s.substring(1).toUpperCase() +p.replaceFirst(s, "");
+//                    System.out.print(left+"-"+right+" "); // set.add(s);
+                    w+=left+((w.isEmpty())?"":"-")+right;
+
+                } else if(!p.isEmpty()) w+=((w.isEmpty())?"":"-")+p;
             }
-
         }
-
-        return w;
+        if(w.toLowerCase().replaceAll("-","").matches(word)) return w;
+        else return word.toUpperCase();
     }
 
     public String getDescription() {

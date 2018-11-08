@@ -176,4 +176,11 @@ public class WordbookController {
         wordbookRepository.saveAll(wb);
     }
 
+    @RequestMapping("/set")
+    @ResponseBody
+    private void set(){
+        Wordbook wb=new Wordbook("");
+//        wb.getSet().forEach((s)-> System.out.print(s+" "));
+    }
+
 }
