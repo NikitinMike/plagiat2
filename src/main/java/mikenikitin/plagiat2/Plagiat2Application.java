@@ -1,23 +1,17 @@
 package mikenikitin.plagiat2;
 
-import lombok.AllArgsConstructor;
-import mikenikitin.plagiat2.model.Article;
-import mikenikitin.plagiat2.model.Wordbook;
-import mikenikitin.plagiat2.repository.ArticleRepository;
-import mikenikitin.plagiat2.repository.WordbookRepository;
+//import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 @SpringBootApplication
-@AllArgsConstructor
+//@AllArgsConstructor
 public class Plagiat2Application implements CommandLineRunner{
 
 	public static void main(String[] args) throws IOException {

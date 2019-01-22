@@ -1,6 +1,6 @@
 package mikenikitin.plagiat2.controllers;
 
-import lombok.AllArgsConstructor;
+//import lombok.AllArgsConstructor;
 import mikenikitin.plagiat2.model.Article;
 import mikenikitin.plagiat2.model.Text;
 import mikenikitin.plagiat2.model.Wordbook;
@@ -25,7 +25,7 @@ import static java.util.Collections.reverse;
 import static java.util.Collections.sort;
 
 @Controller
-@AllArgsConstructor
+//@AllArgsConstructor
 @RequestMapping("wordbook")
 public class WordbookController {
 

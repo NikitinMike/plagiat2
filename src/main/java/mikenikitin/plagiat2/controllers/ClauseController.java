@@ -1,6 +1,6 @@
 package mikenikitin.plagiat2.controllers;
 
-import lombok.AllArgsConstructor;
+//import lombok.AllArgsConstructor;
 import mikenikitin.plagiat2.model.Clause;
 import mikenikitin.plagiat2.repository.ClauseRepository;
 import org.springframework.data.domain.Page;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@AllArgsConstructor
+//@AllArgsConstructor
 @RequestMapping("clause")
 
 public class ClauseController {

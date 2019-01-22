@@ -1,6 +1,6 @@
 package mikenikitin.plagiat2.controllers;
 
-import lombok.AllArgsConstructor;
+//import lombok.AllArgsConstructor;
 import mikenikitin.plagiat2.model.Article;
 import mikenikitin.plagiat2.model.Author;
 import mikenikitin.plagiat2.model.Text;
@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Controller
-@AllArgsConstructor
+//@AllArgsConstructor
 @RequestMapping("/authors") //  {"author","/authors"}
 public class AuthorController {
 

@@ -1,6 +1,6 @@
 package mikenikitin.plagiat2.controllers;
 
-import lombok.AllArgsConstructor;
+//import lombok.AllArgsConstructor;
 import mikenikitin.plagiat2.model.Article;
 import mikenikitin.plagiat2.model.Author;
 import mikenikitin.plagiat2.model.Text;
@@ -29,7 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Controller
-@AllArgsConstructor
+//@AllArgsConstructor
 public class WikiController {
 
     private final String root = "http://www.stihi.ru", localHost = "http://localhost:8080",

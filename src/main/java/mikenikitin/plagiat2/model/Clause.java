@@ -1,10 +1,10 @@
 package mikenikitin.plagiat2.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+//import lombok.AllArgsConstructor;
+//import lombok.Getter;
+//import lombok.NoArgsConstructor;
+//import lombok.Setter;
 import mikenikitin.plagiat2.repository.WordbookRepository;
 import mikenikitin.plagiat2.services.Combiner;
 import org.springframework.core.annotation.Order;
@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 //@AllArgsConstructor
-@Getter
-@Setter
+//@Getter
+//@Setter
 //@NoArgsConstructor
 @Entity
 

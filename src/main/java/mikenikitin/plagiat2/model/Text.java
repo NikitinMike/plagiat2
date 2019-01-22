@@ -2,13 +2,13 @@ package mikenikitin.plagiat2.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+//import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
+//@Data
+//@NoArgsConstructor
 @Entity
 //@AllArgsConstructor
 //@Getter

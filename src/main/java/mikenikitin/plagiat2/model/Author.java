@@ -1,16 +1,16 @@
 package mikenikitin.plagiat2.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+//import lombok.*;
 import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
 import java.util.List;
 
-@AllArgsConstructor
-@Getter
-@Setter
-@NoArgsConstructor
+//@AllArgsConstructor
+//@Getter
+//@Setter
+//@NoArgsConstructor
 @Entity
 public class Author {
 

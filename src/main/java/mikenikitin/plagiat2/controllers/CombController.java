@@ -1,6 +1,6 @@
 package mikenikitin.plagiat2.controllers;
 
-import lombok.AllArgsConstructor;
+//import lombok.AllArgsConstructor;
 import mikenikitin.plagiat2.services.Combiner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.ArrayList;
 
 @Controller
-@AllArgsConstructor
+//@AllArgsConstructor
 @RequestMapping({"comb","combiner"})
 
 public class CombController {

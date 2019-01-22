@@ -1,8 +1,8 @@
 package mikenikitin.plagiat2.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+//import lombok.Data;
+//import lombok.NoArgsConstructor;
 import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
 
 import static sun.swing.MenuItemLayoutHelper.max;
 
-@Data
-@NoArgsConstructor
+//@Data
+//@NoArgsConstructor
 @Entity
 public class Wordbook implements Comparable<Wordbook> {
     @Id

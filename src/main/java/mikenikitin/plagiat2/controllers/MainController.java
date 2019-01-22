@@ -1,6 +1,6 @@
 package mikenikitin.plagiat2.controllers;
 
-import lombok.AllArgsConstructor;
+//import lombok.AllArgsConstructor;
 import mikenikitin.plagiat2.model.*;
 import mikenikitin.plagiat2.repository.*;
 import mikenikitin.plagiat2.services.LoadDictionary;
@@ -20,10 +20,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+//import static lombok.patcher.Symbols.isEmpty;
 import static org.aspectj.util.LangUtil.split;
 
 @Controller
-@AllArgsConstructor
+//@AllArgsConstructor
 public class MainController {
 
     private ArticleRepository articleRepository;
@@ -202,8 +203,7 @@ public class MainController {
             System.out.println("POEMS TO GO: "+c);
             for (String p:poems)
                 System.out.println(
-                    a.replaceAll(".+/avtor/","")
-                    +' '+--c+":"+!stih2base(p).isEmpty()
+                    a.replaceAll(".+/avtor/","")+' '+--c+":"+!stih2base(p).isEmpty()
                 );
     //        a.addAll(poems);
         }
@@ -319,11 +319,12 @@ public class MainController {
         String[] lines=poem.split("\\n+");
         if (lines.length < 4 || lines.length > 99) return "";
 
-        Article art = new Article(url);
-        if (!articleRepository.findArticlesByName(art.getName()).isEmpty()) return "";
-
         Author author = authorRepository.findByName(authorName);
         if (author == null) authorRepository.save(author = new Author(authorName, realName));
+
+        Article art = new Article(url);
+//        if (articleRepository.findArticlesByName(art.getName())!=null)
+        if (!articleRepository.findArticlesByName(art.getName()).isEmpty()) return "";
 
         art.setAuthor(author);
         art.setTitle(title);
